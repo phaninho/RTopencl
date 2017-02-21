@@ -23,8 +23,8 @@
 	<!--<dirlight color="255 255 255" attenuation="0.0"  direction="1.0 -1.0 0.0" />
 	<!--<pointlight position="65.0 0.0 150.0" color="255 255 255" attenuation="0.001" />
 	<!--<pointlight position="0.0 0.0 100.0" color="255 255 255" attenuation="0.0001" />
-	-	<pointlight position="15.0 0.0 100.0" color="255 255 255" attenuation="0.001" />-->
-	<!-- <triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
+	<!--<pointlight position="15.0 0.0 100.0" color="255 255 255" attenuation="0.001" />-->
+	<!--<triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
 	<!--<spotlight position="9.0 8.5 1.0" direction="2.2 1.0 3.2" color="100 255 255" attenuation="3" anglemax="4" />-->
 
 	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="1" refraction="1" shininess="100"/>
