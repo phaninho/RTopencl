@@ -47,7 +47,8 @@ $(NAME) : $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -MMD $(IFLAGS) -o $@ -c $<
-
+uninstall:
+	@rm -rf libsdl libpng
 clean:
 	$(RM) $(OBJS)
 	@echo "Make clean :\033[1;31m DONE !\033[m"
