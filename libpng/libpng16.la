@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/Users/stmartin/Github/RT2/libpng/lib'
+libdir='/Users/stmartin/Github/RTopencl/libpng/lib'

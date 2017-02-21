@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: i486 (Intel 80486)
 Processors active: 0 1 2 3
 Primary memory available: 8.00 gigabytes
-Default processor set: 248 tasks, 1118 threads, 4 processors
-Load average: 1.11, Mach factor: 2.88
+Default processor set: 248 tasks, 1241 threads, 4 processors
+Load average: 1.06, Mach factor: 2.92
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -1004,7 +1004,7 @@ configure:16618: checking for _strrev
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__strrev", referenced from:
-      _main in conftest-88278e.o
+      _main in conftest-5cf4a5.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1112,7 +1112,7 @@ configure:16618: checking for _strupr
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__strupr", referenced from:
-      _main in conftest-608293.o
+      _main in conftest-510d56.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1220,7 +1220,7 @@ configure:16618: checking for _strlwr
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__strlwr", referenced from:
-      _main in conftest-e91c4d.o
+      _main in conftest-1bee46.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1355,7 +1355,7 @@ configure:16618: checking for itoa
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "_itoa", referenced from:
-      _main in conftest-b92339.o
+      _main in conftest-2cabf8.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1466,7 +1466,7 @@ configure:16618: checking for _ltoa
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__ltoa", referenced from:
-      _main in conftest-951d06.o
+      _main in conftest-065619.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1577,7 +1577,7 @@ configure:16618: checking for _uitoa
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__uitoa", referenced from:
-      _main in conftest-697250.o
+      _main in conftest-7512f2.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1688,7 +1688,7 @@ configure:16618: checking for _ultoa
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__ultoa", referenced from:
-      _main in conftest-f3db6e.o
+      _main in conftest-b7aa32.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1807,7 +1807,7 @@ configure:16618: checking for _i64toa
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__i64toa", referenced from:
-      _main in conftest-868726.o
+      _main in conftest-61a8ca.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -1920,7 +1920,7 @@ configure:16618: checking for _ui64toa
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__ui64toa", referenced from:
-      _main in conftest-7c9bd3.o
+      _main in conftest-5f5a01.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -2067,7 +2067,7 @@ configure:16618: checking for _stricmp
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__stricmp", referenced from:
-      _main in conftest-8581c1.o
+      _main in conftest-ce6ddd.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -2195,7 +2195,7 @@ configure:16618: checking for _strnicmp
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "__strnicmp", referenced from:
-      _main in conftest-339253.o
+      _main in conftest-6e310e.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -2346,7 +2346,7 @@ configure:16618: checking for fseeko64
 configure:16618: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include   -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "_fseeko64", referenced from:
-      _main in conftest-f91cf2.o
+      _main in conftest-5b7097.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:16618: $? = 1
@@ -3619,7 +3619,7 @@ conftest.c:124:19: warning: implicit declaration of function 'sem_timedwait' is 
 1 warning generated.
 Undefined symbols for architecture x86_64:
   "_sem_timedwait", referenced from:
-      _main in conftest-055363.o
+      _main in conftest-e0f68e.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:22147: $? = 1
@@ -3888,7 +3888,7 @@ configure:22213: checking for pthread_set_name_np
 configure:22233: gcc -o conftest -g -O2 -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include  -D_THREAD_SAFE  -Iinclude -I/Users/stmartin/Github/RTopencl/SDL2-2.0.5/include    conftest.c  -lm -liconv  >&5
 Undefined symbols for architecture x86_64:
   "_pthread_set_name_np", referenced from:
-      _main in conftest-7a6dc4.o
+      _main in conftest-a46198.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:22233: $? = 1
@@ -4048,7 +4048,6 @@ config.status:1284: creating sdl2-config.cmake
 config.status:1284: creating SDL2.spec
 config.status:1284: creating sdl2.pc
 config.status:1284: creating include/SDL_config.h
-config.status:1444: include/SDL_config.h is unchanged
 config.status:1458: executing libtool commands
 config.status:1458: executing sdl2_config commands
 config.status:1458: executing summary commands
