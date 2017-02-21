@@ -1,0 +1,17 @@
+<scene width="640" height="480" maxreflect="0" maxrefract="0" fov="70" znear="0" zfar="10000">
+	<sphere position="0 5.0 165.0"  radius="10.0" color="0 55 255 255" material="3"/>
+	<sphere position="25 0.0 165.0"  radius="10.0" color="0 255 0 255" material="3"/>
+	<sphere position="-25 0.0 165.0"  radius="10.0" color="255 55 0 255" material="3"/>
+	<!--<plane position="0.0 0.0 300.0" color="245 35 175 255" normal="0.0 0.01 -1.0" material="2"/>-->
+	<plane position="0.0 50.0 0.0" color="255 255 255 255" normal="0.0 -1.0 0.0" material="3"/>
+	<spottlight position="0.0 -10.0 165.0" color="255 255 255" direction="-0.4 1.4 -0.1" attenuation="0.6" angle="40"/>
+	<!--	<dirlight position="0.0 -10.0 165.0" color="255 255 255" direction="0.4 -1.0 -1.0" attenuation="0.6" angle="40"/>-->
+	<!--<pointlight position="15.0 -35.0 220.0" color="255 255 255" direction="0.1 0.3 -0.8" attenuation="0.06" angle="40.0"/>-->
+	<!--<dirlight position="35.0 -15.0 100.0" color="105 105 205" direction="0.3 -1.0 0.0" attenuation="0.2" angle="40.0"/>-->
+	<!--<plane position="-100.0 0.0 0.0" color="205 205 205 255" normal="1.0 0.0 0.0" material="1"/>-->
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="1.0" refraction="1.0" shininess="100"/>
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0.5" refraction="1.0" shininess="100"/>
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0.0" refraction="0.0" shininess="100"/>
+	<texture load="texture.png" />
+	<render debug="0"/>
+</scene>
