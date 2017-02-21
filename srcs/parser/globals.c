@@ -52,6 +52,8 @@ char		*g_tags[] =
 	"cylinder",
 	"cone",
 	"disk",
+	"cylinderinf",
+	"coneinf",
 	"triangle",
 	"spotlight",
 	"pointlight",

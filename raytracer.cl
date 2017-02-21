@@ -7,18 +7,20 @@
 #define CYLINDER 4
 #define CONE 5
 #define DISK 6
-#define TRIANGLE 7
-#define SPOTLIGHT 8
-#define POINTLIGHT 9
-#define DIRLIGHT 10
-#define MATERIAL 11
-#define TEXTURE 12
-#define RENDER 13
+#define CYLINDERINF 7
+#define CONEINF 8
+#define TRIANGLE 9
+#define SPOTLIGHT 10
+#define POINTLIGHT 11
+#define DIRLIGHT 12
+#define MATERIAL 13
+#define TEXTURE 14
+#define RENDER 15
 // Pour le parser et le CL du mod de rendu
-#define RENDERMODE_SEPIA 14
-#define RENDERMODE_GRIS 15
-#define RENDERMODE_FILTER 16
-#define RENDERMODE_ADD 17
+#define RENDERMODE_SEPIA 16
+#define RENDERMODE_GRIS 17
+#define RENDERMODE_FILTER 18
+#define RENDERMODE_ADD 19
 
 typedef struct	s_texture
 {
@@ -206,13 +208,13 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 	{
 		return (soft_normalize(objects.normal));
 	}
-	else if (objects.type == CYLINDER)
+	else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
 	{
 		float3 nor = impact - objects.position;
 		nor.y = 0;
 		return (soft_normalize(nor));
 	}
-	else if (objects.type == CONE)
+	else if (objects.type == CONE || objects.type == CONEINF)
 	{
 		float3 nor = impact - objects.position;
 		nor.y = -0.01f * nor.y;
@@ -430,6 +432,20 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
  			return (FLT_MAX);
 		a = rdir.x * rdir.x + rdir.z * rdir.z;
 		b = rdir.x * dist.x + rdir.z * dist.z;
+	}
+	else if (objects.type == CYLINDERINF)
+	{
+		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
+ 		if (enable && c < EPSILON) // Culling face
+ 			return (FLT_MAX);
+		a = rdir.x * rdir.x + rdir.z * rdir.z;
+		b = rdir.x * dist.x + rdir.z * dist.z;
+	}
+	else if (objects.type == CONEINF)
+	{
+		a = rdir.x * rdir.x + rdir.z * rdir.z - rdir.y * rdir.y;
+		b = rdir.x * dist.x + rdir.z * dist.z - rdir.y * dist.y;
+		c = dist.x * dist.x + dist.z * dist.z - dist.y * dist.y;
 	}
 	else if (objects.type == CONE)
 	{
