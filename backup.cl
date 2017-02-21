@@ -6,6 +6,7 @@
 #define CYLINDER 4
 #define CONE 5
 #define TRIANGLE 6
+#define DISK 17
 #define SPOTLIGHT 7
 #define POINTLIGHT 8
 #define DIRLIGHT 9

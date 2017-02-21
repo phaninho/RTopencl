@@ -13,6 +13,7 @@
 #define MATERIAL 10
 #define TEXTURE 11
 #define RENDER 12
+#define DISK 17
 // Pour le parser et le CL du mod de rendu
 #define RENDERMODE_SEPIA 13
 #define RENDERMODE_GRIS 14
@@ -198,6 +199,10 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 		return (soft_normalize(impact - objects.position));
 	}
 	else if (objects.type == PLANE)
+	{
+		return (soft_normalize(objects.normal));
+	}
+	else if (objects.type == DISK)
 	{
 		return (soft_normalize(objects.normal));
 	}
@@ -401,6 +406,23 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 			return (FLT_MAX);
 		return (solve);
 	}
+	else if (objects.type == DISK)
+	{
+		a = soft_dot(-objects.normal, rdir);
+		if (enable && a < EPSILON) // Culling face
+			return (FLT_MAX);
+		b = soft_dot(-objects.normal, ray->pos);
+		c = soft_dot(-objects.normal, objects.position);
+		solve = -((b - c) / a);
+		if (solve < EPSILON)
+			return (FLT_MAX);
+		float impact = (ray->pos + rdir * solve);
+		float3 v = impact - objects.position;
+		if (sqrt(soft_dot(v,v)) <= 50)
+				return (solve);
+		else
+			return (FLT_MAX);
+	}
 	else if (objects.type == CYLINDER)
 	{
 		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
@@ -422,6 +444,22 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 		return (FLT_MAX);
 	t0 = (-b - sqrt(solve)) / a;
 	t1 = (-b + sqrt(solve)) / a;
+	if (objects.type == CYLINDER)
+	{
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > 0 && fmax(m,0) < 50)
+			return (deph_min(t0, t1));
+		else
+			return (FLT_MAX);
+	}
+	if (objects.type == CONE)
+	{
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > 0 && fmax(m,0) < 50)
+			return (deph_min(t0, t1));
+		else
+			return (FLT_MAX);
+	}
 	return (deph_min(t0, t1));
 }
 

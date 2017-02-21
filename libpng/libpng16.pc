@@ -1,4 +1,4 @@
-prefix=/Users/stmartin/Github/RTopencl/libpng
+prefix=/Users/ifranc-r/Desktop/RTopencl/libpng
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include/libpng16

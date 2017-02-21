@@ -29,6 +29,8 @@
 # define MATERIAL 10
 # define TEXTURE 11
 # define RENDER 12
+# define DISK 17
+
 // Pour le parser et le CL du mod de rendu
 #define RENDERMODE_SEPIA 13
 #define RENDERMODE_GRIS 14
