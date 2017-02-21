@@ -22,20 +22,20 @@
 # define PLANE 3
 # define CYLINDER 4
 # define CONE 5
-# define TRIANGLE 6
-# define SPOTLIGHT 7
-# define POINTLIGHT 8
-# define DIRLIGHT 9
-# define MATERIAL 10
-# define TEXTURE 11
-# define RENDER 12
-# define DISK 17
+# define DISK 6
+# define TRIANGLE 7
+# define SPOTLIGHT 8
+# define POINTLIGHT 9
+# define DIRLIGHT 10
+# define MATERIAL 11
+# define TEXTURE 12
+# define RENDER 13
 
 // Pour le parser et le CL du mod de rendu
-#define RENDERMODE_SEPIA 13
-#define RENDERMODE_GRIS 14
-#define RENDERMODE_FILTER 15
-#define RENDERMODE_ADD 16
+#define RENDERMODE_SEPIA 14
+#define RENDERMODE_GRIS 15
+#define RENDERMODE_FILTER 16
+#define RENDERMODE_ADD 17
 
 typedef struct	s_cam
 {

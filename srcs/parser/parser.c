@@ -75,7 +75,7 @@ static int	parse_file2(char *file, t_env *e, int i, t_parse *p)
 	{
 		p->tag = parse_tag(file, &i);
 		p->type = parse_tag_type(p->tag, &j);
-		if (p->type >= SPHERE && p->type <= CONE && !ft_strsuffix(p->tag, "/>"))
+		if (p->type >= SPHERE && p->type <= TRIANGLE && !ft_strsuffix(p->tag, "/>"))
 			p->in_object = p->object + 1;
 		if (p->type == SCENE)
 			p->in_scene = 1;

@@ -98,7 +98,7 @@ void		check_values(t_env *e, t_parse *p, t_arg *arg)
 		e->camera.position = arg->avec[POSITION - VEC];
 		e->camera.rotation = arg->avec[ROTATION - VEC];
 	}
-	else if (p->type >= SPHERE && p->type <= CONE)
+	else if (p->type >= SPHERE && p->type <= TRIANGLE)
 		check_object(e, p, arg);
 	else if (p->type >= SPOTLIGHT && p->type <= DIRLIGHT)
 		check_light(e, p, arg);
