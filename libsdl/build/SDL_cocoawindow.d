@@ -19,6 +19,9 @@ build/SDL_cocoawindow.lo: \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_surface.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_blendmode.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_version.h \
+  /usr/X11R6/include/X11/Xlib.h /usr/X11R6/include/X11/X.h \
+  /usr/X11R6/include/X11/Xfuncproto.h /usr/X11R6/include/X11/Xosdefs.h \
+  /usr/X11R6/include/X11/Xatom.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_timer.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_hints.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/video/cocoa/../SDL_sysvideo.h \

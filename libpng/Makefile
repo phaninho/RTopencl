@@ -98,12 +98,12 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = x86_64-apple-darwin15.6.0
-host_triplet = x86_64-apple-darwin15.6.0
+build_triplet = x86_64-apple-darwin16.1.0
+host_triplet = x86_64-apple-darwin16.1.0
 check_PROGRAMS = pngtest$(EXEEXT) pngunknown$(EXEEXT) \
 	pngstest$(EXEEXT) pngvalid$(EXEEXT) pngimage$(EXEEXT) \
 	pngcp$(EXEEXT) $(am__EXEEXT_1)
-#am__append_1 = timepng
+am__append_1 = timepng
 bin_PROGRAMS = pngfix$(EXEEXT) png-fix-itxt$(EXEEXT)
 #am__append_2 = arm/arm_init.c\
 #	arm/filter_neon.S arm/filter_neon_intrinsics.c
@@ -199,7 +199,7 @@ libpng16_la_LINK = $(LIBTOOL) $(AM_V_lt) \
 	$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libpng16_la_LDFLAGS) $(LDFLAGS) -o \
 	$@
-#am__EXEEXT_1 = timepng$(EXEEXT)
+am__EXEEXT_1 = timepng$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am_png_fix_itxt_OBJECTS = contrib/tools/png-fix-itxt.$(OBJEXT)
 png_fix_itxt_OBJECTS = $(am_png_fix_itxt_OBJECTS)
@@ -574,7 +574,7 @@ MANIFEST_TOOL = :
 MKDIR_P = ../libpng-1.6.26/install-sh -c -d
 NM = /usr/bin/nm -B
 NMEDIT = nmedit
-OBJDUMP = false
+OBJDUMP = objdump
 OBJEXT = o
 OTOOL = otool
 OTOOL64 = :
@@ -620,10 +620,10 @@ am__untar = $${TAR-tar} xf -
 # generate the -config scripts if required
 binconfigs = libpng16-config
 bindir = ${exec_prefix}/bin
-build = x86_64-apple-darwin15.6.0
+build = x86_64-apple-darwin16.1.0
 build_alias = 
 build_cpu = x86_64
-build_os = darwin15.6.0
+build_os = darwin16.1.0
 build_vendor = apple
 builddir = .
 datadir = ${datarootdir}
@@ -631,10 +631,10 @@ datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-host = x86_64-apple-darwin15.6.0
+host = x86_64-apple-darwin16.1.0
 host_alias = 
 host_cpu = x86_64
-host_os = darwin15.6.0
+host_os = darwin16.1.0
 host_vendor = apple
 htmldir = ${docdir}
 includedir = ${prefix}/include

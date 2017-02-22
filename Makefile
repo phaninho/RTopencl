@@ -60,4 +60,4 @@ fclean : clean
 
 re: fclean all
 
-.PHONY: all clean fclean re build install
+.PHONY: all clean fclean re build install uninstall

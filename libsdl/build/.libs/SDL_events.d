@@ -48,6 +48,9 @@ build/SDL_events.lo: \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_timer.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_version.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_syswm.h \
+  /usr/X11R6/include/X11/Xlib.h /usr/X11R6/include/X11/X.h \
+  /usr/X11R6/include/X11/Xfuncproto.h /usr/X11R6/include/X11/Xosdefs.h \
+  /usr/X11R6/include/X11/Xatom.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/events/SDL_events_c.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/events/SDL_clipboardevents_c.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/events/SDL_dropevents_c.h \

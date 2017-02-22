@@ -62,6 +62,10 @@ build/SDL_video.lo: \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/video/../events/SDL_windowevents_c.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/video/../timer/SDL_timer_c.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_syswm.h \
+  /usr/X11R6/include/X11/Xlib.h /usr/X11R6/include/X11/X.h \
+  /usr/X11R6/include/X11/Xfuncproto.h /usr/X11R6/include/X11/Xosdefs.h \
+  /usr/X11R6/include/X11/Xatom.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_opengl.h \
   /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/include/SDL_opengl_glext.h \
-  /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/video/cocoa/SDL_cocoamessagebox.h
+  /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/video/cocoa/SDL_cocoamessagebox.h \
+  /Users/ifranc-r/Desktop/RTopencl/SDL2-2.0.5/src/video/x11/SDL_x11messagebox.h

@@ -17,6 +17,7 @@
 #include "utils/error.h"
 #include "utils/file.h"
 #include "parser/rt_parser.h"
+#include <math.h>
 
 static void	program_init(void)
 {
