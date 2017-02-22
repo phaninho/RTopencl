@@ -98,12 +98,12 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = x86_64-apple-darwin15.6.0
-host_triplet = x86_64-apple-darwin15.6.0
+build_triplet = x86_64-apple-darwin16.1.0
+host_triplet = x86_64-apple-darwin16.1.0
 check_PROGRAMS = pngtest$(EXEEXT) pngunknown$(EXEEXT) \
 	pngstest$(EXEEXT) pngvalid$(EXEEXT) pngimage$(EXEEXT) \
 	pngcp$(EXEEXT) $(am__EXEEXT_1)
-#am__append_1 = timepng
+am__append_1 = timepng
 bin_PROGRAMS = pngfix$(EXEEXT) png-fix-itxt$(EXEEXT)
 #am__append_2 = arm/arm_init.c\
 #	arm/filter_neon.S arm/filter_neon_intrinsics.c
@@ -199,7 +199,7 @@ libpng16_la_LINK = $(LIBTOOL) $(AM_V_lt) \
 	$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libpng16_la_LDFLAGS) $(LDFLAGS) -o \
 	$@
-#am__EXEEXT_1 = timepng$(EXEEXT)
+am__EXEEXT_1 = timepng$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am_png_fix_itxt_OBJECTS = contrib/tools/png-fix-itxt.$(OBJEXT)
 png_fix_itxt_OBJECTS = $(am_png_fix_itxt_OBJECTS)
@@ -517,14 +517,14 @@ distcleancheck_listfiles = find . -type f -print
 
 #distribute headers in /usr/include/libpng/*
 pkgincludedir = $(includedir)/$(PNGLIB_BASENAME)
-ACLOCAL = ${SHELL} /Users/stmartin/Github/RTopencl/libpng-1.6.26/missing aclocal-1.15
+ACLOCAL = ${SHELL} /Users/ifranc-r/Desktop/RTopencl/libpng-1.6.26/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /Users/stmartin/Github/RTopencl/libpng-1.6.26/missing autoconf
-AUTOHEADER = ${SHELL} /Users/stmartin/Github/RTopencl/libpng-1.6.26/missing autoheader
-AUTOMAKE = ${SHELL} /Users/stmartin/Github/RTopencl/libpng-1.6.26/missing automake-1.15
+AUTOCONF = ${SHELL} /Users/ifranc-r/Desktop/RTopencl/libpng-1.6.26/missing autoconf
+AUTOHEADER = ${SHELL} /Users/ifranc-r/Desktop/RTopencl/libpng-1.6.26/missing autoheader
+AUTOMAKE = ${SHELL} /Users/ifranc-r/Desktop/RTopencl/libpng-1.6.26/missing automake-1.15
 AWK = awk
 CC = gcc
 CCAS = gcc
@@ -569,12 +569,12 @@ LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
 MAINT = #
-MAKEINFO = ${SHELL} /Users/stmartin/Github/RTopencl/libpng-1.6.26/missing makeinfo
+MAKEINFO = ${SHELL} /Users/ifranc-r/Desktop/RTopencl/libpng-1.6.26/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = ../libpng-1.6.26/install-sh -c -d
 NM = /usr/bin/nm -B
 NMEDIT = nmedit
-OBJDUMP = false
+OBJDUMP = objdump
 OBJEXT = o
 OTOOL = otool
 OTOOL64 = :
@@ -604,10 +604,10 @@ SHELL = /bin/sh
 STRIP = strip
 SYMBOL_PREFIX = 
 VERSION = 1.6.26
-abs_builddir = /Users/stmartin/Github/RTopencl/libpng
-abs_srcdir = /Users/stmartin/Github/RTopencl/libpng/../libpng-1.6.26
-abs_top_builddir = /Users/stmartin/Github/RTopencl/libpng
-abs_top_srcdir = /Users/stmartin/Github/RTopencl/libpng/../libpng-1.6.26
+abs_builddir = /Users/ifranc-r/Desktop/RTopencl/libpng
+abs_srcdir = /Users/ifranc-r/Desktop/RTopencl/libpng/../libpng-1.6.26
+abs_top_builddir = /Users/ifranc-r/Desktop/RTopencl/libpng
+abs_top_srcdir = /Users/ifranc-r/Desktop/RTopencl/libpng/../libpng-1.6.26
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -620,10 +620,10 @@ am__untar = $${TAR-tar} xf -
 # generate the -config scripts if required
 binconfigs = libpng16-config
 bindir = ${exec_prefix}/bin
-build = x86_64-apple-darwin15.6.0
+build = x86_64-apple-darwin16.1.0
 build_alias = 
 build_cpu = x86_64
-build_os = darwin15.6.0
+build_os = darwin16.1.0
 build_vendor = apple
 builddir = .
 datadir = ${datarootdir}
@@ -631,15 +631,15 @@ datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-host = x86_64-apple-darwin15.6.0
+host = x86_64-apple-darwin16.1.0
 host_alias = 
 host_cpu = x86_64
-host_os = darwin15.6.0
+host_os = darwin16.1.0
 host_vendor = apple
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /Users/stmartin/Github/RTopencl/libpng-1.6.26/install-sh
+install_sh = ${SHELL} /Users/ifranc-r/Desktop/RTopencl/libpng-1.6.26/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -652,7 +652,7 @@ pdfdir = ${docdir}
 # pkg-config stuff, note that libpng.pc is always required in order
 # to get the correct library
 pkgconfigdir = ${libdir}/pkgconfig
-prefix = /Users/stmartin/Github/RTopencl/libpng
+prefix = /Users/ifranc-r/Desktop/RTopencl/libpng
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin

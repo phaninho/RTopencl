@@ -1,6 +1,6 @@
 
  Testing libpng version 1.6.26
-   with zlib   version 1.2.5
+   with zlib   version 1.2.8
 
 libpng version 1.6.26 - October 20, 2016
 Copyright (c) 1998-2002,2004,2006-2016 Glenn Randers-Pehrson
@@ -16,7 +16,7 @@ Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
 Files ../libpng-1.6.26/tests/badcrc.png and pngout.png are different
    Was ../libpng-1.6.26/tests/badcrc.png written with the same maximum IDAT chunk size (8192 bytes),
    filtering heuristic (libpng default), compression level (zlib default),
-   and zlib version (1.2.5)?
+   and zlib version (1.2.8)?
 
 
  PASS (1 zero samples)
@@ -46,7 +46,7 @@ libpng error: Not enough image data
 libpng error: Not enough image data
 
  Testing libpng version 1.6.26
-   with zlib   version 1.2.5
+   with zlib   version 1.2.8
 
 libpng version 1.6.26 - October 20, 2016
 Copyright (c) 1998-2002,2004,2006-2016 Glenn Randers-Pehrson
@@ -78,7 +78,7 @@ Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
   malloc_max = 8000000
 
  Testing libpng version 1.6.26
-   with zlib   version 1.2.5
+   with zlib   version 1.2.8
 
 libpng version 1.6.26 - October 20, 2016
 Copyright (c) 1998-2002,2004,2006-2016 Glenn Randers-Pehrson
