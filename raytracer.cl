@@ -418,18 +418,18 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 			return (FLT_MAX);
 		float3 impact = (ray->pos + rdir * solve);
 		float3 v = impact - objects.position;
-		if (sqrt(soft_dot(v,v)) <= 50)
+		if (sqrt(soft_dot(v,v)) <= objects.radius)
 				return (solve);
 		else
 			return (FLT_MAX);
 	}
 	else if (objects.type == CYLINDER)
 	{
-		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
- 		if (enable && c < EPSILON) // Culling face
- 			return (FLT_MAX);
-		a = rdir.x * rdir.x + rdir.z * rdir.z;
-		b = rdir.x * dist.x + rdir.z * dist.z;
+			c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
+ 			if (enable && c < EPSILON) // Culling face
+ 				return (FLT_MAX);
+			a = rdir.x * rdir.x + rdir.z * rdir.z;
+			b = rdir.x * dist.x + rdir.z * dist.z;
 	}
 	else if (objects.type == CONE)
 	{
@@ -469,15 +469,16 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	int i = -1;
 	int	tmp = scene->zfar;
 
+	float3 rdir = soft_normalize(rotatexyz(ray.dir, objects->rotation));
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
+	ray_light.deph = sqrt(soft_dot(light.position - ray_light.pos,light.position - ray_light.pos));//scene->zfar;
 	if (light.type == POINTLIGHT)
-		ray_light.dir = light.position - ray_light.pos;
+		ray_light.dir = soft_normalize(light.position - ray_light.pos);
 	else if (light.type == SPOTLIGHT)
-		ray_light.dir = soft_normalize(-light.direction);
+		ray_light.dir = soft_normalize(light.direction);
 	else if (light.type == DIRLIGHT)
 		ray_light.dir = soft_normalize(light.direction);
-	ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));//scene->zfar;
 	while (++i < scene->max_object)
 	{
 		if (i != ray_light.object)

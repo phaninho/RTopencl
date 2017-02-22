@@ -2,7 +2,7 @@
 	<camera position="0.0 0.0 400.0" rotation="0.0 180.0 0.0" />
 	<!--<sphere position="0.0 10.0 -200.0" color="255 255 255 255" radius="100.0" material="1"/>-->
 	<cylinder position="20.0 -10.0 155.0" normal="0.0 1.0 0.0" radius="10.0" color="255 0 0 255" material="1"/>
-	<disk position="20.0 10.0 155.0" color="0 255 0 255" normal="0.0 -1.0 0.0" material="1"/>
+	<!--<disk position="20.0 -10.0 155.0"  normal="0.0 -1.0 0.0" radius="10.0" color="255 0 0 255" material="1"/>-->
 	<sphere position="15 -15.0 250.0" normal="0.0 1.0 0.0" radius="10.0" color="255 0 0 255" material="1"/>
 	<sphere position="-15.0 -15.0 250.0" normal="0.0 1.0 0.0" radius="10.0" color="0 255 0 255" material="1"/>
 	<sphere position="0 -20.0 250.0" normal="0.0 1.0 0.0" radius="10.0" color="0 0 255 255" material="1"/>
@@ -22,9 +22,9 @@
 	<!--<pointlight position="90.0 0.0 550.0" color="255 255 255" attenuation="0.001"/>-->
 	<!--<pointlight position="90.0 -90.0 100.0" color="255 255 255" attenuation="0.001"/>
 	<!--<dirlight color="255 255 255" attenuation="0.0"  direction="1.0 -1.0 0.0" />
-	<!--<pointlight position="65.0 0.0 150.0" color="255 255 255" attenuation="0.001" />
-	<!--<pointlight position="0.0 0.0 100.0" color="255 255 255" attenuation="0.0001" />
-	-	<pointlight position="15.0 0.0 100.0" color="255 255 255" attenuation="0.001" />-->
+	<!--<pointlight position="65.0 0.0 150.0" color="255 255 255" attenuation="0.001" />-->
+	<pointlight position="40.0 -40.0 250.0" color="255 255 255" attenuation="0.001" />
+	<pointlight position="15.0 -50.0 100.0" color="255 255 255" attenuation="0.001" />
 	<!-- <triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
 	<!--<spotlight position="9.0 8.5 1.0" direction="2.2 1.0 3.2" color="100 255 255" attenuation="3" anglemax="4" />-->
 
