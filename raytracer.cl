@@ -321,7 +321,9 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//else
 	//	specular = light.color;
 	else
-		specular = specular_coeff * light.color;*/
+		specular = specular_coeff * light.color;
+*/
+
 	/*float	specular_coeff = 0.0f;
 	if (diffuse_coeff > 0.0f)
 	{
@@ -349,7 +351,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//
 	//linear color (color before gamma correction)
 	//
-	float4	linearColor = (/*specular*/ + ambient + attenuation) * (diffuse  /*+specular*/);
+	float4	linearColor = (/*specular */+ ambient + attenuation) * (diffuse /*+ specular*/);
 	//final color (after gamma correction)
 	//float4	gamma = 2.2f;
 	//finalColor = pow(linearColor, gamma);
@@ -429,14 +431,13 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 {
 	t_ray  ray_light;
 	int i = -1;
-	int	tmp = scene->zfar;
 
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
 	if (light.type == POINTLIGHT)
-		ray_light.dir = light.position - ray_light.pos;
+		ray_light.dir = soft_normalize(light.position - ray_light.pos);
 	else if (light.type == SPOTLIGHT)
-		ray_light.dir = soft_normalize(-light.direction);
+		ray_light.dir = soft_normalize(light.direction);
 	else if (light.type == DIRLIGHT)
 		ray_light.dir = soft_normalize(light.direction);
 	ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));//scene->zfar;
@@ -445,14 +446,10 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 		if (i != ray_light.object)
 		{
 			float d  = intersect(&ray_light, objects[i], EPSILON, 1);
-			//if (tmp > d)
-
-			tmp = d;
 			if (d >= EPSILON && d < ray_light.deph)
 			{
 				ray_light.deph = d;
 				ray_light.object = i;
-				//if (i == scene->max_object)
 				return (0.5f);
 			}
 		}
