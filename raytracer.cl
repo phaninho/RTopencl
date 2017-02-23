@@ -437,13 +437,19 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	if (light.type == POINTLIGHT)
 		ray_light.dir = light.position - ray_light.pos;
 	else if (light.type == SPOTLIGHT)
-		ray_light.dir = light.position - ray_light.pos;
+	{
+		ray_light.dir = soft_normalize(light.position - ray_light.pos);
+		float3 coneDirection = soft_normalize(-light.direction);
+		float3 raydirection = ray_light.dir;
+		float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
+		lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
+		if(lightToSurfaceAngle > light.angle / 2)
+    		return (0.5f);
+    	ray_light.dir = light.position - ray_light.pos;
+	}
 	else if (light.type == DIRLIGHT)
-		ray_light.dir = light.direction;
-	if (light.type != DIRLIGHT)
-		ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
-	else
-		ray_light.deph = scene->zfar;
+		ray_light.dir = light.position - ray_light.pos;
+	ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
 	while (++i < scene->max_object)
 	{
 		if (i != ray_light.object)
