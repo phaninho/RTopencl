@@ -315,14 +315,14 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//		specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), 64.0f);
 		specular_coeff = clamp(specular_coeff, 0.0f, 1.0f);
 	}
-	/*float4	specular = (float4)(0, 0, 0, 0);
+	float4	specular = (float4)(0, 0, 0, 0);
 	if (objects.material_id > 0)
 		specular = specular_coeff * material[objects.material_id - 1].specular_color * light.color;
 	//else
 	//	specular = light.color;
 	else
 		specular = specular_coeff * light.color;
-*/
+
 
 	/*float	specular_coeff = 0.0f;
 	if (diffuse_coeff > 0.0f)
@@ -351,7 +351,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//
 	//linear color (color before gamma correction)
 	//
-	float4	linearColor = (/*specular */+ ambient + attenuation) * (diffuse /*+ specular*/);
+	float4	linearColor = (specular + ambient + attenuation) * (diffuse + specular);
 	//final color (after gamma correction)
 	//float4	gamma = 2.2f;
 	//finalColor = pow(linearColor, gamma);
@@ -435,12 +435,12 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
 	if (light.type == POINTLIGHT)
-		ray_light.dir = soft_normalize(light.position - ray_light.pos);
+		ray_light.dir = light.position - ray_light.pos;
 	else if (light.type == SPOTLIGHT)
-		ray_light.dir = soft_normalize(light.direction);
+		ray_light.dir = light.direction;
 	else if (light.type == DIRLIGHT)
-		ray_light.dir = soft_normalize(light.direction);
-	ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));//scene->zfar;
+		ray_light.dir = light.direction;
+	ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
 	while (++i < scene->max_object)
 	{
 		if (i != ray_light.object)
@@ -498,7 +498,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				while (i < scene->max_light)
 				{
 					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials);
-					shadow_attenuation = shadow(reflect_ray, lights[i], objects, scene);
+					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
 				color *= (shadow_attenuation);
@@ -561,7 +561,7 @@ float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, 
 				while (i < scene->max_light)
 				{
 					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials);
-					shadow_attenuation = shadow(refract_ray, lights[i], objects, scene);
+					shadow_attenuation *= shadow(refract_ray, lights[i], objects, scene);
 					i++;
 				}
 				color *= (shadow_attenuation);
@@ -571,8 +571,7 @@ float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, 
 				color = noLight(&refract_ray, objects[refract_ray.object], materials, scene->max_material);
 		}
 		else
-		{//printf("laaaaaaaaaa\n");
-			//color = (float4)(0.0f, 1.0f, 0.0f, 1.0f);
+		{
 			return (color);
 		}
 		point_color *= objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
@@ -596,7 +595,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	int y = get_global_id(1);
 	int index = x + y * xmax;
 	float4 color;
-	float shadow_attenuation;
+	float shadow_attenuation = 1.0f;
 	t_ray ray;
 	float4 cc = (float4)(0, 0, 0, 1);
 	ray.deph = scene->zfar;
@@ -624,16 +623,16 @@ __kernel void raytracer(__global uchar4* pixel,
 			while (i < scene->max_light)
 			{
 				color += light(&ray, objects[ray.object], lights[i], materials);
-				shadow_attenuation = shadow(ray, lights[i], objects, scene);
+				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}
 			color *= (shadow_attenuation);
-			color = clamp(color, 0.0f, 1.0f);
 			color.w = 1.0f;
 			if (scene->max_refract > 0 && materials[objects[ray.object].material_id - 1].refraction > 0.0)
 				color += refract_color(scene, objects, ray, materials, lights);
 			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
 				color += reflect_color(scene, lights, objects, ray, materials);
+			color = clamp(color, 0.0f, 1.0f);
 		}
 		else
 			color = noLight(&ray, objects[ray.object], materials, scene->max_material);
