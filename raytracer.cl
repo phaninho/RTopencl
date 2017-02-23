@@ -439,8 +439,11 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	else if (light.type == SPOTLIGHT)
 		ray_light.dir = light.position - ray_light.pos;
 	else if (light.type == DIRLIGHT)
-		ray_light.dir = light.position - ray_light.pos;
-	ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
+		ray_light.dir = light.direction;
+	if (light.type != DIRLIGHT)
+		ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
+	else
+		ray_light.deph = scene->zfar;
 	while (++i < scene->max_object)
 	{
 		if (i != ray_light.object)
