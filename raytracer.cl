@@ -471,7 +471,6 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 }
 
 float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights);
-
 static float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials)
 {
 	t_ray ray = nray;
@@ -511,7 +510,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				while (i < scene->max_light)
 				{
 					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials);
-					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
+					shadow_attenuation = shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
 				color *= (shadow_attenuation);
@@ -533,7 +532,6 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 	}
 	return (clamp(reflect_color, 0.0f, 1.0f));
 }
-
 
 float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights)
 {
@@ -608,7 +606,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	int y = get_global_id(1);
 	int index = x + y * xmax;
 	float4 color;
-	float shadow_attenuation = 1.0f;
+	float shadow_attenuation;
 	t_ray ray;
 	float4 cc = (float4)(0, 0, 0, 1);
 	ray.deph = scene->zfar;
@@ -636,7 +634,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			while (i < scene->max_light)
 			{
 				color += light(&ray, objects[ray.object], lights[i], materials);
-				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
+				shadow_attenuation = shadow(ray, lights[i], objects, scene);
 				i++;
 			}
 			color *= (shadow_attenuation);
@@ -645,7 +643,6 @@ __kernel void raytracer(__global uchar4* pixel,
 				color += refract_color(scene, objects, ray, materials, lights);
 			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
 				color += reflect_color(scene, lights, objects, ray, materials);
-			color = clamp(color, 0.0f, 1.0f);
 		}
 		else
 			color = noLight(&ray, objects[ray.object], materials, scene->max_material);

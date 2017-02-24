@@ -27,7 +27,7 @@ static int	thread_caillou(t_window *win)
 	tmp = check_name_screen(win);
 	if (!SDL_SaveBMP(win->surface, tmp))
 		free(tmp);
-	printf("coucou");
+	printf("PRINTSCREEN\n");
 	return (0);
 }
 
@@ -61,7 +61,7 @@ static VEC3	straf(const VEC3 *rot)
 
 static void	updatekey(t_env *env, t_window *win, VEC3 dir)
 {
-	win->move_speed = (win->keys[SDL_SCANCODE_LSHIFT] ? 2 : 1);
+	win->move_speed = (win->keys[SDL_SCANCODE_LSHIFT] ? 10 : 1);
 	if (win->keys[SDL_SCANCODE_SPACE])
 		env->camera.position.y -= win->move_speed;
 	if (win->keys[SDL_SCANCODE_LCTRL])
