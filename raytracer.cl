@@ -381,7 +381,7 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	float t0, t1;
 
 	dist = ray->pos - objects.position;
-	float3 rdir = soft_normalize(rotatexyz(ray->dir, objects.rotation));
+	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
 	//float3 rdir = ray->dir;
 	if (objects.type == SPHERE)
 	{
@@ -426,7 +426,7 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	t1 = (-b + sqrt(solve)) / a;
 	return (deph_min(t0, t1));
 }
-
+/*
 static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
 {
 	t_ray  ray_light;
@@ -435,7 +435,7 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
 	if (light.type == POINTLIGHT)
-		ray_light.dir = light.position - ray_light.pos;
+		ray_light.dir = soft_normalize(light.position - ray_light.pos);
 	else if (light.type == SPOTLIGHT)
 	{
 		ray_light.dir = soft_normalize(light.position - ray_light.pos);
@@ -453,7 +453,7 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 		ray_light.deph = scene->zfar;
 	}
 	if (light.type == SPOTLIGHT || light.type == POINTLIGHT)
-		ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
+		ray_light.deph = scene->zfar;//sqrt(soft_dot(ray_light.dir, ray_light.dir));
 	while (++i < scene->max_object)
 	{
 		if (i != ray_light.object)
@@ -466,6 +466,38 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 				return (0.5f);
 			}
 		}
+	}
+	return (1.0f);
+}*/
+
+static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
+{
+	t_ray  ray_light;
+	int i = 0;
+	ray_light.object = -1;
+	ray_light.pos = ray.pos + ray.dir * ray.deph;
+	if (light.type == POINTLIGHT)
+		ray_light.dir = light.position - ray_light.pos;
+	else if (light.type == SPOTLIGHT)
+		ray_light.dir = -light.direction;
+	else
+		ray_light.dir = light.direction;
+	ray_light.deph = scene->zfar;
+	if (light.type == SPOTLIGHT || light.type == POINTLIGHT)
+		ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
+	while (i < scene->max_object)
+	{
+		if (i != ray.object)
+		{
+			float d  = intersect(&ray_light, objects[i], scene->znear, 1);
+			if (d >= EPSILON && d < ray_light.deph)
+			{
+				ray_light.deph = d;
+				ray_light.object = i;
+				return (0.5f);
+			}
+		}
+		i++;
 	}
 	return (1.0f);
 }
@@ -606,7 +638,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	int y = get_global_id(1);
 	int index = x + y * xmax;
 	float4 color;
-	float shadow_attenuation;
+	float shadow_attenuation = 1.0f;
 	t_ray ray;
 	float4 cc = (float4)(0, 0, 0, 1);
 	ray.deph = scene->zfar;
@@ -618,7 +650,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	while (i < scene->max_object)
 	{
 		float d  = intersect(&ray, objects[i], scene->znear, 1);
-		if (d >= scene->znear && d < ray.deph)
+		if (d >= EPSILON && d < ray.deph)
 		{
 			ray.deph = d;
 			ray.object = i;
@@ -634,7 +666,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			while (i < scene->max_light)
 			{
 				color += light(&ray, objects[ray.object], lights[i], materials);
-				shadow_attenuation = shadow(ray, lights[i], objects, scene);
+				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}
 			color *= (shadow_attenuation);
