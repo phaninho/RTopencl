@@ -341,7 +341,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	{
 		if (objects.material_id > 0)
 			specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), material[objects.material_id - 1].shininess);
-	//	else
+		else
 	//		specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), 64.0f);
 		specular_coeff = clamp(specular_coeff, 0.0f, 1.0f);
 	}
@@ -352,7 +352,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//	specular = light.color;
 	else
 		specular = specular_coeff * light.color;
-
 
 	/*float	specular_coeff = 0.0f;
 	if (diffuse_coeff > 0.0f)
@@ -506,19 +505,12 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	int i = 0;
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
-	if (light.type == POINTLIGHT)
+
+	float3	lightDir;
+
+	if (light.type == POINTLIGHT || light.type == SPOTLIGHT)
 		ray_light.dir = light.position - ray_light.pos;
-	else if (light.type == SPOTLIGHT)
-	{
-		//ray_light.dir = soft_normalize(light.position - ray_light.pos);
-		float3 coneDirection = soft_normalize(-light.direction);
-		float3 raydirection = ray_light.dir;
-		float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
-		lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
-		//if(lightToSurfaceAngle > light.angle / 2)
-	   		//return (0.5f);
-	  	ray_light.dir = light.position - ray_light.pos;
-	}
+
 	else if (light.type == DIRLIGHT)
 	{
 		ray_light.dir = light.direction;
@@ -536,6 +528,17 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 			{
 				ray_light.deph = d;
 				ray_light.object = i;
+				if (light.type == SPOTLIGHT)
+				{
+					lightDir = soft_normalize(light.position - ray_light.pos);
+					float3 coneDirection = soft_normalize(-light.direction);
+					float3 raydirection = lightDir;
+					float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
+					lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
+					if(lightToSurfaceAngle > light.angle / 2)
+						return (1.0f);
+					return(0.5f);
+				}
 				return (0.5f);
 			}
 		}
@@ -564,7 +567,6 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 		normal = soft_normalize(get_normal(&ray, objects[ray.object]));
 		reflect_ray.deph = scene->zfar;
 		reflect_ray.dir = soft_normalize(float3_reflect(ray.dir, normal));
-		//reflect_ray.dir = soft_normalize(rotatexyz(reflect_ray.dir, objects[ray.object].rotation));
 		while (i < scene->max_object)
 		{
 			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
@@ -625,7 +627,6 @@ float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, 
 		normal = soft_normalize(get_normal(&ray, objects[ray.object]));
 		refract_ray.deph = scene->zfar;
 		refract_ray.dir = soft_normalize(float3_refract(ray.dir, normal, materials[objects[ray.object].material_id - 1].refraction));
-		//refract_ray.dir = soft_normalize(rotatexyz(refract_ray.dir, objects[ray.object].rotation));
 		int i = 0;
 		while (i < scene->max_object)
 		{
