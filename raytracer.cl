@@ -480,7 +480,7 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 		ray_light.dir = light.position - ray_light.pos;
 	else if (light.type == SPOTLIGHT)
 	{
-		ray_light.dir = soft_normalize(light.position - ray_light.pos);
+		//ray_light.dir = soft_normalize(light.position - ray_light.pos);
 		float3 coneDirection = soft_normalize(-light.direction);
 		float3 raydirection = ray_light.dir;
 		float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
