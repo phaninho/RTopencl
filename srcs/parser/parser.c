@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/04 13:45:36 by qhonore           #+#    #+#             */
-/*   Updated: 2016/12/13 22:58:05 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/02/27 16:46:02 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ static void	init_elements2(t_parse *p, t_env *e)
 	}
 	else if (p->in_scene && p->type == CAMERA)
 		p->cam++;
-	else if (p->in_scene && p->type >= SPHERE && p->type <= TRIANGLE)
+	else if (p->in_scene && p->type >= OBJECTS && p->type <= END_OBJECTS)
 		p->object++;
-	else if (p->in_scene && p->type >= SPOTLIGHT && p->type <= DIRLIGHT)
+	else if (p->in_scene && p->type >= LIGHTS && p->type <= END_LIGHTS)
 		p->light++;
 	else if (p->in_scene && p->type == MATERIAL)
 		p->mate++;
@@ -75,7 +75,8 @@ static int	parse_file2(char *file, t_env *e, int i, t_parse *p)
 	{
 		p->tag = parse_tag(file, &i);
 		p->type = parse_tag_type(p->tag, &j);
-		if (p->type >= SPHERE && p->type <= CONE && !ft_strsuffix(p->tag, "/>"))
+		if (p->type >= OBJECTS && p->type <= END_OBJECTS
+		&& !ft_strsuffix(p->tag, "/>"))
 			p->in_object = p->object + 1;
 		if (p->type == SCENE)
 			p->in_scene = 1;

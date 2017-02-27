@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/23 16:17:44 by qhonore           #+#    #+#             */
-/*   Updated: 2016/12/13 23:20:58 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/02/27 16:51:23 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ char		*g_tags[] =
 	"cylinder",
 	"cone",
 	"triangle",
+	"disk",
+	"cylinderinf",
+	"coneinf",
 	"spotlight",
 	"pointlight",
 	"dirlight",

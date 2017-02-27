@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2016/12/19 18:43:35 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/02/27 16:41:46 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,9 @@ void		check_values(t_env *e, t_parse *p, t_arg *arg)
 		e->camera.position = arg->avec[POSITION - VEC];
 		e->camera.rotation = arg->avec[ROTATION - VEC];
 	}
-	else if (p->type >= SPHERE && p->type <= CONE)
+	else if (p->type >= OBJECTS && p->type <= END_OBJECTS)
 		check_object(e, p, arg);
-	else if (p->type >= SPOTLIGHT && p->type <= DIRLIGHT)
+	else if (p->type >= LIGHTS && p->type <= END_LIGHTS)
 		check_light(e, p, arg);
 	else if (p->type == MATERIAL)
 		check_material(e, p, arg);

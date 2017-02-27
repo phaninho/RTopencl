@@ -6,7 +6,7 @@
 #    By: lvalenti <lvalenti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/03/24 12:41:09 by lvalenti          #+#    #+#              #
-#    Updated: 2016/12/19 18:40:54 by qhonore          ###   ########.fr        #
+#    Updated: 2017/02/27 17:04:26 by qhonore          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ clean:
 fclean : clean
 	$(RM) -rf $(OBJ_ALL_DIR)
 	$(RM) $(NAME)
+	rm -rf libpng libsdl
 	@echo "Make fclean :\033[1;31m DONE !\033[m"
 
 re: fclean all

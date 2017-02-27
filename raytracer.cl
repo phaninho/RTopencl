@@ -1,23 +1,53 @@
 #define PI 3.14159265359f
 #define EPSILON 0.00001f
-#define SCENE 0
-#define CAMERA 1
-#define SPHERE 2
-#define PLANE 3
-#define CYLINDER 4
-#define CONE 5
-#define TRIANGLE 6
-#define SPOTLIGHT 7
-#define POINTLIGHT 8
-#define DIRLIGHT 9
-#define MATERIAL 10
-#define TEXTURE 11
-#define RENDER 12
+// #define SCENE 0
+// #define CAMERA 1
+// #define SPHERE 2
+// #define PLANE 3
+// #define CYLINDER 4
+// #define CONE 5
+// #define TRIANGLE 6
+// #define SPOTLIGHT 7
+// #define POINTLIGHT 8
+// #define DIRLIGHT 9
+// #define MATERIAL 10
+// #define TEXTURE 11
+// #define RENDER 12
+// // Pour le parser et le CL du mod de rendu
+// #define RENDERMODE_SEPIA 13
+// #define RENDERMODE_GRIS 14
+// #define RENDERMODE_FILTER 15
+// #define RENDERMODE_ADD 16
+
+# define SCENE 0
+# define CAMERA (SCENE + 1)
+
+# define OBJECTS (CAMERA + 1)
+# define SPHERE (OBJECTS)
+# define PLANE (SPHERE + 1)
+# define CYLINDER (PLANE + 1)
+# define CONE (CYLINDER + 1)
+# define TRIANGLE (CONE + 1)
+# define DISK (TRIANGLE + 1)
+# define CYLINDERINF (DISK + 1)
+# define CONEINF (CYLINDERINF + 1)
+# define END_OBJECTS (CONEINF)
+
+# define LIGHTS (END_OBJECTS + 1)
+# define SPOTLIGHT (LIGHTS)
+# define POINTLIGHT (SPOTLIGHT + 1)
+# define DIRLIGHT (POINTLIGHT + 1)
+# define END_LIGHTS (DIRLIGHT)
+
+# define MATERIAL (END_LIGHTS + 1)
+# define TEXTURE (MATERIAL + 1)
+# define RENDER (TEXTURE + 1)
+
 // Pour le parser et le CL du mod de rendu
-#define RENDERMODE_SEPIA 13
-#define RENDERMODE_GRIS 14
-#define RENDERMODE_FILTER 15
-#define RENDERMODE_ADD 16
+#define RENDERMODE_SEPIA (RENDER + 1)
+#define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
+#define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
+#define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
 
 typedef struct	s_texture
 {
