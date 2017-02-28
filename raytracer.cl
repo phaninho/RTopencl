@@ -227,17 +227,17 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 	{
 		return (soft_normalize(impact - objects.position));
 	}
-	else if (objects.type == PLANE)
+	else if (objects.type == PLANE || objects.type == DISK)
 	{
 		return (soft_normalize(objects.normal));
 	}
-	else if (objects.type == CYLINDER)
+	else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
 	{
 		float3 nor = impact - objects.position;
 		nor.y = 0;
 		return (soft_normalize(nor));
 	}
-	else if (objects.type == CONE)
+	else if (objects.type == CONE || objects.type == CONEINF)
 	{
 		float3 nor = impact - objects.position;
 		nor.y = -0.01f * nor.y;
@@ -380,7 +380,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//
 	//linear color (color before gamma correction)
 	//
-	float4	linearColor = (specular + ambient + attenuation) * (diffuse + specular);
+	float4 specular1 = specular * ambient;
+	float4	linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
 	//final color (after gamma correction)
 	//float4	gamma = 2.2f;
 	//finalColor = pow(linearColor, gamma);
@@ -432,7 +433,7 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 			return (FLT_MAX);
 		return (solve);
 	}
-	else if (objects.type == CYLINDER)
+	else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
 	{
 		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
  		if (enable && c < EPSILON) // Culling face
@@ -440,7 +441,24 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 		a = rdir.x * rdir.x + rdir.z * rdir.z;
 		b = rdir.x * dist.x + rdir.z * dist.z;
 	}
-	else if (objects.type == CONE)
+	else if (objects.type == DISK)
+	{
+		a = soft_dot(-objects.normal, rdir);
+		if (enable && a < EPSILON) // Culling face
+			return (FLT_MAX);
+		b = soft_dot(-objects.normal, ray->pos);
+		c = soft_dot(-objects.normal, objects.position);
+		solve = -((b - c) / a);
+		if (solve < EPSILON)
+			return (FLT_MAX);
+		float3 impact = (ray->pos + rdir * solve);
+		float3 v = impact - objects.position;
+		if (sqrt(soft_dot(v,v)) <= 50)
+				return (solve);
+		else
+			return (FLT_MAX);
+	}
+	else if (objects.type == CONE || objects.type == CONEINF)
 	{
 		a = rdir.x * rdir.x + rdir.z * rdir.z - rdir.y * rdir.y;
 		b = rdir.x * dist.x + rdir.z * dist.z - rdir.y * dist.y;
@@ -453,6 +471,22 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 		return (FLT_MAX);
 	t0 = (-b - sqrt(solve)) / a;
 	t1 = (-b + sqrt(solve)) / a;
+	if (objects.type == CYLINDER)
+	{
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
+			return (deph_min(t0, t1));
+		else
+			return (FLT_MAX);
+	}
+	if (objects.type == CONE)
+	{
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
+			return (deph_min(t0, t1));
+		else
+			return (FLT_MAX);
+	}
 	return (deph_min(t0, t1));
 }
 /*
@@ -586,7 +620,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				while (i < scene->max_light)
 				{
 					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials);
-					shadow_attenuation = shadow(reflect_ray, lights[i], objects, scene);
+					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
 				color *= (shadow_attenuation);
