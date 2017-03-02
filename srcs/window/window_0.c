@@ -6,53 +6,20 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:14:15 by mgallo            #+#    #+#             */
-/*   Updated: 2016/12/04 12:55:36 by mgallo           ###   ########.fr       */
+/*   Updated: 2017/03/02 20:55:40 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <SDL2/SDL.h>
 #include "window/window.h"
 #include "raytracer/rt_env.h"
-
-t_window	*window_get(void)
-{
-	static t_window window;
-
-	return (&window);
-}
-
-int			window_init(void)
-{
-	t_window	*win;
-
-	env_init();
-	win = window_get();
-	if (win->width <= 0 || win->height <= 0)
-		return (0);
-	win->win = SDL_CreateWindow("Raytracer", SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED, win->width, win->height, 0);
-	win->surface = SDL_GetWindowSurface(win->win);
-	win->pixels = (unsigned char *)win->surface->pixels;
-	win->close_request = 0;
-	win->render = NULL;
-	win->update = NULL;
-	win->time_tick = SDL_GetTicks();
-	win->time_delta = 0.0f;
-	win->move_speed = 1.0f;
-	win->rot_speed = 0.75f;
-	win->timer = 0;
-	win->tick = 0;
-	win->frame = 0;
-	return (1);
-}
-
 #include<stdio.h>
+
 static void	gameloop(t_window *win, t_env *env)
 {
-	unsigned int now;
-	unsigned int elapse;
+	const unsigned int	now = SDL_GetTicks();
+	unsigned int		elapse;
 
-	now = SDL_GetTicks();
 	elapse = now - win->time_tick;
 	win->time_delta += (float)(elapse);
 	win->time_tick = now;
@@ -70,11 +37,22 @@ static void	gameloop(t_window *win, t_env *env)
 	if (win->timer >= 1000)
 	{
 		if (env->scene.render_debug)
-			printf("FPS: %d, UPS: %d\n", win->frame, win->tick);
+				printf("FPS: %d, UPS: %d\n", win->frame, win->tick);
 		win->tick = 0;
 		win->frame = 0;
 		win->timer -= 1000;
 	}
+}
+
+static void	display_window(t_window *win)
+{
+	SDL_Texture	*texture;
+
+	texture = SDL_CreateTextureFromSurface(win->renderer, win->surface);
+	SDL_RenderCopy(win->renderer, texture, NULL, NULL);
+	SDL_DestroyTexture(texture);
+	// draw_ui();
+	SDL_RenderPresent(win->renderer);
 }
 
 void		window_loop(void)
@@ -102,16 +80,6 @@ void		window_loop(void)
 				mouse_grab();
 		}
 		gameloop(win, env);
-		SDL_UpdateWindowSurface(win->win);
+		display_window(win);
 	}
-}
-
-void		window_end(void)
-{
-	t_window	*win;
-
-	win = window_get();
-	if (win->win != NULL)
-		SDL_DestroyWindow(win->win);
-	SDL_Quit();
 }

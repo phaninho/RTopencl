@@ -1,0 +1,35 @@
+<scene width="640" height="480" maxreflect="0" maxrefract="0" fov="70" znear="0" zfar="10000" >
+    <camera position="0.0 -10.0 450.0" rotation="0.0 180.0 0.0" />
+    <!--<cone position="40.0 0.0 155.0" radius="15.0" color="220 50 50 255" material="1"/>-->
+    <!--<cylinder position="-40.0 0.0 155.0"  rotation="0.5 0.5 45.5" radius="27.0" color="20 250 50 255" material="1"/>
+    <cylinder position="40.0 0.0 155.0"  rotation="0.5 0.5 -45.5" radius="27.0" color="20 250 50 255" material="1"/>-->
+    <disk position="10 -10.0 240.0" radius="20.0" color="255 0 0 255" normal="0.0 0.0 1.0" material="1"/>
+    <sphere position="15 -15.0 250.0" radius="10.0" color="255 0 0 255" material="1"/>
+    <sphere position="-15.0 -15.0 250.0"  radius="10.0" color="0 255 0 255" material="1"/>
+    <sphere position="0 -20.0 250.0" radius="10.0" color="0 0 255 255" material="1"/>
+    <sphere position="0 -40.0 250.0" radius="10.0" color="255 255 0 255" material="1"/>
+    <sphere position="0.0 -30.0 290.0" radius="5.0" color="205 205 205 255" material="1"/>
+    <!--<sphere position="0.0 -20.0 500.0" radius="5.0" color="20 20 20 255" material="1"/>-->
+    <sphere position="0.0 40.0 90.0" radius="5.0" color="255 0 0 255" material="1" texture="1"/>
+    <!-- <cone position="-0.0 -15.0 155.0" color="255 255 255 255" radius="20" rotation="0.0 0.0 0.0"material="1"/>-->
+<!-- <plane position="0.0 0.0 400.0" color="255 0 0 255" normal="0.0 0.0 -1.0" material="1"/>
+    <plane position="0.0 0.0 -400.0" color="255 0 0 255" normal="0.0 0.0 1.0" material="1"/>
+    <plane position="0.0 -400.0 0.0" color="100 205  0 255" normal="0.0 1.0 0.0" material="1"/>-->
+    <plane position="0.0 40.0 0.0" color="150 255 100 255" normal="0.0 -1.0 0.0" material="1"/>
+    <!--<plane position="400.0 0.0 0.0" color="0 0 255 255" normal="-1.0 0.0 0.0" material="1"/>
+    <plane position="-400.0 0.0 0.0" color="0 0 255 255" normal="1.0 0.0 0.0" material="1"/>-->
+        <pointlight position="40.0 -40.0 280.0" color="255 255 255" attenuation="0.01"/>
+        <!--<pointlight position="0.0 -40.0 320.0" color="255 255 255" attenuation="0.01"/>-->
+        <!--<pointlight position="90.0 -40.0 200.0" color="255 255 255" attenuation="0.01" material="1"/>
+        <pointlight position="30.0 -30.0 180.0" color="255 255 255" attenuation="0.01" material="1"/>
+        <pointlight position="60.0 -30.0 200.0" color="255 255 255" attenuation="0.01" material="1"/>-->
+    <!--<dirlight color="255 255 255" attenuation="0.0"  direction="1.5 -1. 0.0" />-->
+    <spotlight position="0.0 -30.0 380.0" color="255 255 255" attenuation="0.001" direction="0.0 0.5 -0.85" angle="45"/>-->
+    <!--<spotlight position="0.0 -50.0 380.0" color="255 255 255" attenuation="0.001" direction="-1.0 0.6 -0.95" angle="45"/>-->
+    <!--<spotlight position="50.0 -50.0 390.0" color="255 255 255" attenuation="0.01" direction="0.1 0.5 -0.95" angle="45"/>-->
+        <!--<triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
+        <material specular="225 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0.5" refraction="1" shininess="100"/>
+        <material specular="225 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0.0" refraction="0" shininess="100"/>
+        <!--<texture load="texture.png"/>-->
+        <!--<render mod="grey"/>-->
+    </scene>

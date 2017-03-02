@@ -1,10 +1,7 @@
 <scene width="640" height="480" maxreflect="0" maxrefract="0" fov="70" znear="0" zfar="10000"	>
 	<camera position="0.0 0.0 400.0" rotation="0.0 180.0 0.0" />
 	<!--<sphere position="0.0 10.0 -200.0" color="255 255 255 255" radius="100.0" material="1"/>-->
-	<disk position="40.0 0.0 155.0" normal="0.0 1.0 0.0" radius="15.0" color="255 255 255 255" material="1"/>
-	<cylinderinf position="40.0 0.0 155.0" normal="0.0 1.0 0.0" radius="15.0" color="255 255 255 255" material="1"/>
-	<coneinf position="-0.0 -15.0 155.0" color="255 255 255 255" rotation="0.0 0.0 0.0"material="1"/>
-	<disk position="40.0 0.0 155.0" normal="0.0 1.0 0.0" radius="15.0" color="255 255 255 255" material="1"/>
+	<!--<cylinder position="40.0 0.0 155.0" normal="0.0 1.0 0.0" radius="15.0" color="255 255 255 255" material="1"/>-->
 	<sphere position="15 -15.0 250.0" normal="0.0 1.0 0.0" radius="10.0" color="255 0 0 255" material="1"/>
 	<sphere position="-15.0 -15.0 250.0" normal="0.0 1.0 0.0" radius="10.0" color="0 255 0 255" material="1"/>
 	<sphere position="0 -20.0 250.0" normal="0.0 1.0 0.0" radius="10.0" color="0 0 255 255" material="1"/>
