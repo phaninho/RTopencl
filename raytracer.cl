@@ -607,7 +607,7 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	return (1.0f);
 }
 
-static float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials)
+float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials)
 {
 	t_ray ray = nray;
 	float3	normal;
@@ -626,6 +626,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 		normal = soft_normalize(get_normal(&ray, objects[ray.object]));
 		reflect_ray.deph = scene->zfar;
 		reflect_ray.dir = soft_normalize(float3_reflect(ray.dir, normal));
+		//reflect_ray.dir = soft_normalize(rotatexyz(reflect_ray.dir, objects[ray.object].rotation));
 		while (i < scene->max_object)
 		{
 			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
@@ -645,7 +646,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				while (i < scene->max_light)
 				{
 					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials);
-					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
+					shadow_attenuation = shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
 				color *= (shadow_attenuation);
@@ -719,7 +720,7 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 		{
 			return (color);
 		}
-		point_color += objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
+		point_color *= objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
