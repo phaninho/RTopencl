@@ -202,16 +202,42 @@ static float3		float3_reflect(const float3 v, const float3 normal)
 	return (v - (normal * 2.0f * soft_dot(v, normal)));
 }
 
+/*static float3        float3_refract(const float3 v, const float3 normal, const float ior)
+{
+    float cosi = clamp(-1.0f, 1.0f, soft_dot(v, normal));
+    float etai = 1;
+    float etat = ior;
+    float3 n = normal;
+    if (cosi < 0)
+        cosi = -cosi;
+    else
+    {
+        etat = 1;
+        etai = ior;
+        n = -normal;
+    }
+    float eta = etai / etat;
+    float k = 1 - eta * eta * (1 - cosi * cosi);
+    return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
+}*/
+
+
 static float3		float3_refract(const float3 v, const float3 normal, const float eta)
 {
-	float air = 1.33f;
+	float k = 1.0f - eta * eta * (1.0f - soft_dot(normal, v) * soft_dot(normal, v));
+    if (k < 0.0f)
+        return ((float3)(0, 0, 0));
+    else
+        return (eta * v - (eta * soft_dot(normal, v) + sqrtf(k)) * normal);
+
+	/*float air = 1.33f;
 	float n = eta / air;
 	float cosI = -(soft_dot(normal, v));
 	float sinT2 = eta * eta * (1.0f - cosI * cosI);
 	if (sinT2 > 1.0)
 		return ((float3)(0, 0, 0));
 	float cosT = sqrt(1.0 - sinT2);
-	return (v * n + normal * (n * cosI - cosT));
+	return (v * n + normal * (n * cosI - cosT));*/
 	/*float n = -(soft_dot(normal, v));
 	float k = 1.f - eta * eta * (1.f - n * n);
 	if (k < 0.0f)
@@ -581,7 +607,6 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	return (1.0f);
 }
 
-float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights);
 static float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials)
 {
 	t_ray ray = nray;
@@ -643,7 +668,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 	return (clamp(reflect_color, 0.0f, 1.0f));
 }
 
-float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights)
+static float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights)
 {
 	t_ray ray = nray;
 	float3	normal;
@@ -694,7 +719,7 @@ float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, 
 		{
 			return (color);
 		}
-		point_color *= objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
+		point_color += objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
