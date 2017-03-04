@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:14:15 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 20:55:40 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/04 15:37:24 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	display_window(t_window *win)
 	texture = SDL_CreateTextureFromSurface(win->renderer, win->surface);
 	SDL_RenderCopy(win->renderer, texture, NULL, NULL);
 	SDL_DestroyTexture(texture);
-	// draw_ui();
+	draw_ui();
 	SDL_RenderPresent(win->renderer);
 }
 

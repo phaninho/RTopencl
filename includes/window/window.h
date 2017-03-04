@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:07:00 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 20:31:30 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/04 18:00:37 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define WINDOW_H
 
 # define TICK_PER_MS (1000.0f / 30.0f)
+# define RGBA (SDL_Color)
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_ttf.h>
 

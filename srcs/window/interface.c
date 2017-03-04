@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/02 20:46:09 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/04 18:12:23 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ void				draw_ui(void)
 	rect = (SDL_Rect){win->width - 300, 0, 300, win->height};
 	SDL_SetRenderDrawColor(win->renderer, 0xaa, 0xaa, 0xaa, 0xff);
 	SDL_RenderFillRect(win->renderer, &rect);
-	draw_text(scene->name, win->width - 250, 15, (SDL_Color){100, 100, 100, 255});
+	draw_text("File:", win->width - 280, 15, RGBA{100, 100, 100, 255});
+	draw_text(scene->name, win->width - 240, 15, RGBA{100, 100, 100, 255});
 }
