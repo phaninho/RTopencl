@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 20:40:38 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/02/27 16:50:46 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ typedef struct	s_texture
 
 typedef struct	s_scene
 {
-	char		*name;
 	int			width;
 	int			height;
 	float		znear;
