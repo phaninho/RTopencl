@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/03 10:18:10 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/08 17:14:55 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 17:21:33 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	mouse_grab(int x, int y)
 		SDL_ShowCursor(SDL_DISABLE);
 		mouse_motion(0, 0);
 	}
-	else if ((i = button_clicked(x, y)))
+	else if (!mouse_isgrab() && (i = button_clicked(x, y)))
 		get_button(i - 1)->exec(get_button(i - 1));
 }
 

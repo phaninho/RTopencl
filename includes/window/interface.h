@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/08 17:16:30 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 17:29:57 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,23 @@ typedef struct s_font	t_font;
 typedef struct s_button	t_button;
 typedef void(*t_func)(t_button*);
 
-struct	s_font
+struct		s_font
 {
-	uint8_t			font_size;
-	TTF_Font		*font;
-	SDL_Surface		*surf;
-	SDL_Texture		*texture;
-	SDL_Rect		rect;
+	uint8_t		font_size;
+	TTF_Font	*font;
+	SDL_Surface	*surf;
+	SDL_Texture	*texture;
+	SDL_Rect	rect;
 };
 
-struct	s_button
+struct		s_button
 {
-	t_func			exec;
-	char			*name;
-	SDL_Rect		rect;
+	t_func		exec;
+	char		*name;
+	SDL_Rect	rect;
 };
 
-t_font 		*get_font(void);
+t_font		*get_font(void);
 void		init_font(void);
 void		draw_ui(void);
 void		draw_text(char *str, int x, int y, SDL_Color color);

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/08 17:14:28 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 17:27:36 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@
 
 void		test_button(t_button *button)
 {
-	printf("Button %s\n", button->name);
+	t_env		*e;
+
+	e = env_get();
+	e->scene.render_mod = e->scene.render_mod == RENDERMODE_SEPIA ? 0 : RENDERMODE_SEPIA;
+	printf("Button %s clicked\n", button->name);
 }
 
 t_button	g_buttons[] =
