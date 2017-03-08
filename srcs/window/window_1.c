@@ -6,12 +6,13 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:14:15 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 20:21:46 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 16:26:20 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <SDL2/SDL.h>
 #include "window/window.h"
+#include "window/interface.h"
 #include "raytracer/rt_env.h"
 
 t_window	*window_get(void)
@@ -32,7 +33,7 @@ int			window_init(void)
 	win->win = SDL_CreateWindow("Raytracer", SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED, win->width, win->height, 0);
 	win->surface = SDL_CreateRGBSurface(0, win->width, win->height,\
-							32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+																32, 0, 0, 0, 0);
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);
 	win->pixels = (unsigned char *)win->surface->pixels;
 	win->close_request = 0;
@@ -45,6 +46,7 @@ int			window_init(void)
 	win->timer = 0;
 	win->tick = 0;
 	win->frame = 0;
+	win->interface = (SDL_Rect){win->width - 300, 0, 300, win->height};
 	return (1);
 }
 

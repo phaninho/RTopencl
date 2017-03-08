@@ -6,12 +6,13 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 20:25:43 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/02 20:38:04 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 13:19:34 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <SDL2/SDL.h>
 #include "window/window.h"
+#include "window/interface.h"
 #include "raytracer/rt_env.h"
 
 t_font				*get_font(void)

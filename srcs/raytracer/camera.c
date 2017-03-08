@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/03 09:30:05 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 20:34:21 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 13:14:50 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include "utils/rt_math.h"
 #include "thread/thread_SDL.h"
 #include <stdio.h>
-
 
 static int	thread_caillou(void *param)
 {

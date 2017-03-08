@@ -6,12 +6,13 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/03 10:18:10 by mgallo            #+#    #+#             */
-/*   Updated: 2016/12/03 14:40:24 by mgallo           ###   ########.fr       */
+/*   Updated: 2017/03/08 17:14:55 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <SDL2/SDL.h>
 #include "window/window.h"
+#include "window/interface.h"
 
 void	mouse_motion(Sint32 xrel, Sint32 yrel)
 {
@@ -25,15 +26,22 @@ void	mouse_motion(Sint32 xrel, Sint32 yrel)
 		SDL_WarpMouseInWindow(win->win, win->width / 2, win->height / 2);
 }
 
-void	mouse_grab(void)
+void	mouse_grab(int x, int y)
 {
 	t_window	*win;
+	int			i;
 
 	win = window_get();
-	//SDL_SetWindowGrab(win->win, SDL_TRUE);
-	SDL_SetRelativeMouseMode(SDL_TRUE);
-	SDL_ShowCursor(SDL_DISABLE);
-	mouse_motion(0, 0);
+	printf("MOUSE_CLICK: %d, %d\n", x, y);
+	if (!in_rect(win->interface, x, y))
+	{
+		//SDL_SetWindowGrab(win->win, SDL_TRUE);
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+		SDL_ShowCursor(SDL_DISABLE);
+		mouse_motion(0, 0);
+	}
+	else if ((i = button_clicked(x, y)))
+		get_button(i - 1)->exec(get_button(i - 1));
 }
 
 int		mouse_isgrab(void)
