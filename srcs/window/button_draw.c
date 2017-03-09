@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 12:56:52 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 13:09:43 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 17:28:49 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void		draw_buttons(void)
 
 	i = -1;
 	win = window_get();
+	SDL_SetRenderDrawColor(win->renderer, 0x50, 0x50, 0x50, 0xff);
+	draw_rect(win->width - 290, 30, 280, 2);
 	while (++i < BUTTON_NB)
 	{
 		cur = get_button(i);

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 14:07:48 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 17:18:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void		slider_render_mod(t_button *button)
 	filter = &(env_get()->scene.render_filter);
 	slider_move(button);
 	if (button->id == 1)
-		filter->x = button->val;
+		filter->x = (double)button->val / 100.0f;
 	else if (button->id == 2)
-		filter->y = button->val;
+		filter->y = (double)button->val / 100.0f;
 	else if (button->id == 3)
-		filter->z = button->val;
+		filter->z = (double)button->val / 100.0f;
 }

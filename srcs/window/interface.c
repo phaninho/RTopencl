@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 13:24:45 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 17:28:30 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,17 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 
-void				draw_ui(void)
+void	draw_rect(int x, int y, int w, int h)
+{
+	t_window	*win;
+	SDL_Rect	rect;
+
+	rect = (SDL_Rect){x, y, w, h};
+	win = window_get();
+	SDL_RenderFillRect(win->renderer, &(rect));
+}
+
+void	draw_ui(void)
 {
 	t_window	*win;
 	t_scene		*scene;
@@ -24,7 +34,7 @@ void				draw_ui(void)
 	scene = &(env_get()->scene);
 	SDL_SetRenderDrawColor(win->renderer, 0xaa, 0xaa, 0xaa, 0xff);
 	SDL_RenderFillRect(win->renderer, &(win->interface));
-	draw_text("File:", win->width - 265, 40, DARK_GREY);
-	draw_text(scene->name, win->width - 200, 40, DARK_GREY);
+	draw_text("File:", win->width - 265, 15, DARK_GREY);
+	draw_text(scene->name, win->width - 200, 15, DARK_GREY);
 	draw_buttons();
 }

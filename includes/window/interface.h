@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 14:08:55 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 17:25:44 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ t_font		*get_font(void);
 void		init_font(void);
 void		draw_ui(void);
 void		draw_text(char *str, int x, int y, SDL_Color color);
+void		draw_rect(int x, int y, int w, int h);
 
 t_button	*get_button(int i);
 t_vec2i		*last_click(void);

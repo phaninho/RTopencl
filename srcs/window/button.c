@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 14:08:45 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 17:29:42 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 
 t_button	g_buttons[] =
 {
-	{1, ONOFF, button_render_mod, "SEPIA", {WIN_W - 250, 100, 100, 50}, 0},
-	{2, ONOFF, button_render_mod, "GREY", {WIN_W - 140, 100, 100, 50}, 0},
-	{3, ONOFF, button_render_mod, "FILTER", {WIN_W - 250, 160, 100, 50}, 0},
-	{4, ONOFF, button_render_mod, "ADD", {WIN_W - 140, 160, 100, 50}, 0},
-	{1, SLIDER, slider_render_mod, "r mod", {WIN_W - 250, 220, 210, 8}, 50},
-	{2, SLIDER, slider_render_mod, "g mod", {WIN_W - 250, 230, 210, 8}, 50},
-	{3, SLIDER, slider_render_mod, "b mod", {WIN_W - 250, 240, 210, 8}, 50}
+	{1, ONOFF, button_render_mod, "SEPIA", {WIN_W - 280, 100, 100, 50}, 0},
+	{2, ONOFF, button_render_mod, "GREY", {WIN_W - 170, 100, 100, 50}, 0},
+	{3, ONOFF, button_render_mod, "FILTER", {WIN_W - 280, 160, 100, 50}, 0},
+	{4, ONOFF, button_render_mod, "ADD", {WIN_W - 170, 160, 100, 50}, 0},
+	{1, SLIDER, slider_render_mod, "r mod", {WIN_W - 280, 220, 210, 8}, 50},
+	{2, SLIDER, slider_render_mod, "g mod", {WIN_W - 280, 230, 210, 8}, 50},
+	{3, SLIDER, slider_render_mod, "b mod", {WIN_W - 280, 240, 210, 8}, 50}
 };
 
 t_button	*get_button(int i)
