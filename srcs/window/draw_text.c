@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 20:25:43 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/08 13:19:34 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 13:24:04 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void				init_font(void)
 	font = get_font();
 	win = window_get();
 	TTF_Init();
-	font->font_size = 15;
-	font->font = TTF_OpenFont("/Library/Fonts/Arial Bold.ttf", font->font_size);
+	font->font_size = 18;
+	font->font = TTF_OpenFont("/Library/Fonts/Arial.ttf", font->font_size);
 }
 
 static SDL_Texture	*surface_to_texture(t_window *win, t_font *font)
@@ -52,9 +52,9 @@ void				draw_text(char *str, int x, int y, SDL_Color color)
 	font = get_font();
 	font->surf = TTF_RenderText_Solid(font->font, str, color);
 	font->texture = surface_to_texture(win, font);
-	font->rect.x = x;
-	font->rect.y = y;
 	SDL_QueryTexture(font->texture, NULL, NULL, &font->rect.w, &font->rect.h);
+	font->rect.x = x - font->rect.w / 2;
+	font->rect.y = y - font->rect.h / 2;
 	SDL_RenderCopy(win->renderer, font->texture, NULL, &font->rect);
 	SDL_DestroyTexture(font->texture);
 }

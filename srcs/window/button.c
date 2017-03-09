@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/08 17:27:36 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 14:08:45 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,15 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 
-void		test_button(t_button *button)
-{
-	t_env		*e;
-
-	e = env_get();
-	e->scene.render_mod = e->scene.render_mod == RENDERMODE_SEPIA ? 0 : RENDERMODE_SEPIA;
-	printf("Button %s clicked\n", button->name);
-}
-
 t_button	g_buttons[] =
 {
-	{test_button, "Test", {WIN_W - 200, 100, 100, 50}}
+	{1, ONOFF, button_render_mod, "SEPIA", {WIN_W - 250, 100, 100, 50}, 0},
+	{2, ONOFF, button_render_mod, "GREY", {WIN_W - 140, 100, 100, 50}, 0},
+	{3, ONOFF, button_render_mod, "FILTER", {WIN_W - 250, 160, 100, 50}, 0},
+	{4, ONOFF, button_render_mod, "ADD", {WIN_W - 140, 160, 100, 50}, 0},
+	{1, SLIDER, slider_render_mod, "r mod", {WIN_W - 250, 220, 210, 8}, 50},
+	{2, SLIDER, slider_render_mod, "g mod", {WIN_W - 250, 230, 210, 8}, 50},
+	{3, SLIDER, slider_render_mod, "b mod", {WIN_W - 250, 240, 210, 8}, 50}
 };
 
 t_button	*get_button(int i)
@@ -36,9 +33,22 @@ t_button	*get_button(int i)
 	return (NULL);
 }
 
+t_vec2i		*last_click(void)
+{
+	static t_vec2i	pos = (t_vec2i){0, 0};
+
+	return (&pos);
+}
+
+void		exec_button(int i)
+{
+	if (i >= 0 && i < BUTTON_NB)
+		g_buttons[i].exec(&(g_buttons[i]));
+}
+
 int			in_rect(SDL_Rect rec, int x, int y)
 {
-	if (x >= rec.x && x < rec.x + rec.w && y >= rec.y && y < rec.y + rec.h)
+	if (x > rec.x && x <= rec.x + rec.w && y > rec.y && y <= rec.y + rec.h)
 		return (1);
 	return (0);
 }
@@ -50,23 +60,6 @@ int			button_clicked(int x, int y)
 	i = -1;
 	while (++i < BUTTON_NB)
 		if (in_rect(g_buttons[i].rect, x, y))
-			return (i + 1);
-	return (0);
-}
-
-void		draw_buttons(void)
-{
-	int			i;
-	t_window	*win;
-	t_button	*cur;
-
-	i = -1;
-	win = window_get();
-	while (++i < BUTTON_NB)
-	{
-		cur = &(g_buttons[i]);
-		SDL_SetRenderDrawColor(win->renderer, 0x60, 0x60, 0x60, 0xff);
-		SDL_RenderFillRect(win->renderer, &(cur->rect));
-		draw_text(cur->name, cur->rect.x + 5, cur->rect.y + 5, WHITE);
-	}
+			return (i);
+	return (-1);
 }

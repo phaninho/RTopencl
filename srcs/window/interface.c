@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/08 17:08:19 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/09 13:24:45 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void				draw_ui(void)
 	scene = &(env_get()->scene);
 	SDL_SetRenderDrawColor(win->renderer, 0xaa, 0xaa, 0xaa, 0xff);
 	SDL_RenderFillRect(win->renderer, &(win->interface));
-	draw_text("File:", win->width - 280, 15, DARK_GREY);
-	draw_text(scene->name, win->width - 240, 15, DARK_GREY);
+	draw_text("File:", win->width - 265, 40, DARK_GREY);
+	draw_text(scene->name, win->width - 200, 40, DARK_GREY);
 	draw_buttons();
 }
