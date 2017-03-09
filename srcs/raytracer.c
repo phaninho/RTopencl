@@ -6,12 +6,13 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 15:58:14 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 13:20:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include <OpenCL/opencl.h>
 #include "window/window.h"
+#include "window/interface.h"
 #include "thread/thread.h"
 #include "raytracer/rt_env.h"
 #include "utils/error.h"
@@ -196,8 +197,8 @@ int				main(int ac, char **av)
 	t_window	*window;
 
 	window = window_get();
-	window->width = 1280;
-	window->height = 720;
+	window->width = WIN_W;
+	window->height = WIN_H;
 	if (!window_init())
 		die("Error: Window init!");
 	if (ac < 2)

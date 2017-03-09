@@ -6,12 +6,13 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:14:15 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/04 15:37:24 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/08 16:36:12 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <SDL2/SDL.h>
 #include "window/window.h"
+#include "window/interface.h"
 #include "raytracer/rt_env.h"
 #include<stdio.h>
 
@@ -77,7 +78,7 @@ void		window_loop(void)
 			if (event.type == SDL_MOUSEMOTION)
 				mouse_motion(event.motion.xrel, event.motion.yrel);
 			if (event.type == SDL_MOUSEBUTTONDOWN)
-				mouse_grab();
+				mouse_grab(event.motion.x, event.motion.y);
 		}
 		gameloop(win, env);
 		display_window(win);
