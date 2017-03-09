@@ -58,7 +58,6 @@ typedef struct	s_texture
 
 typedef struct	s_scene
 {
-	char		*name;
 	int			width;
 	int			height;
 	float		znear;
@@ -222,14 +221,24 @@ static float3		float3_reflect(const float3 v, const float3 normal)
     return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
 }*/
 
-
-static float3		float3_refract(const float3 v, const float3 normal, const float eta)
+float3 float3_refract(float3 V, float3 N, float refrIndex)
 {
-	float k = 1.0f - eta * eta * (1.0f - soft_dot(normal, v) * soft_dot(normal, v));
+	float cosI = -soft_dot( N, V );
+	float cosT2 = 1.0f - refrIndex * refrIndex * (1.0f - cosI * cosI);
+	return ((refrIndex * V) + (refrIndex * cosI - sqrt( cosT2 )) * N);
+}
+
+/*static float3		float3_refract(const float3 v, const float3 normal,float n)
+{
+	float ct1 = soft_dot(normal, -1 * v);
+	float ct2 = sqrt(1 - n * n * (1 - ct1 * ct1));
+	return (n * v + (n * ct1 - ct2) * normal);
+}*/
+	/*float k = 1.0f - eta * eta * (1.0f - soft_dot(normal, v) * soft_dot(normal, v));
     if (k < 0.0f)
         return ((float3)(0, 0, 0));
     else
-        return (eta * v - (eta * soft_dot(normal, v) + sqrtf(k)) * normal);
+        return (eta * v - (eta * soft_dot(normal, v) + sqrtf(k)) * normal);*/
 
 	/*float air = 1.33f;
 	float n = eta / air;
@@ -243,9 +252,8 @@ static float3		float3_refract(const float3 v, const float3 normal, const float e
 	float k = 1.f - eta * eta * (1.f - n * n);
 	if (k < 0.0f)
 		return ((float3)(0, 0, 0));
-	return (eta * v + (eta * n - sqrtf(k)) * normal);*/
-
-}
+	return (eta * v + (eta * n - sqrtf(k)) * normal);
+}*/
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
 {
@@ -521,7 +529,6 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 {
 	t_ray  ray_light;
 	int i = -1;
-
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
 	if (light.type == POINTLIGHT)
@@ -608,7 +615,7 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	return (1.0f);
 }
 
-float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials)
+static float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials)
 {
 	t_ray ray = nray;
 	float3	normal;
@@ -627,11 +634,10 @@ float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __co
 		normal = soft_normalize(get_normal(&ray, objects[ray.object]));
 		reflect_ray.deph = scene->zfar;
 		reflect_ray.dir = soft_normalize(float3_reflect(ray.dir, normal));
-		//reflect_ray.dir = soft_normalize(rotatexyz(reflect_ray.dir, objects[ray.object].rotation));
 		while (i < scene->max_object)
 		{
 			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
-			if (d >= EPSILON && d < reflect_ray.deph)
+			if (d >= EPSILON && d < reflect_ray.deph && i != ray.object)
 			{
 				reflect_ray.deph = d;
 				reflect_ray.object = i;
@@ -642,12 +648,12 @@ float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __co
 		{
 			if (scene->max_light > 0)
 			{
-				float shadow_attenuation;
+				float shadow_attenuation = 1.0f;
 				i = 0;
 				while (i < scene->max_light)
 				{
 					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials);
-					shadow_attenuation = shadow(reflect_ray, lights[i], objects, scene);
+					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
 				color *= (shadow_attenuation);
@@ -675,11 +681,11 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 	t_ray ray = nray;
 	float3	normal;
 	t_ray	refract_ray;
-	//refract_ray.object = ray.object;
+	refract_ray.object = ray.object;
 	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	int j = 0;
 	float4	point_color = objects[ray.object].color;
 	float4	refract_color;
+	int j = 0;
 	while (j < scene->max_refract)
 	{
 		if (!materials[objects[ray.object].material_id - 1].refraction)
@@ -692,7 +698,7 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 		while (i < scene->max_object)
 		{
 			float d  = intersect(&refract_ray, objects[i], EPSILON, 1);
-			if (d >= EPSILON && d < refract_ray.deph)
+			if (d >= EPSILON && d < refract_ray.deph && i != ray.object)
 			{
 				refract_ray.deph = d;
 				refract_ray.object = i;
@@ -719,14 +725,14 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 		}
 		else
 		{
-			return (color);
+			return (clamp(color, 0.0f, 1.0f));
 		}
-		point_color *= objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
+		point_color += objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
 	}
-	return (refract_color);
+	return (clamp(refract_color, 0.0f, 1.0f));
 }
 
 __kernel void raytracer(__global uchar4* pixel,

@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 15:58:14 by qhonore          ###   ########.fr       */
+/*   Updated: 2016/12/19 18:45:14 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,6 @@ static void	rt_init(void)
 	env->scene.focale = (float)2.0f * tan(env->scene.fov / 2.0);
 	if (env->scene.znear < EPSILON)
 		env->scene.znear = EPSILON;
-	init_font();
 	program_init();
 	kernel_init(window);
 }

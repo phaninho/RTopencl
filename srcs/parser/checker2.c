@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/30 14:39:59 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/02 20:48:46 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/01/10 14:40:04 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 static float	soft_length(VEC3 vec)
 {
-	return (sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z));
+	return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
-static VEC3		soft_normalize(VEC3 vec)
+static VEC3 	soft_normalize(VEC3 vec)
 {
 	float	l;
 

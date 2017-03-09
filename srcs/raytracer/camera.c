@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/03 09:30:05 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/02 20:34:21 by qhonore          ###   ########.fr       */
+/*   Updated: 2016/12/17 17:14:06 by paim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,10 @@
 #include <stdio.h>
 
 
-static int	thread_caillou(void *param)
+static int	thread_caillou(t_window *win)
 {
-	char		*tmp;
-	t_window	*win;
+	char	*tmp;
 
-	win = (t_window*)param;
 	tmp = check_name_screen(win);
 	if (!SDL_SaveBMP(win->surface, tmp))
 		free(tmp);
