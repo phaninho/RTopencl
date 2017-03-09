@@ -6,7 +6,7 @@
 #    By: lvalenti <lvalenti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/03/24 12:41:09 by lvalenti          #+#    #+#              #
-#    Updated: 2017/03/02 15:56:14 by qhonore          ###   ########.fr        #
+#    Updated: 2017/02/27 17:04:26 by qhonore          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ IFLAGS = -I $(INC_DIR) -I ./libsdl/include -I ./libpng/include
 # FLAGS = -Wall -Werror -Wextra -O2 -O3
 
 CC = gcc -g $(FLAGS)
-LIBFLAGS = -L ./libsdl/lib -lSDL2 -lSDL2_ttf -L ./libpng/lib -lpng -framework OPENCL
+LIBFLAGS = -L ./libsdl/lib -lSDL2 -L ./libpng/lib -lpng -framework OPENCL
 RM = /bin/rm -f
 
 all: build $(NAME)
@@ -39,12 +39,6 @@ install:
 	@echo "Make SDL2 :\033[1;32m DONE !\033[m"
 	@mkdir -p libpng && cd libpng && ../libpng-1.6.26/configure --prefix=`pwd` && make check && make install
 	@echo "Make LIBPNG :\033[1;32m DONE !\033[m"
-	@mkdir -p libsdl && cd libsdl && ../SDL2_ttf-2.0.14/configure --prefix=`pwd` --with-sdl-prefix=`pwd` && make check && make install
-	@echo "Make SDL2_TTF :\033[1;32m DONE !\033[m"
-
-uninstall:
-	rm -rf libpng
-	rm -rf libsdl
 
 $(NAME) : $(OBJS)
 	@echo "Make Objects :\033[1;32m DONE !\033[m"
@@ -61,6 +55,7 @@ clean:
 fclean : clean
 	$(RM) -rf $(OBJ_ALL_DIR)
 	$(RM) $(NAME)
+	rm -rf libpng libsdl
 	@echo "Make fclean :\033[1;31m DONE !\033[m"
 
 re: fclean all
