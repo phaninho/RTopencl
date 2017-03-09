@@ -253,7 +253,6 @@ float3 float3_refract(float3 V, float3 N, float refrIndex)
 	if (k < 0.0f)
 		return ((float3)(0, 0, 0));
 	return (eta * v + (eta * n - sqrtf(k)) * normal);
-
 }*/
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
@@ -530,7 +529,6 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 {
 	t_ray  ray_light;
 	int i = -1;
-
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
 	if (light.type == POINTLIGHT)
@@ -639,7 +637,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 		while (i < scene->max_object)
 		{
 			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
-			if (d >= EPSILON && d < reflect_ray.deph)
+			if (d >= EPSILON && d < reflect_ray.deph && i != ray.object)
 			{
 				reflect_ray.deph = d;
 				reflect_ray.object = i;
