@@ -221,7 +221,7 @@ static float3		float3_reflect(const float3 v, const float3 normal)
     return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
 }*/
 
-float3 float3_refract(float3 V, float3 N, float refrIndex)
+static float3 float3_refract(float3 V, float3 N, float refrIndex)
 {
 	float cosI = -soft_dot( N, V );
 	float cosT2 = 1.0f - refrIndex * refrIndex * (1.0f - cosI * cosI);
@@ -727,6 +727,11 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 		{
 			return (clamp(color, 0.0f, 1.0f));
 		}
+		//if (scene->max_reflect > 0 && materials[objects[refract_ray.object].material_id - 1].reflection > 0.0)
+		//{
+			//printf("laaaaaaaaaaaaaaa\n");
+		//	color += reflect_color(scene, lights, objects, refract_ray, materials);
+		//}
 		point_color += objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
