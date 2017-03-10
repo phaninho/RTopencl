@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 17:25:00 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 20:09:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,16 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 
-void		slider_move(t_slider *slider)
+void		slider_move(t_slider *s)
 {
 	t_vec2i		*vec;
+	SDL_Rect	rec;
 
 	vec = last_click();
-	if (slider->vert)
-		slider->val = 100 - ((vec->y - slider->rect.y) * 100 / slider->rect.h);
+	if (s->vert)
+		s->val = (vec->y - s->rect.y - 1) * 100 / s->rect.h;
 	else
-		slider->val = (vec->x - slider->rect.x) * 100 / slider->rect.w;
+		s->val = (vec->x - s->rect.x) * 100 / s->rect.w;
 }
 
 void		button_render_mod(void *param)

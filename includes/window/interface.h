@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 17:23:01 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 19:43:57 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 # define RGBA (SDL_Color)
 # define DARK_GREY (SDL_Color){100, 100, 100, 255}
 # define WHITE (SDL_Color){240, 240, 240, 255}
-# define RED 0xffff0000
-# define GREEN 0xff00ff00
-# define BLUE 0xff0000ff
+# define RED 0xff0000
+# define GREEN 0x00ff00
+# define BLUE 0x0000ff
+# define DEFCOLOR 0xeeeeee
 
 # define ONOFF 0
 # define SLIDER 1

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 12:56:52 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 17:24:38 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 19:45:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,22 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 
-static void	draw_slider(t_window *win, t_slider *slider)
+static void	draw_slider(t_window *win, t_slider *s)
 {
 	SDL_Rect	rec;
 
-	draw_rect(slider->rect, 0xff606060);
-	if (slider->vert)
-		rec = (SDL_Rect){slider->rect.x, slider->rect.y + slider->rect.h,\
-						slider->rect.w, -(slider->rect.h * slider->val / 100)};
+	rec = s->rect;
+	draw_rect(rec, 0x606060);
+	if (s->vert)
+		rec = (SDL_Rect){rec.x, rec.y, rec.w, rec.h * s->val / 100};
 	else
-		rec = (SDL_Rect){slider->rect.x, slider->rect.y,\
-							slider->rect.w * slider->val / 100, slider->rect.h};
-	if (slider->color)
-		draw_rect(rec, slider->color);
-	else
-		draw_rect(rec, 0xffeeeeee);
+		rec = (SDL_Rect){rec.x, rec.y, rec.w * s->val / 100, rec.h};
+	draw_rect(rec, (s->color ? s->color : DEFCOLOR));
 }
 
 static void	draw_onoff(t_window *win, t_button *button)
 {
-	draw_rect(button->rect, 0xff606060);
+	draw_rect(button->rect, 0x606060);
 	draw_text(button->name, button->rect.x + button->rect.w / 2,\
 									button->rect.y + button->rect.h / 2, WHITE);
 }

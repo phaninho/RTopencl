@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 17:31:03 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 20:13:12 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ t_button	g_buttons[] =
 
 t_slider	g_sliders[] =
 {
-	{1, slider_render_mod, {WIN_W - 80, 70, 15, 100}, 100, 1, RED},
-	{2, slider_render_mod, {WIN_W - 64, 70, 15, 100}, 100, 1, GREEN},
-	{3, slider_render_mod, {WIN_W - 48, 70, 15, 100}, 100, 1, BLUE},
+	{1, slider_render_mod, {WIN_W - 80, 175, 15, -105}, 100, 1, RED},
+	{2, slider_render_mod, {WIN_W - 64, 175, 15, -105}, 100, 1, GREEN},
+	{3, slider_render_mod, {WIN_W - 48, 175, 15, -105}, 100, 1, BLUE},
 	{0, NULL, {0, 0, 0, 0}, 0, 0, 0}
 };
 
@@ -59,7 +59,17 @@ void		exec_button(int i, int type)
 
 int			in_rect(SDL_Rect rec, int x, int y)
 {
-	if (x > rec.x && x <= rec.x + rec.w && y > rec.y && y <= rec.y + rec.h)
+	if (rec.w < 0 && rec.h > 0 &&
+	x > rec.x + rec.w && x <= rec.x && y > rec.y && y <= rec.y + rec.h)
+		return (1);
+	if (rec.w < 0 && rec.h < 0 &&
+	x > rec.x + rec.w && x <= rec.x && y > rec.y + rec.h && y <= rec.y)
+		return (1);
+	if (rec.w > 0 && rec.h < 0 &&
+	x > rec.x && x <= rec.x + rec.w && y > rec.y + rec.h && y <= rec.y)
+		return (1);
+	if (rec.w > 0 && rec.h > 0 &&
+	x > rec.x && x <= rec.x + rec.w && y > rec.y && y <= rec.y + rec.h)
 		return (1);
 	return (0);
 }
