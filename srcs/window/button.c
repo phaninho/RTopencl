@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 17:29:42 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 17:31:03 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,29 @@
 
 t_button	g_buttons[] =
 {
-	{1, ONOFF, button_render_mod, "SEPIA", {WIN_W - 280, 100, 100, 50}, 0},
-	{2, ONOFF, button_render_mod, "GREY", {WIN_W - 170, 100, 100, 50}, 0},
-	{3, ONOFF, button_render_mod, "FILTER", {WIN_W - 280, 160, 100, 50}, 0},
-	{4, ONOFF, button_render_mod, "ADD", {WIN_W - 170, 160, 100, 50}, 0},
-	{1, SLIDER, slider_render_mod, "r mod", {WIN_W - 280, 220, 210, 8}, 50},
-	{2, SLIDER, slider_render_mod, "g mod", {WIN_W - 280, 230, 210, 8}, 50},
-	{3, SLIDER, slider_render_mod, "b mod", {WIN_W - 280, 240, 210, 8}, 50}
+	{1, button_render_mod, "SEPIA", {WIN_W - 290, 70, 100, 50}},
+	{2, button_render_mod, "GREY", {WIN_W - 185, 70, 100, 50}},
+	{3, button_render_mod, "FILTER", {WIN_W - 290, 125, 100, 50}},
+	{4, button_render_mod, "ADD", {WIN_W - 185, 125, 100, 50}},
+	{0, NULL, NULL, {0, 0, 0, 0}}
+};
+
+t_slider	g_sliders[] =
+{
+	{1, slider_render_mod, {WIN_W - 80, 70, 15, 100}, 100, 1, RED},
+	{2, slider_render_mod, {WIN_W - 64, 70, 15, 100}, 100, 1, GREEN},
+	{3, slider_render_mod, {WIN_W - 48, 70, 15, 100}, 100, 1, BLUE},
+	{0, NULL, {0, 0, 0, 0}, 0, 0, 0}
 };
 
 t_button	*get_button(int i)
 {
-	if (i >= 0 && i < BUTTON_NB)
-		return (&(g_buttons[i]));
-	return (NULL);
+	return (&(g_buttons[i]));
+}
+
+t_slider	*get_slider(int i)
+{
+	return (&(g_sliders[i]));
 }
 
 t_vec2i		*last_click(void)
@@ -40,10 +49,12 @@ t_vec2i		*last_click(void)
 	return (&pos);
 }
 
-void		exec_button(int i)
+void		exec_button(int i, int type)
 {
-	if (i >= 0 && i < BUTTON_NB)
+	if (type == ONOFF)
 		g_buttons[i].exec(&(g_buttons[i]));
+	else if (type == SLIDER)
+		g_sliders[i].exec(&(g_sliders[i]));
 }
 
 int			in_rect(SDL_Rect rec, int x, int y)
@@ -53,13 +64,16 @@ int			in_rect(SDL_Rect rec, int x, int y)
 	return (0);
 }
 
-int			button_clicked(int x, int y)
+void		button_clicked(int x, int y)
 {
 	int		i;
 
 	i = -1;
-	while (++i < BUTTON_NB)
+	while (g_buttons[++i].exec)
 		if (in_rect(g_buttons[i].rect, x, y))
-			return (i);
-	return (-1);
+			exec_button(i, ONOFF);
+	i = -1;
+	while (g_sliders[++i].exec)
+		if (in_rect(g_sliders[i].rect, x, y))
+			exec_button(i, SLIDER);
 }

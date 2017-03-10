@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 20:25:43 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 13:24:04 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 14:26:04 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void				init_font(void)
 	win = window_get();
 	TTF_Init();
 	font->font_size = 18;
-	font->font = TTF_OpenFont("/Library/Fonts/Arial.ttf", font->font_size);
+	font->font = TTF_OpenFont("/Library/Fonts/Arial Bold.ttf", font->font_size);
 }
 
 static SDL_Texture	*surface_to_texture(t_window *win, t_font *font)

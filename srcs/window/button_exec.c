@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/09 17:18:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 17:25:00 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,24 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 
-void		slider_move(t_button *button)
+void		slider_move(t_slider *slider)
 {
 	t_vec2i		*vec;
 
 	vec = last_click();
-	button->val = (vec->x - button->rect.x) * 100 / button->rect.w;
+	if (slider->vert)
+		slider->val = 100 - ((vec->y - slider->rect.y) * 100 / slider->rect.h);
+	else
+		slider->val = (vec->x - slider->rect.x) * 100 / slider->rect.w;
 }
 
-void		button_render_mod(t_button *button)
+void		button_render_mod(void *param)
 {
-	int		*mod;
+	int			*mod;
+	t_button	*button;
 
 	mod = &(env_get()->scene.render_mod);
+	button = (t_button*)param;
 	if (button->id == 1)
 		*mod = (*mod == RENDERMODE_SEPIA ? 0 : RENDERMODE_SEPIA);
 	else if (button->id == 2)
@@ -38,16 +43,18 @@ void		button_render_mod(t_button *button)
 		*mod = (*mod == RENDERMODE_ADD ? 0 : RENDERMODE_ADD);
 }
 
-void		slider_render_mod(t_button *button)
+void		slider_render_mod(void *param)
 {
 	VEC4		*filter;
+	t_slider	*slider;
 
 	filter = &(env_get()->scene.render_filter);
-	slider_move(button);
-	if (button->id == 1)
-		filter->x = (double)button->val / 100.0f;
-	else if (button->id == 2)
-		filter->y = (double)button->val / 100.0f;
-	else if (button->id == 3)
-		filter->z = (double)button->val / 100.0f;
+	slider = (t_slider*)param;
+	slider_move(slider);
+	if (slider->id == 1)
+		filter->x = (double)slider->val / 100.0f;
+	else if (slider->id == 2)
+		filter->y = (double)slider->val / 100.0f;
+	else if (slider->id == 3)
+		filter->z = (double)slider->val / 100.0f;
 }
