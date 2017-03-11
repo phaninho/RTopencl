@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 20:09:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:18:05 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,21 @@ void		slider_render_mod(void *param)
 		filter->y = (double)slider->val / 100.0f;
 	else if (slider->id == 3)
 		filter->z = (double)slider->val / 100.0f;
+}
+
+void		button_lights(void *param)
+{
+	t_scene		*scene;
+	t_button	*button;
+
+	scene = &(env_get()->scene);
+	button = (t_button*)param;
+	if (button->id == 5 && scene->max_reflect > 0)
+		scene->max_reflect--;
+	else if (button->id == 6 && scene->max_reflect < 20)
+		scene->max_reflect++;
+	else if (button->id == 7 && scene->max_refract > 0)
+		scene->max_refract--;
+	else if (button->id == 8 && scene->max_refract < 20)
+		scene->max_refract++;
 }

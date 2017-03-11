@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:14:15 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/08 16:36:12 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:49:37 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,17 @@ static void	display_window(t_window *win)
 	SDL_RenderPresent(win->renderer);
 }
 
-void		window_loop(void)
+void		window_loop(t_window *win)
 {
-	t_window	*win;
-	t_env		*env;
-	SDL_Event	event;
+	t_env			*env;
+	SDL_Event		event;
 
-	win = window_get();
 	env = env_get();
 	while (!win->close_request)
 	{
 		mouse_motion(0, 0);
 		while (SDL_PollEvent(&event))
 		{
-			if (event.window.event == SDL_WINDOWEVENT_CLOSE)
-				win->close_request = 1;
 			if (event.type == SDL_KEYDOWN)
 				win->keys[event.key.keysym.scancode] = 1;
 			if (event.type == SDL_KEYUP)
@@ -79,6 +75,9 @@ void		window_loop(void)
 				mouse_motion(event.motion.xrel, event.motion.yrel);
 			if (event.type == SDL_MOUSEBUTTONDOWN)
 				mouse_grab(event.motion.x, event.motion.y);
+			if ((event.window.event == SDL_WINDOWEVENT_CLOSE)
+			|| (!mouse_isgrab() && win->keys[SDL_SCANCODE_ESCAPE]))
+				win->close_request = 1;
 		}
 		gameloop(win, env);
 		display_window(win);

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 19:19:09 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:58:43 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,13 @@ void	draw_ui(void)
 	scene = &(env_get()->scene);
 	draw_rect(win->interface, 0xaaaaaa);
 	draw_text("File:", win->width - 265, 15, DARK_GREY);
-	draw_text(scene->name, win->width - 200, 15, DARK_GREY);
+	draw_text(scene->name, win->width - 190, 15, DARK_GREY);
 	draw_rect((SDL_Rect){win->width - 290, 30, 280, 2}, 0x505050);
+	draw_rect((SDL_Rect){win->width - 290, 190, 280, 2}, 0x505050);
 	draw_text("FILTERS", win->width - win->interface.w / 2, 55, DARK_GREY);
+	draw_text("MAX REFLECT", win->width - 160, 220, DARK_GREY);
+	draw_number(scene->max_reflect, win->width - 80, 220, DARK_GREY);
+	draw_text("MAX REFRACT", win->width - 160, 275, DARK_GREY);
+	draw_number(scene->max_refract, win->width - 80, 275, DARK_GREY);
 	draw_buttons();
 }

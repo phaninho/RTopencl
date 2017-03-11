@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 20:25:43 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 14:26:04 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:30:28 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "window/window.h"
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
+#include "libft/libft.h"
+#include "utils/error.h"
 
 t_font				*get_font(void)
 {
@@ -57,4 +59,14 @@ void				draw_text(char *str, int x, int y, SDL_Color color)
 	font->rect.y = y - font->rect.h / 2;
 	SDL_RenderCopy(win->renderer, font->texture, NULL, &font->rect);
 	SDL_DestroyTexture(font->texture);
+}
+
+void				draw_number(long nb, int x, int y, SDL_Color color)
+{
+	char	*str;
+
+	if (!(str = ft_ltoa(nb)))
+		die("draw_number(): malloc failure\n");
+	draw_text(str, x, y, color);
+	free(str);
 }

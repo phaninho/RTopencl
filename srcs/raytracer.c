@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/08 13:20:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:49:11 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ int				main(int ac, char **av)
 	print_env();
 	thread_init();
 	rt_init();
-	window_loop();
+	window_loop(window_get());
 	window_end();
 	thread_end();
 	return (0);

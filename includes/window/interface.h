@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 19:43:57 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:24:14 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ t_font		*get_font(void);
 void		init_font(void);
 void		draw_ui(void);
 void		draw_text(char *str, int x, int y, SDL_Color color);
+void		draw_number(long nb, int x, int y, SDL_Color color);
 void		draw_rect(SDL_Rect rect, int color);
 
 t_button	*get_button(int i);
@@ -80,5 +81,6 @@ void		slider_move(t_slider *button);
 
 void		button_render_mod(void *button);
 void		slider_render_mod(void *button);
+void		button_lights(void *param);
 
 #endif

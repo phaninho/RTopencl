@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 20:13:12 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:54:49 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ t_button	g_buttons[] =
 	{2, button_render_mod, "GREY", {WIN_W - 185, 70, 100, 50}},
 	{3, button_render_mod, "FILTER", {WIN_W - 290, 125, 100, 50}},
 	{4, button_render_mod, "ADD", {WIN_W - 185, 125, 100, 50}},
+	{5, button_lights, "-", {WIN_W - 275, 200, 40, 40}},
+	{6, button_lights, "+", {WIN_W - 65, 200, 40, 40}},
+	{7, button_lights, "-", {WIN_W - 275, 255, 40, 40}},
+	{8, button_lights, "+", {WIN_W - 65, 255, 40, 40}},
 	{0, NULL, NULL, {0, 0, 0, 0}}
 };
 
