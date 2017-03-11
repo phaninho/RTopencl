@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/11 12:58:43 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 18:03:19 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,31 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 
-void	draw_rect(SDL_Rect rect, int color)
+t_vec2i		*last_click(void)
 {
-	t_window	*win;
-	VEC4		c;
+	static t_vec2i	pos = (t_vec2i){0, 0};
 
-	win = window_get();
-	c.w = (color >> 24 & 0xff);
-	if (!c.w)
-		c.w = 0xff;
-	c.x = color >> 16 & 0xff;
-	c.y = color >> 8 & 0xff;
-	c.z = color & 0xff;
-	SDL_SetRenderDrawColor(win->renderer, c.x, c.y, c.z, c.w);
-	SDL_RenderFillRect(win->renderer, &(rect));
+	return (&pos);
 }
 
-void	draw_ui(void)
+static void	draw_filter_n_scene(t_window *win, t_scene *scene)
+{
+	draw_rect((SDL_Rect){win->width - 290, 30, 280, 2}, DARK_GREY);
+	draw_text("FILTERS", win->width - win->interface.w / 2, 55, DARK_GREY);
+	draw_rect((SDL_Rect){win->width - 290, 190, 280, 2}, DARK_GREY);
+	draw_text("SCENE", win->width - win->interface.w / 2, 210, DARK_GREY);
+	draw_text("MAX REFLECT", win->width - 200, 240, DARK_GREY);
+	draw_number(scene->max_reflect, win->width - 90, 240, DARK_GREY);
+	draw_text("MAX REFRACT", win->width - 200, 270, DARK_GREY);
+	draw_number(scene->max_refract, win->width - 90, 270, DARK_GREY);
+}
+
+static void	draw_object(t_window *win, t_scene *scene)
+{
+	draw_rect((SDL_Rect){win->width - 290, 290, 280, 2}, DARK_GREY);
+}
+
+void		draw_ui(void)
 {
 	t_window	*win;
 	t_scene		*scene;
@@ -41,12 +49,7 @@ void	draw_ui(void)
 	draw_rect(win->interface, 0xaaaaaa);
 	draw_text("File:", win->width - 265, 15, DARK_GREY);
 	draw_text(scene->name, win->width - 190, 15, DARK_GREY);
-	draw_rect((SDL_Rect){win->width - 290, 30, 280, 2}, 0x505050);
-	draw_rect((SDL_Rect){win->width - 290, 190, 280, 2}, 0x505050);
-	draw_text("FILTERS", win->width - win->interface.w / 2, 55, DARK_GREY);
-	draw_text("MAX REFLECT", win->width - 160, 220, DARK_GREY);
-	draw_number(scene->max_reflect, win->width - 80, 220, DARK_GREY);
-	draw_text("MAX REFRACT", win->width - 160, 275, DARK_GREY);
-	draw_number(scene->max_refract, win->width - 80, 275, DARK_GREY);
+	draw_filter_n_scene(win, scene);
+	draw_object(win, scene);
 	draw_buttons();
 }

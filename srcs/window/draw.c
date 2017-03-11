@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_text.c                                        :+:      :+:    :+:   */
+/*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 20:25:43 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/11 12:30:28 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 16:48:22 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,19 @@ static SDL_Texture	*surface_to_texture(t_window *win, t_font *font)
 	return (text);
 }
 
-void				draw_text(char *str, int x, int y, SDL_Color color)
+void				draw_text(char *str, int x, int y, int c)
 {
 	t_window	*win;
 	t_font		*font;
+	SDL_Color	color;
 
 	win = window_get();
 	font = get_font();
+
+	color.a = !(c >> 24 & 0xff) ? 0xff : (c >> 24 & 0xff);
+	color.r = c >> 16 & 0xff;
+	color.g = c >> 8 & 0xff;
+	color.b = c & 0xff;
 	font->surf = TTF_RenderText_Solid(font->font, str, color);
 	font->texture = surface_to_texture(win, font);
 	SDL_QueryTexture(font->texture, NULL, NULL, &font->rect.w, &font->rect.h);
@@ -61,12 +67,12 @@ void				draw_text(char *str, int x, int y, SDL_Color color)
 	SDL_DestroyTexture(font->texture);
 }
 
-void				draw_number(long nb, int x, int y, SDL_Color color)
+void				draw_number(long nb, int x, int y, int c)
 {
 	char	*str;
 
 	if (!(str = ft_ltoa(nb)))
 		die("draw_number(): malloc failure\n");
-	draw_text(str, x, y, color);
+	draw_text(str, x, y, c);
 	free(str);
 }

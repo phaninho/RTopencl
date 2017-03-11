@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/11 12:54:49 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 17:28:58 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@ t_button	g_buttons[] =
 	{2, button_render_mod, "GREY", {WIN_W - 185, 70, 100, 50}},
 	{3, button_render_mod, "FILTER", {WIN_W - 290, 125, 100, 50}},
 	{4, button_render_mod, "ADD", {WIN_W - 185, 125, 100, 50}},
-	{5, button_lights, "-", {WIN_W - 275, 200, 40, 40}},
-	{6, button_lights, "+", {WIN_W - 65, 200, 40, 40}},
-	{7, button_lights, "-", {WIN_W - 275, 255, 40, 40}},
-	{8, button_lights, "+", {WIN_W - 65, 255, 40, 40}},
+	{5, button_lights, "-", {WIN_W - 130, 230, 20, 20}},
+	{6, button_lights, "+", {WIN_W - 70, 230, 20, 20}},
+	{7, button_lights, "-", {WIN_W - 130, 260, 20, 20}},
+	{8, button_lights, "+", {WIN_W - 70, 260, 20, 20}},
 	{0, NULL, NULL, {0, 0, 0, 0}}
 };
 
 t_slider	g_sliders[] =
 {
 	{1, slider_render_mod, {WIN_W - 80, 175, 15, -105}, 100, 1, RED},
-	{2, slider_render_mod, {WIN_W - 64, 175, 15, -105}, 100, 1, GREEN},
-	{3, slider_render_mod, {WIN_W - 48, 175, 15, -105}, 100, 1, BLUE},
+	{2, slider_render_mod, {WIN_W - 60, 175, 15, -105}, 100, 1, GREEN},
+	{3, slider_render_mod, {WIN_W - 40, 175, 15, -105}, 100, 1, BLUE},
 	{0, NULL, {0, 0, 0, 0}, 0, 0, 0}
 };
 
@@ -44,13 +44,6 @@ t_button	*get_button(int i)
 t_slider	*get_slider(int i)
 {
 	return (&(g_sliders[i]));
-}
-
-t_vec2i		*last_click(void)
-{
-	static t_vec2i	pos = (t_vec2i){0, 0};
-
-	return (&pos);
 }
 
 void		exec_button(int i, int type)

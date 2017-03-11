@@ -6,16 +6,15 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/11 12:24:14 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 16:01:10 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INTERFACE_H
 # define INTERFACE_H
 
-# define RGBA (SDL_Color)
-# define DARK_GREY (SDL_Color){100, 100, 100, 255}
-# define WHITE (SDL_Color){240, 240, 240, 255}
+# define DARK_GREY 0x646464
+# define WHITE 0xf0f0f0
 # define RED 0xff0000
 # define GREEN 0x00ff00
 # define BLUE 0x0000ff
@@ -66,8 +65,8 @@ struct		s_slider
 t_font		*get_font(void);
 void		init_font(void);
 void		draw_ui(void);
-void		draw_text(char *str, int x, int y, SDL_Color color);
-void		draw_number(long nb, int x, int y, SDL_Color color);
+void		draw_text(char *str, int x, int y, int c);
+void		draw_number(long nb, int x, int y, int c);
 void		draw_rect(SDL_Rect rect, int color);
 
 t_button	*get_button(int i);
