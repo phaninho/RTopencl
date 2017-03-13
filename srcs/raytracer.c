@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <OpenCL/opencl.h>
 #include "window/window.h"
 #include "thread/thread.h"
 #include "raytracer/rt_env.h"
@@ -29,17 +28,19 @@ static void	program_init(void)
 	if (size <= 0)
 		die("Error: File doesn't exist or is empty!");
 	cl = thread_get();
-	cl->program = clCreateProgramWithSource(cl->context, 1, (const char **)&str, (const size_t *)&size, &err);
+	cl->program = clCreateProgramWithSource(cl->context, \
+		1, (const char **)&str, (const size_t *)&size, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: program source");
-	if ((err = clBuildProgram(cl->program, 1, &(cl->device_id), NULL, NULL, NULL)) != CL_SUCCESS)
+	if ((err = clBuildProgram(cl->program, 1, &(cl->device_id), \
+		NULL, NULL, NULL)) != CL_SUCCESS)
 		die("OpenCL error: build program");
-	cl->kernel = clCreateKernel(cl->program , "raytracer", &err);
+	cl->kernel = clCreateKernel(cl->program, "raytracer", &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: kernel");
 }
 
-static void kernel_init(t_window *window)
+static void	kernel_init(t_window *window)
 {
 	t_thread	*cl;
 	t_env		*env;
@@ -47,30 +48,37 @@ static void kernel_init(t_window *window)
 
 	cl = thread_get();
 	env = env_get();
-	cl->mem_pixel = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, (window->width * window->height *  4) * sizeof(unsigned char), NULL, &err);
+	cl->mem_pixel = clCreateBuffer(cl->context, \
+		CL_MEM_READ_WRITE, (window->width * window->height * 4) * \
+		sizeof(unsigned char), NULL, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: buffer pixel");
-	cl->mem_scene = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_scene), NULL, &err);
+	cl->mem_scene = clCreateBuffer(cl->context, \
+		CL_MEM_READ_ONLY, sizeof(t_scene), NULL, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: buffer scene");
-	cl->mem_camera = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_cam), NULL, &err);
+	cl->mem_camera = clCreateBuffer(cl->context, \
+		CL_MEM_READ_ONLY, sizeof(t_cam), NULL, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: buffer camera");
 	if (env->scene.max_object > 0)
-		cl->mem_object = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_objects) * env->scene.max_object, NULL, &err);
+		cl->mem_object = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, \
+			sizeof(t_objects) * env->scene.max_object, NULL, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: buffer objects");
 	if (env->scene.max_material > 0)
-		cl->mem_material = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_material) * env->scene.max_material, NULL, &err);
+		cl->mem_material = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, \
+			sizeof(t_material) * env->scene.max_material, NULL, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: buffer ligths");
 	if (env->scene.max_light > 0)
-		cl->mem_light = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_light) * env->scene.max_light, NULL, &err);
+		cl->mem_light = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, \
+			sizeof(t_light) * env->scene.max_light, NULL, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: buffer material");
 }
 
-static void cl_render(void)
+static void	cl_render(void)
 {
 	t_thread	*cl;
 	cl_int		err;
@@ -80,68 +88,89 @@ static void cl_render(void)
 	window = window_get();
 	cl = thread_get();
 	env = env_get();
-	if ((err = clSetKernelArg(cl->kernel, 0, sizeof(cl_mem), (void *) &(cl->mem_pixel))) != CL_SUCCESS)
+	if ((err = clSetKernelArg(cl->kernel, 0, sizeof(cl_mem), \
+		(void *)&(cl->mem_pixel))) != CL_SUCCESS)
 		die("OpenCL error: Kernel set arg 0, pixel array");
-	// Scene
-	if ((err = clSetKernelArg(cl->kernel, 1, sizeof(cl_mem), (void *) &(cl->mem_scene))) != CL_SUCCESS)
+		//Scene
+	if ((err = clSetKernelArg(cl->kernel, 1, sizeof(cl_mem), \
+		(void *)&(cl->mem_scene))) != CL_SUCCESS)
 		die("OpenCL error: Kernel set arg 1, Scene");
-	if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_scene, CL_TRUE, 0, sizeof(t_scene), &(env->scene), 0, NULL, NULL)) != CL_SUCCESS)
+	if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_scene, CL_TRUE, \
+		0, sizeof(t_scene), &(env->scene), 0, NULL, NULL)) != CL_SUCCESS)
 		die("OpenCL error: Enqueue Write Buffer, Scene");
-	//Camera
-	if ((err = clSetKernelArg(cl->kernel, 2, sizeof(cl_mem), (void *) &(cl->mem_camera))) != CL_SUCCESS)
+		//Camera
+	if ((err = clSetKernelArg(cl->kernel, 2, sizeof(cl_mem), \
+		(void *)&(cl->mem_camera))) != CL_SUCCESS)
 		die("OpenCL error: Kernel set arg 1, Camera");
-	if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_camera, CL_TRUE, 0, sizeof(t_cam), &(env->camera), 0, NULL, NULL)) != CL_SUCCESS)
+	if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_camera, CL_TRUE, \
+		0, sizeof(t_cam), &(env->camera), 0, NULL, NULL)) != CL_SUCCESS)
 		die("OpenCL error: Enqueue Write Buffer, Camera");
-	// Object
+		//Object
 	if (env->scene.max_object > 0 && cl->mem_object != NULL)
 	{
-		if ((err = clSetKernelArg(cl->kernel, 3, sizeof(cl_mem), (void *) &(cl->mem_object))) != CL_SUCCESS)
+		if ((err = clSetKernelArg(cl->kernel, 3, sizeof(cl_mem), \
+			(void *)&(cl->mem_object))) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Objects");
-		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_object, CL_TRUE, 0, sizeof(t_objects) * env->scene.max_object, env->objects, 0, NULL, NULL)) != CL_SUCCESS)
+		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_object, CL_TRUE, \
+			0, sizeof(t_objects) * env->scene.max_object, env->objects, \
+			0, NULL, NULL)) != CL_SUCCESS)
 			die("OpenCL error: Enqueue Write Buffer, Objects");
 	}
 	else
 	{
-		if ((err = clSetKernelArg(cl->kernel, 3, sizeof(cl_mem), NULL)) != CL_SUCCESS)
+		if ((err = clSetKernelArg(cl->kernel, 3, \
+			sizeof(cl_mem), NULL)) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Objects");
 	}
-	// Light
+	//Light
 	if (env->scene.max_light > 0 && cl->mem_light != NULL)
 	{
-		if ((err = clSetKernelArg(cl->kernel, 4, sizeof(cl_mem), (void *) &(cl->mem_light))) != CL_SUCCESS)
+		if ((err = clSetKernelArg(cl->kernel, 4, sizeof(cl_mem), \
+			(void *)&(cl->mem_light))) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Light");
-		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_light, CL_TRUE, 0, sizeof(t_light) * env->scene.max_light, env->light, 0, NULL, NULL)) != CL_SUCCESS)
+		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_light, CL_TRUE, \
+			0, sizeof(t_light) * env->scene.max_light, env->light, \
+			0, NULL, NULL)) != CL_SUCCESS)
 			die("OpenCL error: Enqueue Write Buffer, Light");
 	}
 	else
 	{
-		if ((err = clSetKernelArg(cl->kernel, 4, sizeof(cl_mem), NULL)) != CL_SUCCESS)
+		if ((err = clSetKernelArg(cl->kernel, 4, \
+			sizeof(cl_mem), NULL)) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Light");
 	}
-	// Material
+	//Material
 	if (env->scene.max_material > 0 && cl->mem_material != NULL)
 	{
-		if ((err = clSetKernelArg(cl->kernel, 5, sizeof(cl_mem), (void *) &(cl->mem_material))) != CL_SUCCESS)
+		if ((err = clSetKernelArg(cl->kernel, 5, sizeof(cl_mem), \
+			(void *)&(cl->mem_material))) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Material");
-		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_material, CL_TRUE, 0, sizeof(t_material) * env->scene.max_material, env->material, 0, NULL, NULL)) != CL_SUCCESS)
+		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_material, CL_TRUE, \
+			0, sizeof(t_material) * env->scene.max_material, env->material, \
+			0, NULL, NULL)) != CL_SUCCESS)
 			die("OpenCL error: Enqueue Write Buffer, Material");
 	}
 	else
 	{
-		if ((err = clSetKernelArg(cl->kernel, 5, sizeof(cl_mem), NULL)) != CL_SUCCESS)
+		if ((err = clSetKernelArg(cl->kernel, 5, \
+			sizeof(cl_mem), NULL)) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Material");
 	}
-	if ((err = clEnqueueNDRangeKernel(cl->queue, cl->kernel, 2, 0, (size_t[2]){window->width, window->height}, NULL, 0, NULL, NULL)) != CL_SUCCESS)
+	if ((err = clEnqueueNDRangeKernel(cl->queue, cl->kernel, 2, \
+		0, (size_t[2]){window->width, window->height}, NULL, \
+		0, NULL, NULL)) != CL_SUCCESS)
 		die("OpenCL error: Enqueue Range Kernel");
 	clFinish(cl->queue);
-	if ((err = clEnqueueReadBuffer(cl->queue, cl->mem_pixel, CL_TRUE, 0, (window->width * window->height *  4) * sizeof(unsigned char), window->pixels, 0, NULL, NULL)) != CL_SUCCESS)
+	if ((err = clEnqueueReadBuffer(cl->queue, cl->mem_pixel, CL_TRUE, \
+		0, (window->width * window->height * 4) * sizeof(unsigned char), \
+		window->pixels, 0, NULL, NULL)) != CL_SUCCESS)
 		die("OpenCL error: Enqueue Read Buffer, pixel");
 }
 
 static void	rt_init(void)
 {
 	t_window	*window;
-	t_env	*env;
+	t_env		*env;
 
 	env = env_get();
 	window = window_get();
@@ -190,7 +219,7 @@ static void		print_env(void)
 	}
 }
 
-int				main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	t_window	*window;
 

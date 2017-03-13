@@ -15,7 +15,7 @@
 #include "../../includes/libft/libft.h"
 #include "../../includes/thread/thread_SDL.h"
 
-static int			ctoi(char c)
+static int		ctoi(char c)
 {
 	int		i;
 
@@ -33,14 +33,14 @@ static char		itoc(int n)
 	return (c);
 }
 
-static int			check_fscreen(void)
+static int		check_fscreen(void)
 {
 	if (access("./Screenshot", F_OK == -1))
 		mkdir("./Screenshot", 0777);
 	return (0);
 }
 
-char	*check_name_screen(t_window *t)
+char			*check_name_screen(t_window *t)
 {
 	FILE	*file;
 	int		i;
