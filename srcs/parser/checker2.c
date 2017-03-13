@@ -15,10 +15,10 @@
 
 static float	soft_length(VEC3 vec)
 {
-	return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	return (sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z));
 }
 
-static VEC3 	soft_normalize(VEC3 vec)
+static VEC3		soft_normalize(VEC3 vec)
 {
 	float	l;
 

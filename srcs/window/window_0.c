@@ -13,6 +13,7 @@
 #include <SDL2/SDL.h>
 #include "window/window.h"
 #include "raytracer/rt_env.h"
+#include <stdio.h>
 
 t_window	*window_get(void)
 {
@@ -46,7 +47,6 @@ int			window_init(void)
 	return (1);
 }
 
-#include<stdio.h>
 static void	gameloop(t_window *win, t_env *env)
 {
 	unsigned int now;
