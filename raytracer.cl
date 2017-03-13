@@ -202,7 +202,7 @@ static float3		float3_reflect(const float3 v, const float3 normal)
 	return (v - (normal * 2.0f * soft_dot(v, normal)));
 }
 
-/*static float3        float3_refract(const float3 v, const float3 normal, const float ior)
+static float3        float3_refract(const float3 v, const float3 normal, const float ior)
 {
     float cosi = clamp(-1.0f, 1.0f, soft_dot(v, normal));
     float etai = 1;
@@ -219,16 +219,10 @@ static float3		float3_reflect(const float3 v, const float3 normal)
     float eta = etai / etat;
     float k = 1 - eta * eta * (1 - cosi * cosi);
     return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
-}*/
-
-static float3 float3_refract(float3 V, float3 N, float refrIndex)
-{
-	float cosI = -soft_dot( N, V );
-	float cosT2 = 1.0f - refrIndex * refrIndex * (1.0f - cosI * cosI);
-	return ((refrIndex * V) + (refrIndex * cosI - sqrt( cosT2 )) * N);
 }
 
-/*static float3		float3_refract(const float3 v, const float3 normal,float n)
+
+/*tatic float3		float3_refract(const float3 v, const float3 normal,float n)
 {
 	float ct1 = soft_dot(normal, -1 * v);
 	float ct2 = sqrt(1 - n * n * (1 - ct1 * ct1));
@@ -338,8 +332,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float3	impactDir = soft_normalize(ray->pos - impact);
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
-
-
 	if (light.type == SPOTLIGHT)
 	{
 		lightDir = soft_normalize(light.position - impact);
@@ -415,6 +407,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//
 	//linear color (color before gamma correction)
 	//
+
+
 	float4 specular1 = specular * ambient;
 	float4	linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
 	//final color (after gamma correction)
