@@ -58,7 +58,6 @@ typedef struct	s_texture
 
 typedef struct	s_scene
 {
-	char		*name;
 	int			width;
 	int			height;
 	float		znear;
@@ -222,7 +221,7 @@ static float3		float3_reflect(const float3 v, const float3 normal)
     return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
 }*/
 
-float3 float3_refract(float3 V, float3 N, float refrIndex)
+static float3 float3_refract(float3 V, float3 N, float refrIndex)
 {
 	float cosI = -soft_dot( N, V );
 	float cosT2 = 1.0f - refrIndex * refrIndex * (1.0f - cosI * cosI);
@@ -254,7 +253,6 @@ float3 float3_refract(float3 V, float3 N, float refrIndex)
 	if (k < 0.0f)
 		return ((float3)(0, 0, 0));
 	return (eta * v + (eta * n - sqrtf(k)) * normal);
-
 }*/
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
@@ -331,6 +329,23 @@ static float4	light_ambient(const t_objects obj, const t_light light, const t_ma
 	return (color_ambient);
 }
 
+float calculateLambert(float3 objCenter, float3 intersection, float3 lightPosition, t_ray *ray)
+{
+	float3 lightDirection = soft_normalize(lightPosition - intersection);
+	float3 objNormal = soft_normalize(intersection - get_normal(ray->position, objCenter));
+	return (max(soft_dot(objNormal, lightDirection));
+}
+
+float calculatePhong(float3 objCenter, float3 intersection, float3 lightPosition, t_ray *rayOrigin, t_material objMaterial, float specPower)
+{
+	float3 objNormal = soft_normalize(intersection - get_normal(rayOrigin, objCenter));
+	float3 lightDirection = soft_normalize(lightPosition - intersection);
+	float3 viewDirection = soft_normalize(intersection - rayOrigin->pos);
+	float3 blinnDirection = soft_normalize(lightDirection - viewDirection);
+	float blinnTerm = max(soft_dot(objNormal, blinnDirection), 0.0f, 1.0f);
+	return (objMaterial.specular * powf(blinnTerm, specPower));
+}
+
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material)
 {
 	float3	impact = ray->pos + ray->dir * ray->deph;
@@ -340,8 +355,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float3	impactDir = soft_normalize(ray->pos - impact);
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
-
-
 	if (light.type == SPOTLIGHT)
 	{
 		lightDir = soft_normalize(light.position - impact);
@@ -417,7 +430,13 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//
 	//linear color (color before gamma correction)
 	//
-	float4 specular1 = specular * ambient;
+
+	float phongTerm = calculatePhong(objects.position, impact, light.position, ray, materials, specular);
+	float lambertTerm = calculateLambert(objects.position, impact, light.position);
+	float4 phong = (impact * lambertTerm) + (impact * phongTerm);
+
+
+	float4 specular1 = phong * ambient;
 	float4	linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
 	//final color (after gamma correction)
 	//float4	gamma = 2.2f;
@@ -531,7 +550,6 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 {
 	t_ray  ray_light;
 	int i = -1;
-
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
 	if (light.type == POINTLIGHT)
@@ -570,7 +588,7 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	return (1.0f);
 }*/
 
-static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
+static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene, __constant t_material *materials)
 {
 	t_ray  ray_light;
 	int i = 0;
@@ -640,7 +658,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 		while (i < scene->max_object)
 		{
 			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
-			if (d >= EPSILON && d < reflect_ray.deph)
+			if (d >= EPSILON && d < reflect_ray.deph && i != ray.object)
 			{
 				reflect_ray.deph = d;
 				reflect_ray.object = i;
@@ -730,6 +748,11 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 		{
 			return (clamp(color, 0.0f, 1.0f));
 		}
+		//if (scene->max_reflect > 0 && materials[objects[refract_ray.object].material_id - 1].reflection > 0.0)
+		//{
+			//printf("laaaaaaaaaaaaaaa\n");
+		//	color += reflect_color(scene, lights, objects, refract_ray, materials);
+		//}
 		point_color += objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
@@ -779,7 +802,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			while (i < scene->max_light)
 			{
 				color += light(&ray, objects[ray.object], lights[i], materials);
-				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
+				shadow_attenuation *= shadow(ray, lights[i], objects, scene, materials);
 				i++;
 			}
 			color *= (shadow_attenuation);
