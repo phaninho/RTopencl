@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/08 15:45:14 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/14 16:19:57 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct	s_scene
 	int			render_debug;
 	int			render_mod;
 	VEC4		render_filter;
+	int			obj_index;
 }				t_scene;
 
 typedef struct	s_env

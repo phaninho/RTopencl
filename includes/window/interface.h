@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/11 16:01:10 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/14 16:18:15 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 
 # define ONOFF 0
 # define SLIDER 1
+
+# define CENTER_X (win->width - win->interface.w / 2)
 
 typedef struct s_font	t_font;
 typedef struct s_button	t_button;
@@ -81,5 +83,6 @@ void		slider_move(t_slider *button);
 void		button_render_mod(void *button);
 void		slider_render_mod(void *button);
 void		button_lights(void *param);
+void		button_objects(void *param);
 
 #endif

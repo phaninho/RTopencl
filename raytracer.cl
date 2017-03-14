@@ -74,6 +74,7 @@ typedef struct	s_scene
 	int			render_debug;
 	int			render_mod;
 	float4		render_filter;
+	int			obj_index;
 }				t_scene;
 
 typedef struct	s_cam
