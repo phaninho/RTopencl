@@ -204,7 +204,7 @@ static float3		float3_reflect(const float3 v, const float3 normal)
 
 static float3        float3_refract(const float3 v, const float3 normal, const float ior)
 {
-    float cosi = clamp(-1.0f, 1.0f, soft_dot(v, normal));
+    float cosi = clamp(-1.0f, 1.0f, soft_dot(normal, v));
     float etai = 1;
     float etat = ior;
     float3 n = normal;
@@ -216,7 +216,7 @@ static float3        float3_refract(const float3 v, const float3 normal, const f
         etai = ior;
         n = -normal;
     }
-    float eta = etai / etat;
+    float eta = etai - etat;
     float k = 1 - eta * eta * (1 - cosi * cosi);
     return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
 }
@@ -329,7 +329,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float3	lightDir;
 	float	distanceToLight;
 	float	attenuation = 1.0f;
-	float3	impactDir = soft_normalize(ray->pos - impact);
+//	float3	impactDir = soft_normalize(ray->pos - impact);
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
 	if (light.type == SPOTLIGHT)
@@ -385,7 +385,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 				// reflect(-l, n) = 2.0 * dot(n, l) * n - l;
 				float3 reflectionVector = float3_reflect(-lightDir, normal);
 				float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
-				specular_coeff = pow(specTmp, 80/*(material[objects.material_id - 1].spec_pow)*/);
+				specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
 		}
 		else if (material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
 		{
@@ -393,21 +393,20 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 				float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
 				specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
 		}
-//materials[objects[ray.object].material_id - 1].refraction)
 
 
-		                /*if (material[objects.material_id - 1].blinn)
+		               /* if (material[objects.material_id - 1].blinn)
 										{
-		                	float3 halfVector = soft_normalize(lightDir + cameraPosition);
+		                	float3 halfVector = soft_normalize(lightDir + cameradir);
 		                	specular_coeff = pow(max(0.0f, soft_dot(normal, halfVector)), 25);
 										}
 										else
 										{
 		                // Phong
 		                	float3 reflectionVector = float3_reflect(-lightDir, normal);
-		                	specular_coeff = pow(max(0.0f, soft_dot(reflectionVector, cameraPosition)),15);
-										}
-										*/
+		                	specular_coeff = pow(max(0.0f, soft_dot(reflectionVector, cameradir)),15);
+										}*/
+
 				specular = ambient + diffuse + specular_coeff;
 	/*float	specular_coeff = 0.0f;
 	if (diffuse_coeff > 0.0f)

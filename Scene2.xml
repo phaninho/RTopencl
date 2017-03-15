@@ -1,9 +1,9 @@
-<scene width="640" height="480" maxreflect="0" maxrefract="0" fov="70" znear="0" zfar="10000">
+<scene width="640" height="480" maxreflect="0" maxrefract="4" fov="70" znear="0" zfar="10000">
 	<camera position="-25.0 25.0 -200.0" rotation="0.0 0.0 0.0" />
 	<!--<sphere position="0.0 50.0 -150.0" normal="0.0 1.0 0.0" radius="3.0" color="0 255 0 255" material="1"/>
 	<sphere position="0 0.0 0.0" normal="0.0 1.0 0.0" radius="10.0" color="0 55 255 255" material="1"/>-->
 	<sphere position="-15.0 15.0 15.0" normal="0.0 1.0 0.0" radius="10.0" color="255 0 0 255" material="1"/>
-	<sphere position="-30.0 30.0 30.0" normal="0.0 1.0 0.0" radius="10.0" color="0 255 0 255" material="2"/>
+	<sphere position="-30.0 15.0 15.0" normal="0.0 1.0 0.0" radius="10.0" color="0 255 0 255" material="2"/>
 	<sphere position="-40.0 40.0 40.0" normal="0.0 1.0 0.0" radius="10.0" color="100 100 155 255" material="3"/>
 	<sphere position="-60.0 60.0 60.0" normal="0.0 1.0 0.0" radius="10.0" color="0 0 0 255" material="1"/>-->
 	<!--<plane position="-100.0 0.0 0.0" color="205 205 205 255" normal="1.0 0.0 0.0" material="1"/>
@@ -25,9 +25,9 @@
 
 	<pointlight position="0.0 -350.0 20.0" color="105 105 205" attenuation="0.01"/>
 
-	<material specular="255 255 255 255" blinn = "1" ambient="255 255 255 255" reflection="1" refraction="0" shininess="100"/>
-	<material specular="255 255 255 255" blinn = "1" ambient="255 255 255 255" reflection="1 " refraction="0.0" shininess="100"/>
-	<material specular="255 255 255 255" blinn = "1" ambient="255 255 255 255" reflection="1" refraction="0.0" shininess="100"/>
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0.1" refraction="0.1" shininess="1000"/>
+	<material specular="255 255 255 255" blinn = "1" ambient="255 255 255 255" reflection="1 " refraction="0.0" shininess="1000"/>
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0.1" refraction="0.0" shininess="1"/>
 	<texture load="texture.png" />
 	<render debug="0"/>
 </scene>
