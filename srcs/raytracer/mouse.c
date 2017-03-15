@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/03 10:18:10 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/09 13:35:19 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/10 17:17:23 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	mouse_motion(Sint32 xrel, Sint32 yrel)
 void	mouse_grab(int x, int y)
 {
 	t_window	*win;
-	int			i;
 
 	win = window_get();
 	last_click()->x = x;
@@ -39,8 +38,8 @@ void	mouse_grab(int x, int y)
 		SDL_ShowCursor(SDL_DISABLE);
 		mouse_motion(0, 0);
 	}
-	else if (!mouse_isgrab() && (i = button_clicked(x, y)) != -1)
-		exec_button(i);
+	else if (!mouse_isgrab())
+		button_clicked(x, y);
 }
 
 int		mouse_isgrab(void)
@@ -55,7 +54,6 @@ void	mouse_ungrab(void)
 	t_window	*win;
 
 	win = window_get();
-	//SDL_SetWindowGrab(win->win, SDL_FALSE);
 	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
 }

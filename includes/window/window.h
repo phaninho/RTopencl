@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:07:00 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/08 16:32:09 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/11 12:49:02 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct	s_window
 
 t_window		*window_get();
 int				window_init();
-void			window_loop();
+void			window_loop(t_window *win);
 void			window_end();
 void			update(void);
 void			mouse_motion(Sint32 xrel, Sint32 yrel);
