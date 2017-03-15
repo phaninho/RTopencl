@@ -644,7 +644,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 	t_ray	reflect_ray;
 	reflect_ray.object = ray.object;
 	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	float4	point_color = objects[ray.object].color;
+	float4	point_color = color;//objects[ray.object].color;
 	float4	reflect_color;
 	int		j = 0;
 	while (j < scene->max_reflect)
@@ -685,12 +685,8 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
 		}
 		else
-		{
 			return (clamp(color,  0.0f, 1.0f)  /*(float)(1.0f, 0.0f, 0.0f, 1.0f)*/);
-		}
-		//le return en dessous donne un effet ressemblant a l'effet cartoon
-		//return (point_color);
-		point_color += objects[reflect_ray.object].color * materials[objects[ray.object].material_id - 1].reflection;
+		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
 		reflect_color = point_color * color;
 		ray = reflect_ray;
 		j++;
@@ -754,7 +750,7 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 			//printf("laaaaaaaaaaaaaaa\n");
 		//	color += reflect_color(scene, lights, objects, refract_ray, materials);
 		//}
-		point_color += objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
+		point_color += objects[refract_ray.object].color * materials[objects[nray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
