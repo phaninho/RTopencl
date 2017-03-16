@@ -94,7 +94,6 @@ typedef struct	s_texture
 
 typedef struct	s_scene
 {
-	char		*name;
 	int			width;
 	int			height;
 	float		znear;
@@ -110,7 +109,6 @@ typedef struct	s_scene
 	int			render_debug;
 	int			render_mod;
 	VEC4		render_filter;
-	int			obj_index;
 }				t_scene;
 
 typedef struct	s_env

@@ -58,7 +58,6 @@ typedef struct	s_texture
 
 typedef struct	s_scene
 {
-	//char		*name;
 	int			width;
 	int			height;
 	float		znear;
@@ -74,7 +73,6 @@ typedef struct	s_scene
 	int			render_debug;
 	int			render_mod;
 	float4		render_filter;
-	int			obj_index;
 }				t_scene;
 
 typedef struct	s_cam
@@ -646,7 +644,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 	t_ray	reflect_ray;
 	reflect_ray.object = ray.object;
 	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	float4	point_color = color; //objects[ray.object].color;
+	float4	point_color = color;//objects[ray.object].color;
 	float4	reflect_color;
 	int		j = 0;
 	while (j < scene->max_reflect)
