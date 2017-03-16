@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/11 12:18:05 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/14 17:03:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,31 @@ void		button_lights(void *param)
 		scene->max_refract--;
 	else if (button->id == 8 && scene->max_refract < 20)
 		scene->max_refract++;
+}
+
+void		button_objects(void *param)
+{
+	t_scene		*scene;
+	t_button	*button;
+	t_objects	*obj;
+
+	scene = &(env_get()->scene);
+	button = (t_button*)param;
+	obj = &(env_get()->objects[scene->obj_index]);
+	if (button->id == 9 && scene->obj_index > 0)
+		scene->obj_index--;
+	else if (button->id == 10 && scene->obj_index + 1 < scene->max_object)
+		scene->obj_index++;
+	else if (button->id == 11)
+		obj->position.x -= 5;
+	else if (button->id == 12)
+		obj->position.x += 5;
+	else if (button->id == 13)
+		obj->position.y -= 5;
+	else if (button->id == 14)
+		obj->position.y += 5;
+	else if (button->id == 15)
+		obj->position.z -= 5;
+	else if (button->id == 16)
+		obj->position.z += 5;
 }
