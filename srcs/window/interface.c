@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/14 16:58:23 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/16 15:49:57 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ static void	draw_filter_n_scene(t_window *win, t_scene *scene)
 static void	draw_object(t_window *win, t_scene *scene, t_objects *obj)
 {
 	draw_rect((SDL_Rect){win->width - 290, 290, 280, 2}, DARK_GREY);
-	draw_text("OBJECTS", CENTER_X, 310, DARK_GREY);
-	draw_number(scene->obj_index, CENTER_X, 330, DARK_GREY);
+	draw_text("OBJECT", CENTER_X - 10, 310, DARK_GREY);
+	draw_number(scene->obj_index, CENTER_X + 45, 310, DARK_GREY);
 	draw_text("Type:", CENTER_X - 80, 360, DARK_GREY);
 	draw_text(get_tag(obj->type), CENTER_X, 360, DARK_GREY);
 	draw_text("Position:", CENTER_X - 95, 390, DARK_GREY);
-	draw_number(obj->position.x, CENTER_X + 25, 390, DARK_GREY);
-	draw_number(obj->position.y, CENTER_X + 25, 410, DARK_GREY);
-	draw_number(obj->position.z, CENTER_X + 25, 430, DARK_GREY);
+	draw_number(obj->position.x, CENTER_X - 25, 390, DARK_GREY);
+	draw_number(obj->position.y, CENTER_X + 25, 390, DARK_GREY);
+	draw_number(obj->position.z, CENTER_X + 75, 390, DARK_GREY);
 }
 
 void		draw_ui(void)

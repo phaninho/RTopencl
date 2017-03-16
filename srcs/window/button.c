@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/14 16:59:24 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/16 15:50:02 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,6 @@ t_button	g_buttons[] =
 	{6, button_lights, "+", {WIN_W - 70, 230, 20, 20}},
 	{7, button_lights, "-", {WIN_W - 130, 260, 20, 20}},
 	{8, button_lights, "+", {WIN_W - 70, 260, 20, 20}},
-	{9, button_objects, "<", {WIN_W - 190, 320, 20, 20}},
-	{10, button_objects, ">", {WIN_W - 130, 320, 20, 20}},
-	{11, button_objects, "-", {WIN_W - 190, 380, 20, 20}},
-	{12, button_objects, "+", {WIN_W - 90, 380, 20, 20}},
-	{13, button_objects, "-", {WIN_W - 190, 400, 20, 20}},
-	{14, button_objects, "+", {WIN_W - 90, 400, 20, 20}},
-	{15, button_objects, "-", {WIN_W - 190, 420, 20, 20}},
-	{16, button_objects, "+", {WIN_W - 90, 420, 20, 20}},
 	{0, NULL, NULL, {0, 0, 0, 0}}
 };
 

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/14 16:18:15 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/16 15:29:02 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,7 @@ void		button_render_mod(void *button);
 void		slider_render_mod(void *button);
 void		button_lights(void *param);
 void		button_objects(void *param);
+
+void		update_scene(t_window *win);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:14:15 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/11 16:50:35 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/16 15:28:54 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void		window_loop(t_window *win)
 				win->close_request = 1;
 		}
 		gameloop(win, env);
+		update_scene(win);
 		display_window(win);
 	}
 }
