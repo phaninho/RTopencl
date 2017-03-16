@@ -1,4 +1,4 @@
-<scene width="640" height="480" maxreflect="4" maxrefract="0" fov="70" znear="0" zfar="10000" >
+<scene width="640" height="480" maxreflect="0" maxrefract="4" fov="70" znear="0" zfar="10000" >
 	<camera position="0.0 -10.0 380.0" rotation="0.0 180.0 0.0" />
 
 <!--	<cone position="40.0 0.0 155.0" radius="15.0" color="220 50 50 255" material="1"/>-->
@@ -19,7 +19,7 @@
 	<sphere position="200.0 -150.0 -200.0" radius="50.0" color="255 55 255 255" material="3"/>
 	<!--	<cone position="-0.0 -15.0 155.0" color="255 255 255 255" radius="20" rotation="0.0 0.0 0.0"material="1"/>-->
 
-	<plane position="0.0 0.0 400.0" color="50 150 20 20" normal="0.0 0.0 -1.0" material="1"/>
+	<plane position="0.0 0.0 400.0" color="50 150 20 20" normal="0.0 0.0 -1.0" material="3"/>
 	<plane position="0.0 0.0 -600.0" color="150 50 20 255" normal="0.0 0.0 1.0" material="1"/>
 	<plane position="0.0 -500.0 0.0" color="50 50 120 255" normal="0.0 1.0 0.0" material="1"/>
 	<plane position="0.0 40.0 0.0" color="50 20 150 255" normal="0.0 -1.0 0.0" material="1"/>
@@ -41,9 +41,9 @@
 
 	<!--<triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
 
-	<material specular="150 150 150 255" blinn = "1" ambient="120 120 120 255" reflection="0" refraction="0" shininess="10"/>
-<material specular="255 255 255 255" blinn = "1" ambient="120 120 120 255" reflection="1" refraction="0" shininess="10"/>
-	<material specular="255 255 225 255" blinn = "1" ambient="120 120 120 255" reflection="0.1" refraction="0" shininess="10"/>-->
+	<material specular="150 150 150 255" blinn = "1" ambient="120 120 120 255" reflection="0" refraction="1" shininess="10"/>
+<material specular="255 255 255 255" blinn = "1" ambient="120 120 120 255" reflection="1" refraction="0.5" shininess="10"/>
+	<material specular="255 255 225 255" blinn = "1" ambient="120 120 120 255" reflection="0.1" refraction="0.1" shininess="10"/>-->
 	<!--<texture load="texture.png"/>-->
 	<!--<render mod="grey"/>-->
 </scene>
