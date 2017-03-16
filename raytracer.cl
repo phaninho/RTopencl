@@ -204,9 +204,9 @@ static float3		float3_reflect(const float3 v, const float3 normal)
 	return (v - (normal * 2.0f * soft_dot(v, normal)));
 }
 
-/*static float3        float3_refract(const float3 v, const float3 normal, const float ior)
+static float3        float3_refract(const float3 v, const float3 normal, const float ior)
 {
-    float cosi = clamp(-1.0f, 1.0f, soft_dot(v, normal));
+    float cosi = clamp(-1.0f, 1.0f, soft_dot(normal, v));
     float etai = 1;
     float etat = ior;
     float3 n = normal;
@@ -218,19 +218,13 @@ static float3		float3_reflect(const float3 v, const float3 normal)
         etai = ior;
         n = -normal;
     }
-    float eta = etai / etat;
+    float eta = etai - etat;
     float k = 1 - eta * eta * (1 - cosi * cosi);
     return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
-}*/
-
-float3 float3_refract(float3 V, float3 N, float refrIndex)
-{
-	float cosI = -soft_dot( N, V );
-	float cosT2 = 1.0f - refrIndex * refrIndex * (1.0f - cosI * cosI);
-	return ((refrIndex * V) + (refrIndex * cosI - sqrt( cosT2 )) * N);
 }
 
-/*static float3		float3_refract(const float3 v, const float3 normal,float n)
+
+/*tatic float3		float3_refract(const float3 v, const float3 normal,float n)
 {
 	float ct1 = soft_dot(normal, -1 * v);
 	float ct2 = sqrt(1 - n * n * (1 - ct1 * ct1));
@@ -255,7 +249,6 @@ float3 float3_refract(float3 V, float3 N, float refrIndex)
 	if (k < 0.0f)
 		return ((float3)(0, 0, 0));
 	return (eta * v + (eta * n - sqrtf(k)) * normal);
-
 }*/
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
@@ -332,17 +325,15 @@ static float4	light_ambient(const t_objects obj, const t_light light, const t_ma
 	return (color_ambient);
 }
 
-static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material)
+static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
 	float3	impact = ray->pos + ray->dir * ray->deph;
 	float3	lightDir;
 	float	distanceToLight;
 	float	attenuation = 1.0f;
-	float3	impactDir = soft_normalize(ray->pos - impact);
+//	float3	impactDir = soft_normalize(ray->pos - impact);
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
-
-
 	if (light.type == SPOTLIGHT)
 	{
 		lightDir = soft_normalize(light.position - impact);
@@ -375,22 +366,50 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float4	diffuse = diffuse_coeff * objects.color * light.color;
 	//specular
 	float	specular_coeff = 0.0f;
-	if (diffuse_coeff > 0.0f)
+	/*if (diffuse_coeff > 0.0f)
 	{
 		if (objects.material_id > 0)
 			specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), material[objects.material_id - 1].shininess);
 		else
 	//		specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), 64.0f);
 		specular_coeff = clamp(specular_coeff, 0.0f, 1.0f);
-	}
+	}*/
 	float4	specular = (float4)(0, 0, 0, 0);
-	if (objects.material_id > 0)
+	/*if (objects.material_id > 0)
 		specular = specular_coeff * material[objects.material_id - 1].specular_color * light.color;
 	//else
 	//	specular = light.color;
 	else
-		specular = specular_coeff * light.color;
+		specular = specular_coeff * light.color;*/
+		float3 cameradir = normalize(campos  - impact);
+		if (!material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
+		{
+				// reflect(-l, n) = 2.0 * dot(n, l) * n - l;
+				float3 reflectionVector = float3_reflect(-lightDir, normal);
+				float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
+				specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
+		}
+		else if (material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
+		{
+				float3 halfwayVector = soft_normalize(lightDir + cameradir);
+				float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
+				specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
+		}
 
+
+		               /* if (material[objects.material_id - 1].blinn)
+										{
+		                	float3 halfVector = soft_normalize(lightDir + cameradir);
+		                	specular_coeff = pow(max(0.0f, soft_dot(normal, halfVector)), 25);
+										}
+										else
+										{
+		                // Phong
+		                	float3 reflectionVector = float3_reflect(-lightDir, normal);
+		                	specular_coeff = pow(max(0.0f, soft_dot(reflectionVector, cameradir)),15);
+										}*/
+
+				specular = ambient + diffuse + specular_coeff;
 	/*float	specular_coeff = 0.0f;
 	if (diffuse_coeff > 0.0f)
 	{
@@ -418,6 +437,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//
 	//linear color (color before gamma correction)
 	//
+
+
 	float4 specular1 = specular * ambient;
 	float4	linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
 	//final color (after gamma correction)
@@ -532,7 +553,6 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 {
 	t_ray  ray_light;
 	int i = -1;
-
 	ray_light.object = -1;
 	ray_light.pos = ray.pos + ray.dir * ray.deph;
 	if (light.type == POINTLIGHT)
@@ -619,14 +639,14 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	return (1.0f);
 }
 
-static float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials)
+static float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials, float3 campos)
 {
 	t_ray ray = nray;
 	float3	normal;
 	t_ray	reflect_ray;
 	reflect_ray.object = ray.object;
 	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	float4	point_color = objects[ray.object].color;
+	float4	point_color = color;//objects[ray.object].color;
 	float4	reflect_color;
 	int		j = 0;
 	while (j < scene->max_reflect)
@@ -641,7 +661,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 		while (i < scene->max_object)
 		{
 			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
-			if (d >= EPSILON && d < reflect_ray.deph)
+			if (d >= EPSILON && d < reflect_ray.deph && i != ray.object)
 			{
 				reflect_ray.deph = d;
 				reflect_ray.object = i;
@@ -656,7 +676,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials);
+					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos);
 					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -667,12 +687,8 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
 		}
 		else
-		{
 			return (clamp(color,  0.0f, 1.0f)  /*(float)(1.0f, 0.0f, 0.0f, 1.0f)*/);
-		}
-		//le return en dessous donne un effet ressemblant a l'effet cartoon
-		//return (point_color);
-		point_color += objects[reflect_ray.object].color * materials[objects[ray.object].material_id - 1].reflection;
+		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
 		reflect_color = point_color * color;
 		ray = reflect_ray;
 		j++;
@@ -680,7 +696,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 	return (clamp(reflect_color, 0.0f, 1.0f));
 }
 
-static float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights)
+static float4		refract_color(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights, float3 campos)
 {
 	t_ray ray = nray;
 	float3	normal;
@@ -717,7 +733,7 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials);
+					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials, campos);
 					shadow_attenuation *= shadow(refract_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -731,7 +747,12 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 		{
 			return (clamp(color, 0.0f, 1.0f));
 		}
-		point_color += objects[refract_ray.object].color * materials[objects[ray.object].material_id - 1].refraction;
+		//if (scene->max_reflect > 0 && materials[objects[refract_ray.object].material_id - 1].reflection > 0.0)
+		//{
+			//printf("laaaaaaaaaaaaaaa\n");
+		//	color += reflect_color(scene, lights, objects, refract_ray, materials);
+		//}
+		point_color += objects[refract_ray.object].color * materials[objects[nray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
@@ -779,16 +800,16 @@ __kernel void raytracer(__global uchar4* pixel,
 			i = 0;
 			while (i < scene->max_light)
 			{
-				color += light(&ray, objects[ray.object], lights[i], materials);
+				color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
 				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}
 			color *= (shadow_attenuation);
 			color.w = 1.0f;
 			if (scene->max_refract > 0 && materials[objects[ray.object].material_id - 1].refraction > 0.0)
-				color += refract_color(scene, objects, ray, materials, lights);
+				color += refract_color(scene, objects, ray, materials, lights, camera->position);
 			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
-				color += reflect_color(scene, lights, objects, ray, materials);
+				color += reflect_color(scene, lights, objects, ray, materials, camera->position);
 		}
 		else
 			color = noLight(&ray, objects[ray.object], materials, scene->max_material);

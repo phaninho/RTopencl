@@ -19,12 +19,12 @@
 	<sphere position="0.0 40.0 90.0" radius="5.0" color="255 255 255 255" material="1"/>
 	<!--	<cone position="-0.0 -15.0 155.0" color="255 255 255 255" radius="20" rotation="0.0 0.0 0.0"material="1"/>-->
 
-	<plane position="0.0 0.0 400.0" color="50 150 20 20" normal="0.0 0.0 -1.0" material="2"/>
-	<plane position="0.0 0.0 -400.0" color="150 50 20 255" normal="0.0 0.0 1.0" material="2"/>
-	<plane position="0.0 -400.0 0.0" color="50 50 120 255" normal="0.0 1.0 0.0" material="2"/>-->
-	<plane position="0.0 40.0 0.0" color="50 20 150 255" normal="0.0 -1.0 0.0" material="2"/>
-	<plane position="400.0 0.0 0.0" color="50 120 50 255" normal="-1.0 0.0 0.0" material="2"/>
-	<plane position="-400.0 0.0 0.0" color="150 20 50 255" normal="1.0 0.0 0.0" material="2"/>-->
+	<plane position="0.0 0.0 400.0" color="50 150 20 20" normal="0.0 0.0 -1.0" material="1"/>
+	<plane position="0.0 0.0 -400.0" color="150 50 20 255" normal="0.0 0.0 1.0" material="1"/>
+	<plane position="0.0 -400.0 0.0" color="50 50 120 255" normal="0.0 1.0 0.0" material="1"/>-->
+	<plane position="0.0 40.0 0.0" color="50 20 150 255" normal="0.0 -1.0 0.0" material="1"/>
+	<plane position="400.0 0.0 0.0" color="50 120 50 255" normal="-1.0 0.0 0.0" material="1"/>
+	<plane position="-400.0 0.0 0.0" color="150 20 50 255" normal="1.0 0.0 0.0" material="1"/>-->
 
 <!--	<spotlight position="40.0 -40.0 280.0" color="255 255 255" direction="0.0 1.0 -1.0" attenuation="0.001" angle="50"/>-->
 	<pointlight position="0.0 -40.0 320.0" color="255 255 255" attenuation="0.01"/>
@@ -41,8 +41,8 @@
 
 	<!--<triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
 
-	<material specular="225 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="1" refraction="0.01" shininess="100"/>
-	<material specular="225 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0" refraction="0" shininess="100"/>
+	<material specular="225 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="1" refraction="0" shininess="100"/>
+	<material specular="225 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0" refraction="0.3" shininess="100"/>
 	<material specular="225 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0" refraction="0" shininess="100"/>
 	<!--<texture load="texture.png"/>-->
 	<!--<render mod="grey"/>-->
