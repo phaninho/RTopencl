@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/28 16:14:13 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/14 16:22:01 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/02 20:44:21 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	init_scene(t_env *e)
 	e->scene.render_debug = 1;
 	e->scene.render_mod = 0;
 	e->scene.render_filter = (VEC4){{1.0f, 1.0f, 1.0f, 1.0f}};
-	e->scene.obj_index = 0;
 }
 
 void	init_camera(t_env *e)
