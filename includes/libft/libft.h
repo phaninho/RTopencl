@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/24 11:10:33 by qhonore           #+#    #+#             */
-/*   Updated: 2016/12/17 16:09:18 by paim             ###   ########.fr       */
+/*   Updated: 2017/03/11 12:29:36 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 char	*ft_strdup(const char *s1);
 int		ft_atoi(const char *str);
 double	ft_atof(const char *str);
+char	*ft_itoa(int nbr);
+char	*ft_ltoa(long nbr);
 size_t	ft_strlen(const char *s);
 int		ft_putstr(char const *s);
 void	ft_putendl(char const *s);
