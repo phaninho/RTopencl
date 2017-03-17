@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/03 09:30:05 by mgallo            #+#    #+#             */
-/*   Updated: 2016/12/17 17:14:06 by paim             ###   ########.fr       */
+/*   Updated: 2017/03/11 12:36:33 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@
 #include "thread/thread_SDL.h"
 #include <stdio.h>
 
-static int	thread_caillou(t_window *win)
+static int	thread_caillou(void *param)
 {
-	char	*tmp;
+	char		*tmp;
+	t_window	*win;
 
+	win = (t_window*)param;
 	tmp = check_name_screen(win);
 	if (!SDL_SaveBMP(win->surface, tmp))
 		free(tmp);
@@ -32,9 +34,9 @@ static int	thread_caillou(t_window *win)
 
 static VEC3	forward(const VEC3 *rot)
 {
-	VEC3	vec;
-	float	y[2];
-	float	len;
+	VEC3 vec;
+	float y[2];
+	float len;
 
 	vec = (VEC3){{0, 0, 1}};
 	return (rotatexyz(vec, *rot));
@@ -42,9 +44,9 @@ static VEC3	forward(const VEC3 *rot)
 
 static VEC3	straf(const VEC3 *rot)
 {
-	VEC3	vec;
-	float	y[2];
-	float	len;
+	VEC3 vec;
+	float y[2];
+	float len;
 
 	vec = (VEC3){{0, 0, 0}};
 	y[0] = cosf(TO_RADIANS(rot->y));
@@ -99,9 +101,9 @@ static void	updatekey2(t_env *env, t_window *win, VEC3 dir, t_threadSDL *tsdl)
 	}
 	if (win->keys[SDL_SCANCODE_P])
 	{
-		thread = SDL_CreateThread(thread_caillou, "test", win);
+		thread = SDL_CreateThread(thread_caillou,"test", win);
 		win->keys[SDL_SCANCODE_P] = 0;
-		//SDL_KillThread(thread);
+//		SDL_KillThread(thread);
 	}
 }
 

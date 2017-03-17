@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/04 13:45:36 by qhonore           #+#    #+#             */
-/*   Updated: 2017/02/27 16:46:02 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/14 16:21:49 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,5 +111,6 @@ void		parse_file(t_env *e, const char *name)
 		i = parse_file2(file, e, i, &p);
 		i++;
 	}
+	e->scene.name = (char*)name;
 	free(file);
 }

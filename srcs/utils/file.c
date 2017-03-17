@@ -36,11 +36,11 @@ int		file_exist(const char *name)
 	FILE	*file;
 
 	if ((file = fopen(name, "r")))
-	{
-		fclose(file);
-		return (1);
-	}
-	return (0);
+    {
+        fclose(file);
+        return (1);
+    }
+    return (0);
 }
 
 int		screen_exist(int nb)
