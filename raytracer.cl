@@ -58,7 +58,7 @@ typedef struct	s_texture
 
 typedef struct	s_scene
 {
-	//char		*name;
+	char		*name;
 	int			width;
 	int			height;
 	float		znear;
