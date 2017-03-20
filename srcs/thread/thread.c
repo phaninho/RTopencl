@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   thread.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/17 12:29:47 by stmartin          #+#    #+#             */
-/*   Updated: 2017/03/17 12:29:49 by stmartin         ###   ########.fr       */
+/*   Created: 2016/11/17 13:46:51 by mgallo            #+#    #+#             */
+/*   Updated: 2016/11/26 09:19:34 by mgallo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void		thread_init(void)
 	t_thread	*cl;
 	cl_int		err;
 
-	ft_memset(cl, 0, sizeof(t_thread));
 	cl = thread_get();
 	cl->platform_id = NULL;
 	err = clGetPlatformIDs(1, &(cl->platform_id), &(cl->platform_count));

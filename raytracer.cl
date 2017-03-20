@@ -29,8 +29,7 @@
 # define CONE (CYLINDER + 1)
 # define TRIANGLE (CONE + 1)
 # define DISK (TRIANGLE + 1)
-# define TORUS (DISK + 1)
-# define CYLINDERINF (TORUS + 1)
+# define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
 # define END_OBJECTS (CONEINF)
 
@@ -92,11 +91,6 @@ typedef struct	s_objects
 	float3		normal;
 	float4		color;
 	float		radius;
-	float		radius2;
-	float		a;
-	float		b;
-	float		d;
-	float 		dist;
 	int			material_id;
 	int			texture_id;
 	int			in_object;
@@ -279,13 +273,6 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 		float3 nor = impact - objects.position;
 		nor.y = -0.01f * nor.y;
 		return (soft_normalize(nor));
-	}
-	else if (objects.type == TORUS)
-	{
-		float k = soft_dot((impact - objects.position), objects.normal);
-		float3 a = impact - objects.position * k;
-		float m = sqrt(pow(objects.radius2, 2) - k * k );
-		return (soft_normalize(impact - a - (objects.position - a) * m / (objects.radius + m)));
 	}
 	return ((float3)(0, 0, 0));
 }
@@ -475,113 +462,16 @@ static float4 noLight(t_ray *ray, const t_objects objects, __constant t_material
 	return (objColor);
 }
 
-/*
-//static float 	solvequadratic(float a, float b, float c, float d, float e);
-static float 	solvecubic(float a, float b, float c, float d);
-
-static float   findclosest(const float *roots)
-{
-	int 	i = 0;
-	float 	t;
-
-	t = roots[i];
-	while (roots[i])
-	{
-		if (t < roots[i])
-			t = roots[i];
-		++i;
-	}
-	return (t);
-}
-
-static float 	solvequadratic(float a,float b,float c,float d,float e)
-{
-    if (a == 0)
-        return (solvecubic(b, c, d, e));
-    b /= a;
-    c /= a;
-    d /= a;
-    e /= a;
-    float roots[4];
-    float b2 = b * b;
-    float b3 = b * b2;
-    float b4 = b2 * b2;
-    float alpha = (-3.0/8.0) * b2 + c;
-    float beta  = b3 / 8.0 - b * c/ 2.0 + d;
-    float gamma = (-3.0 / 256.0) * b4 + b2 * c/16.0 - b * d / 4.0 + e;
-    float alpha2 = alpha * alpha;
-    float t = -b / 4.0;
-    if (beta == 0)
-    {
-        float rad = sqrt(alpha2 - 4.0 * gamma);
-        float r1 = sqrt((-alpha + rad) / 2.0);
-        float r2 = sqrt((-alpha - rad) / 2.0);
-        roots[0] = t + r1;
-        roots[1] = t - r1;
-        roots[2] = t + r2;
-        roots[3] = t - r2;
-    }
-    else
-    {
-        float alpha3 = alpha * alpha2;
-        float P = - (alpha2 / 12.0 + gamma);
-        float Q = - alpha3 / 108.0 + alpha * gamma / 3.0 - beta * beta / 8.0;
-        float R = -Q / 2.0 + sqrt(Q * Q / 4.0 + P * P * P/ 27.0);
-        float U = cbrt(R);
-        float y = (-5.0 / 6.0) * alpha + U;
-        y -= (U == 0 ? cbrt(Q) : P/ (3.0 * U));
-        float W = sqrt(alpha + 2.0 * y);
-        float r1 = sqrt(-(3.0 * alpha + 2.0 * y + 2.0 * beta / W));
-        float r2 = sqrt(-(3.0 * alpha + 2.0 * y - 2.0 * beta / W));
-        roots[0] = t + ( W - r1) / 2.0;
-        roots[1] = t + ( W + r1) / 2.0;
-        roots[2] = t + (-W - r2) / 2.0;
-        roots[3] = t + (-W + r2) / 2.0;
-    }
-    return (findclosest(roots));
-}
-
-static float 	solvecubic(float a,float b, float c,float d)
-{
-	float roots[3];
-
-    if (a == 0)
-        return (solvequadratic(b, c, d));
-    b /= a;
-    c /= a;
-    d /= a;
-
-    float S = b/3.0;
-    float D = c/3.0 - S*S;
-    float E = S*S*S + (d - S*c)/2.0;
-    float Froot = sqrt(E*E + D*D*D);
-
-    float F = -Froot - E;
-
-    if (F == 0)
-        F = Froot - E;
-    for (int i=0; i < 3; ++i)
-    {
-        const float G = cbrt(F);
-        roots[i] = cbrt(F) - D/G - S;
-    }
-    return (findclosest(roots));
-}*/
-
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
-	float3 dist = ray->pos - objects.position;
-	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
-//float3 rdir = ray->dir;
-	float a, b, c, d, e;
-	float m, n, o, p, q;
+	float3 dist;
+	float a, b, c;
 	float solve;
 	float t0, t1;
-	m = soft_dot(rdir, rdir);
-	n = soft_dot(rdir, dist);
-	o = soft_dot(dist, dist);
-	p = soft_dot(rdir, objects.normal);
-	q = soft_dot(dist, objects.normal);
+
+	dist = ray->pos - objects.position;
+	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
+	//float3 rdir = ray->dir;
 	if (objects.type == SPHERE)
 	{
 		c = soft_dot(dist, dist) - objects.radius * objects.radius;
@@ -633,25 +523,6 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 		b = rdir.x * dist.x + rdir.z * dist.z - rdir.y * dist.y;
 		c = dist.x * dist.x + dist.z * dist.z - dist.y * dist.y;
 	}
-	/*else if (objects.type == TORUS)
-	{
-		a = m * m;
-		b = 4 * m * n;
-
-		c = 4 * m * m + 2 * m * o - \
-		2 * (pow(objects.radius,2) + pow(objects.radius2, 2)) * m + \
-		 4 * pow(objects.radius, 2) * pow(p, 2);
-
-		d = 4 * n * o - \
-		4 * (pow(objects.radius, 2) + pow(objects.radius2, 2)) * n + \
-		 8 * pow(objects.radius, 2) * p * q;
-
-		e = pow(o,2) - \
-		2 * (pow(objects.radius, 2) + pow(objects.radius2, 2)) * o + \
-		4 * pow(objects.radius, 2) * pow(q, 2) + \
-		 pow((pow(objects.radius, 2) + pow(objects.radius2, 2)),2);
-		return (solvequadratic(a, b, c, d, e));
-	}*/
 	else
 		return (FLT_MAX);
 	solve = b * b - a * c;
@@ -661,16 +532,16 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	t1 = (-b + sqrt(solve)) / a;
 	if (objects.type == CYLINDER)
 	{
-		float max = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
-		if (fmax(max,0) > 0 && fmax(max,0) < 50)
- 			return (deph_min(t0, t1));
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
+			return (deph_min(t0, t1));
 		else
 			return (FLT_MAX);
 	}
 	if (objects.type == CONE)
 	{
-		float max = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
-		if (fmax(max,0) > 0 && fmax(max,0) < 50)
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
 			return (deph_min(t0, t1));
 		else
 			return (FLT_MAX);
@@ -775,7 +646,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 	t_ray	reflect_ray;
 	reflect_ray.object = ray.object;
 	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	float4	point_color = color; //objects[ray.object].color;
+	float4	point_color = color;//objects[ray.object].color;
 	float4	reflect_color;
 	int		j = 0;
 	while (j < scene->max_reflect)
@@ -908,6 +779,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	ray.deph = scene->zfar;
 	ray.pos = (float3)(camera->position.x, camera->position.y, camera->position.z);
 	ray.dir = soft_normalize((float3)((x - xmax / 2.0f), (y - ymax / 2.0f), xmax / scene->focale));
+	// ray.dir = soft_normalize(rotatexyz(ray.dir, camera->rotation));
 	ray.dir = soft_normalize(rotatexyz(ray.dir, camera->rotation));
 	ray.object = -1;
 	int i = 0;

@@ -53,7 +53,6 @@ char		*g_tags[] =
 	"cone",
 	"triangle",
 	"disk",
-	"torus",
 	"cylinderinf",
 	"coneinf",
 	"spotlight",

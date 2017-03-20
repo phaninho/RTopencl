@@ -6,12 +6,14 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/16 15:29:02 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/20 13:16:38 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INTERFACE_H
 # define INTERFACE_H
+
+#include "raytracer/rt_env.h"
 
 # define DARK_GREY 0x646464
 # define WHITE 0xf0f0f0
@@ -52,6 +54,8 @@ struct		s_button
 	t_func		exec;
 	char		*name;
 	SDL_Rect	rect;
+	int			on;
+	int			type;
 };
 
 struct		s_slider
@@ -69,16 +73,21 @@ void		init_font(void);
 void		draw_ui(void);
 void		draw_text(char *str, int x, int y, int c);
 void		draw_number(long nb, int x, int y, int c);
+void		draw_vec3(VEC3 vec, t_vec2i p, int c, int space);
+void		draw_vec4(VEC4 vec, t_vec2i p, int c, int space);
 void		draw_rect(SDL_Rect rect, int color);
 
 t_button	*get_button(int i);
 t_slider	*get_slider(int i);
 t_vec2i		*last_click(void);
+VEC4		to_255(VEC4 color);
 void		exec_button(int i, int type);
 int			in_rect(SDL_Rect rec, int x, int y);
 void		button_clicked(int x, int y);
 void		draw_buttons(void);
 void		slider_move(t_slider *button);
+void		update_onoff(t_button *button);
+t_button	*get_on_button(int type);
 
 void		button_render_mod(void *button);
 void		slider_render_mod(void *button);
