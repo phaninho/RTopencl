@@ -32,7 +32,7 @@ RM = /bin/rm -f
 all: build $(NAME)
 
 build :
-	mkdir -p $(OBJ_ALL_DIR)
+	@mkdir -p $(OBJ_ALL_DIR)
 
 install:
 	@mkdir -p libsdl && cd libsdl && ../SDL2-2.0.5/configure --prefix=`pwd` && make && make install
