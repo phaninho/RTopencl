@@ -204,6 +204,7 @@ static float3		float3_refract(const float3 v, const float3 normal, const float e
 static float3 get_normal(t_ray *ray, const t_objects objects)
 {
 	float3 impact = ray->pos + ray->dir * ray->deph;
+
 	if (objects.type == SPHERE)
 	{
 		return (soft_normalize(impact - objects.position));
@@ -241,18 +242,13 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 			(soft_dot((impact-objects.position), objects.normal) + objects.dist)));
 	else if (objects.type == ELLIPSOID)
 	{
-			m = soft_dot(rdir, rdir);
-			n = soft_dot(rdir, dist);
-			o = soft_dot(dist, dist);
-			p = soft_dot(rdir, objects.normal);
-			q = soft_dot(dist, objects.normal);
-		float A1  = 2 * objects.depth * p;
-   		float A2  = pow(objects.radius, 2) + 2 * objects.dist * q - objects.dist;
-   		a   = 4 * pow(objects.radius, 2) * m - A1 * A1;
-   		b = 2 * (4 * pow(objects.radius, 2) * n - A1 * A2);
-   		float3 Cmid = C + V * objects.dist/2;
+		float A1  = 2 * objects.depth * soft_dot(ray->dir, objects.normal);
+   		float A2  = pow(objects.radius, 2) + 2 * objects.dist * soft_dot(dist, objects.normal) - objects.dist;
+   		a = 4 * pow(objects.radius, 2) * soft_dot(ray->dir, ray->dir) - A1 * A1;
+   		b = 2 * (4 * pow(objects.radius, 2) * soft_dot(ray->dir, dist) - A1 * A2);
+   		float3 Cmid = objects.position + objects.normal * objects.dist / 2;
   		float3 R = impact - Cmid;
-  		return (soft_normalize( R - objects.normal * (1 - (b * b) / (a * a))* soft_dot(R, objects.normal) )
+  		return (soft_normalize( R - objects.normal * (1 - (b * b) / (a * a))* soft_dot(R, objects.normal));
    	}
 	// else if (objects.type == SOR)
 	// {
