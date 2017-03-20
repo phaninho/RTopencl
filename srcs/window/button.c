@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/20 17:25:31 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/20 17:53:59 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ t_button	g_buttons[] =
 	{11, button_objects, "Color:", {WIN_W - 290, 418, 90, 25}, 0, 2},
 	{12, button_objects, "Normal:", {WIN_W - 290, 448, 90, 25}, 0, 2},
 	{13, button_objects, "Radius:", {WIN_W - 290, 478, 90, 25}, 0, 2},
-	{13, button_objects, "<", {WIN_W - 185, 510, 20, 20}, 0, 0},
-	{14, button_objects, ">", {WIN_W - 135, 510, 20, 20}, 0, 0},
+	{14, button_objects, "<", {WIN_W - 185, 510, 20, 20}, 0, 0},
+	{15, button_objects, ">", {WIN_W - 135, 510, 20, 20}, 0, 0},
 	{0, NULL, NULL, {0, 0, 0, 0}, 0, 0}
 };
 
