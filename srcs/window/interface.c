@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/16 15:49:57 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/20 17:23:39 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,6 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 #include "parser/rt_parser.h"
-
-t_vec2i		*last_click(void)
-{
-	static t_vec2i	pos = (t_vec2i){0, 0};
-
-	return (&pos);
-}
 
 static void	draw_filter_n_scene(t_window *win, t_scene *scene)
 {
@@ -40,12 +33,15 @@ static void	draw_object(t_window *win, t_scene *scene, t_objects *obj)
 	draw_rect((SDL_Rect){win->width - 290, 290, 280, 2}, DARK_GREY);
 	draw_text("OBJECT", CENTER_X - 10, 310, DARK_GREY);
 	draw_number(scene->obj_index, CENTER_X + 45, 310, DARK_GREY);
-	draw_text("Type:", CENTER_X - 80, 360, DARK_GREY);
-	draw_text(get_tag(obj->type), CENTER_X, 360, DARK_GREY);
-	draw_text("Position:", CENTER_X - 95, 390, DARK_GREY);
-	draw_number(obj->position.x, CENTER_X - 25, 390, DARK_GREY);
-	draw_number(obj->position.y, CENTER_X + 25, 390, DARK_GREY);
-	draw_number(obj->position.z, CENTER_X + 75, 390, DARK_GREY);
+	draw_text("Type:", CENTER_X - 80, 340, DARK_GREY);
+	draw_text(get_tag(obj->type), CENTER_X, 340, DARK_GREY);
+	draw_vec3(obj->position, (t_vec2i){CENTER_X - 25, 370}, DARK_GREY, 50);
+	draw_vec3(obj->rotation, (t_vec2i){CENTER_X - 25, 400}, DARK_GREY, 50);
+	draw_vec4(to_255(obj->color), (t_vec2i){CENTER_X - 25, 430}, DARK_GREY, 40);
+	draw_vec3(obj->normal, (t_vec2i){CENTER_X - 25, 460}, DARK_GREY, 50);
+	draw_number(obj->radius, CENTER_X, 490, DARK_GREY);
+	draw_text("Material:", CENTER_X - 90, 520, DARK_GREY);
+	draw_number(obj->material_id, CENTER_X, 520, DARK_GREY);
 }
 
 void		draw_ui(void)

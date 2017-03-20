@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 20:25:43 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/11 16:48:22 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/17 15:38:59 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void				draw_text(char *str, int x, int y, int c)
 
 	win = window_get();
 	font = get_font();
-
 	color.a = !(c >> 24 & 0xff) ? 0xff : (c >> 24 & 0xff);
 	color.r = c >> 16 & 0xff;
 	color.g = c >> 8 & 0xff;

@@ -779,6 +779,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	ray.deph = scene->zfar;
 	ray.pos = (float3)(camera->position.x, camera->position.y, camera->position.z);
 	ray.dir = soft_normalize((float3)((x - xmax / 2.0f), (y - ymax / 2.0f), xmax / scene->focale));
+	// ray.dir = soft_normalize(rotatexyz(ray.dir, camera->rotation));
 	ray.dir = soft_normalize(rotatexyz(ray.dir, camera->rotation));
 	ray.object = -1;
 	int i = 0;

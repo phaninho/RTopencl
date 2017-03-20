@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 12:56:52 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/10 19:45:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/20 12:46:35 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	draw_slider(t_window *win, t_slider *s)
 
 static void	draw_onoff(t_window *win, t_button *button)
 {
-	draw_rect(button->rect, 0x606060);
+	draw_rect(button->rect, button->on ? 0xaad700 : 0x606060);
 	draw_text(button->name, button->rect.x + button->rect.w / 2,\
 									button->rect.y + button->rect.h / 2, WHITE);
 }
