@@ -571,7 +571,7 @@ static float 	solvecubic(float a,float b, float c,float d)
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
 	float3 dist = ray->pos - objects.position;
-	float3 rdir = soft_normalize(rotatexyz(ray->dir, objects.rotation));
+	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
 //float3 rdir = ray->dir;
 	float a, b, c, d, e;
 	float m, n, o, p, q;

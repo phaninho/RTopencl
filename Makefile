@@ -6,7 +6,7 @@
 #    By: lvalenti <lvalenti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/03/24 12:41:09 by lvalenti          #+#    #+#              #
-#    Updated: 2017/03/02 15:56:14 by qhonore          ###   ########.fr        #
+#    Updated: 2017/03/20 17:43:40 by stmartin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRC_ALL_DIR = $(shell find $(SRC_DIR) -type d)
 OBJ_ALL_DIR = $(SRC_ALL_DIR:$(SRC_DIR)%=$(OBJ_DIR)%)
 
 IFLAGS = -I $(INC_DIR) -I ./libsdl/include -I ./libpng/include
-# FLAGS = -Wall -Werror -Wextra -O2 -O3
+#FLAGS = -Wall -Werror -Wextra -O2 -O3
 
 CC = gcc -g $(FLAGS)
 LIBFLAGS = -L ./libsdl/lib -lSDL2 -lSDL2_ttf -L ./libpng/lib -lpng -framework OPENCL

@@ -26,6 +26,7 @@ void		thread_init(void)
 	t_thread	*cl;
 	cl_int		err;
 
+	ft_memset(cl, 0, sizeof(t_thread));
 	cl = thread_get();
 	cl->platform_id = NULL;
 	err = clGetPlatformIDs(1, &(cl->platform_id), &(cl->platform_count));
