@@ -10,9 +10,10 @@
 #define CYLINDERINF 7
 #define CONEINF 8
 #define TRIANGLE 9
-//#define ELLIPSOID 10
-//#define TORUS 11
-//#define SOR 12
+//#define PARABOLOID 10 // variable : pos, normal, dist (distance entre les 2 points)
+//#define ELLIPSOID 11 // variable : pos, dist (distance entre les 2 points), normal, radius
+//#define TORUS 12 // variable : pos, normal, Grand radius et petit radius.
+//#define SOR 13 //<- ne pas ajourter // pos, normal, taille(dist), coeficient a b c d.
 #define SPOTLIGHT 10
 #define POINTLIGHT 11
 #define DIRLIGHT 12
@@ -65,11 +66,11 @@ typedef struct	s_objects
 	float3		normal;
 	float4		color;
 	float		radius;
-	float		radius2;
-	float		a;
-	float		b;
-	float		d;
-	float 		dist;
+	float		radius2; // petit radius pour torus
+	//float		a;
+	//float		b;
+	//float		d;
+	float 		dist; // distance des point pour parabol, epsilloid
 	int			material_id;
 	int			texture_id;
 	int			in_object;
@@ -446,7 +447,7 @@ float   findclosest(float *roots)
 	t = roots[i];
 	while (roots[i])
 	{
-		if (t < roots[i])
+		if (t > roots[i])
 			t = roots[i];
 		++i;
 	}
@@ -456,6 +457,7 @@ float   findclosest(float *roots)
 float 	solvecubic(float a, float b, float c, float d)
 {
 	float roots[3];
+    int i = 0;
 
     if (a == 0)
         return (solvequadratic(b, c, d));
@@ -463,19 +465,20 @@ float 	solvecubic(float a, float b, float c, float d)
     c /= a;
     d /= a;
 
-    float S = b/3.0;
-    float D = c/3.0 - S*S;
-    float E = S*S*S + (d - S*c)/2.0;
-    float Froot = sqrt(E*E + D*D*D);
+    float S = b / 3.0;
+    float D = c / 3.0 - S * S;
+    float E = S * S * S + (d - S * c) / 2.0;
+    float Froot = sqrt(E * E + D * D * D);
 
     float F = -Froot - E;
 
     if (F == 0) 
         F = Froot - E;
-    for (int i=0; i < 3; ++i) 
+    while (i < 3) 
     {
-        const float G = cbrt(F,i);
-        roots[i] = cbrt(F,i) - D/G - S;
+        const float G = pow(F, ((1 / 3) * i));
+        roots[i] = pow(F, ((1 / 3) * i)) - D / G - S;
+        ++i;
     }
     return (findclosest(roots));
 }
@@ -513,9 +516,9 @@ float 	solvequartic(float a, float b, float c, float d, float e)
         float P = - (alpha2 / 12.0 + gamma);
         float Q = - alpha3 / 108.0 + alpha * gamma / 3.0 - beta * beta / 8.0;
         float R = -Q / 2.0 + sqrt(Q * Q / 4.0 + P * P * P/ 27.0);
-        float U = cbrt(R, 0);
+        float U = cbrt(R);
         float y = (-5.0 / 6.0) * alpha + U;
-        (U == 0 ? y -= cbrt(Q, 0) : y -= P/ (3.0 * U));
+        (U == 0 ? y -= cbrt(Q) : P/ (3.0 * U));
         float W = sqrt(alpha + 2.0 * y);
         float r1 = sqrt(-(3.0 * alpha + 2.0 * y + 2.0 * beta / W));
         float r2 = sqrt(-(3.0 * alpha + 2.0 * y - 2.0 * beta / W));
@@ -524,7 +527,7 @@ float 	solvequartic(float a, float b, float c, float d, float e)
         roots[2] = t + (-W - r2) / 2.0;
         roots[3] = t + (-W + r2) / 2.0;
     }
-    return (findclosest(root));
+    return (findclosest(roots));
 }
 
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
