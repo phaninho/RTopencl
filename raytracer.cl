@@ -454,31 +454,96 @@ float   findclosest(float *roots)
 	return (t);
 }
 
-float 	solvecubic(float a, float b, float c, float d)
+// float 	solvecubic(float a, float b, float c, float d)
+// {
+// 	float roots[3];
+//     int i = 0;
+
+//     if (a == 0)
+//         return (solvequadratic(b, c, d));
+//     b /= a;
+//     c /= a;
+//     d /= a;
+
+//     float S = b / 3.0;
+//     float D = c / 3.0 - S * S;
+//     float E = S * S * S + (d - S * c) / 2.0;
+//     float Froot = sqrt(E * E + D * D * D);
+
+//     float F = -Froot - E;
+
+//     printf("%f\n", F);
+//     if (F == 0) 
+//         F = Froot - E;
+//     while (i < 3) 
+//     {
+//         // float m = pow(F, (1 / (float)i)) - D / pow(F, (1 / (float)i)) - S;
+//         // printf("%f\n", m );
+//         // printf("%f\n", pow(F, (1 / (float)i)));
+//             roots[i] = pow(F, (1 / (float)i)) - D / pow(F, (1 / (float)i)) - S;
+//         ++i;
+//     }
+//     return (findclosest(roots));
+// }
+
+float   solvecubic(float x, float a, float b, float c)
 {
-	float roots[3];
-    int i = 0;
+    float roots[3];
 
-    if (a == 0)
-        return (solvequadratic(b, c, d));
-    b /= a;
-    c /= a;
-    d /= a;
 
-    float S = b / 3.0;
-    float D = c / 3.0 - S * S;
-    float E = S * S * S + (d - S * c) / 2.0;
-    float Froot = sqrt(E * E + D * D * D);
+    if (x == 0)
+        return (solvequadratic(a, b, c));
+    a /= x;
+    b /= x;
+    c /= x;
 
-    float F = -Froot - E;
-
-    if (F == 0) 
-        F = Froot - E;
-    while (i < 3) 
+    float p = (3 * b - a * a) / 3;
+    float q = (3 * pow(a, 3) - 9 * a * b + 27 * c) / 27;
+    if (p == 0 && q == 0)
     {
-        const float G = pow(F, ((1 / 3) * i));
-        roots[i] = pow(F, ((1 / 3) * i)) - D / G - S;
-        ++i;
+            roots[0] = 0;
+            roots[1] = 0;
+            roots[2] = 0;
+    }
+    else if (p && q)
+    {
+        float discri = pow(q/2,2) + pow(p/3,3);
+        float u = cbrt(((-1 * ( q / 2)) + sqrt(discri)));
+        float v = cbrt((q / 2) + sqrt(discri));
+        if (discri == 0)
+        {
+            roots[0] = 2 * (cbrt(-1 * (q / 2))) - a / 3;
+            roots[1] = -1 * cbrt(-1 * (q / 2)) - a / 3;
+            roots[2] =  cbrt((q / 2)) - a / 3;
+        }
+        else if (discri > 0)
+        {
+            roots[0] = u - v - a / 3;
+            roots[1] = -0.5 * (u - v) + (u + v) * ((sqrt(3) / 2) * I) - a / 3;
+            roots[2] = -0.5 * (u - v) - (u + v) * ((sqrt(3) / 2) * I) - a / 3;
+        }
+        else if (discri < 0)
+        {
+            float r = sqrt(pow(-1 * (p / 3), 3));
+            float phi = acos(-1 * (q / (2 * r)));
+            roots[0] = 2 * cbrt(r) * cos(phi / 3) - a / 3;
+            roots[1] = 2 * cbrt(r) * cos((phi + 2 * M_PI) / 3) - a / 3;
+            roots[2] = 2 * cbrt(r) * cos((phi + 4 * M_PI) / 3) - a / 3;
+        }
+    }
+    else if (p && q == 0)
+    {
+
+        roots[0] = (-1 * a)/3;
+        roots[1] = ( -1 * p) - a / 3;
+        roots[2] = -1 * ( -1 * p) - a / 3;
+    }
+    else if (p == 0 && q)
+    {
+
+        roots[0] = cbrt(-1 * q) - a / 3;
+        roots[1] = cbrt(-1 * q) * ( -0.5 + sqrt(3) * I / 2) - a / 3;
+        roots[2] = cbrt(-1 * q) * ( -0.5 - sqrt(3) * I / 2) - a / 3;
     }
     return (findclosest(roots));
 }
