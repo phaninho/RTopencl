@@ -439,14 +439,14 @@ float		solvequadratic(float a, float b, float c)
 	return (t);
 }
 
-float   findclosest(float *roots)
+float   findclosest(float *roots, int a)
 {
 	int 	i = 0;
 	float 	t;
 
 	t = roots[i];
-	while (roots[i])
-	{
+    while (i != a)
+    {
 		if (t > roots[i])
 			t = roots[i];
 		++i;
@@ -483,7 +483,7 @@ float   findclosest(float *roots)
 //             roots[i] = pow(F, (1 / (float)i)) - D / pow(F, (1 / (float)i)) - S;
 //         ++i;
 //     }
-//     return (findclosest(roots));
+//     return (findclosest(roots,);
 // }
 
 float   solvecubic(float x, float a, float b, float c)
@@ -525,7 +525,7 @@ float   solvecubic(float x, float a, float b, float c)
         else if (discri < 0)
         {
             float r = sqrt(pow(-1 * (p / 3), 3));
-            float phi = acos(-1 * (q / (2 * r)));
+            float phi = cos(-1 * (q / (2 * r)));
             roots[0] = 2 * cbrt(r) * cos(phi / 3) - a / 3;
             roots[1] = 2 * cbrt(r) * cos((phi + 2 * M_PI) / 3) - a / 3;
             roots[2] = 2 * cbrt(r) * cos((phi + 4 * M_PI) / 3) - a / 3;
@@ -545,9 +545,34 @@ float   solvecubic(float x, float a, float b, float c)
         roots[1] = cbrt(-1 * q) * ( -0.5 + sqrt(3) * I / 2) - a / 3;
         roots[2] = cbrt(-1 * q) * ( -0.5 - sqrt(3) * I / 2) - a / 3;
     }
-    return (findclosest(roots));
-}
 
+    return (findclosest(roots, 3));
+}
+// float   solvecubic(float _Complex a, float _Complex b, float _Complex c, float _Complex d)
+//     {
+//         if (a == 0)
+//             return (solvequadratic(a, b, c));
+//         b /= a;
+//         c /= a;
+//         d /= a;
+//         float _Complex roots[3];
+//         float _Complex S = b/3.0;
+//         float _Complex D = c/3.0 - S*S;
+//         float _Complex E = S*S*S + (d - S*c)/2.0;
+//         float _Complex Froot = sqrt(E*E + D*D*D);
+//         float _Complex F = -Froot - E;
+
+//         if (F == 0) 
+//         {
+//             F = Froot - E;
+//         }
+//         for (int i=0; i < 3; ++i) 
+//         {
+//             const float _Complex G = cbrt(F);
+//             roots[i] = G - D/G - S;
+//         }
+//         return (findclosest((floa,*)roots));
+//     }
 float 	solvequartic(float a, float b, float c, float d, float e)
 {
     if (a == 0)
@@ -592,9 +617,8 @@ float 	solvequartic(float a, float b, float c, float d, float e)
         roots[2] = t + (-W - r2) / 2.0;
         roots[3] = t + (-W + r2) / 2.0;
     }
-    return (findclosest(roots));
+    return (findclosest(roots, 4));
 }
-
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
 	float3 dist;
