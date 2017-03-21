@@ -60,13 +60,13 @@ void		button_lights(void *param)
 
 	scene = &(env_get()->scene);
 	button = (t_button*)param;
-	if (button->id == 5 && scene->max_reflect > 0)
+	if (button->id == 7 && scene->max_reflect > 0)
 		scene->max_reflect--;
-	else if (button->id == 6 && scene->max_reflect < 20)
+	else if (button->id == 8 && scene->max_reflect < 20)
 		scene->max_reflect++;
-	else if (button->id == 7 && scene->max_refract > 0)
+	else if (button->id == 9 && scene->max_refract > 0)
 		scene->max_refract--;
-	else if (button->id == 8 && scene->max_refract < 20)
+	else if (button->id == 10 && scene->max_refract < 20)
 		scene->max_refract++;
 }
 
