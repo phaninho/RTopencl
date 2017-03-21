@@ -32,6 +32,8 @@ void		button_render_mod(void *param)
 		*mod = (*mod == RENDERMODE_ADD ? 0 : RENDERMODE_ADD);
 	else if (button->id == 5)
 		*mod = (*mod == RENDERMODE_NEGATIF ? 0 : RENDERMODE_NEGATIF);
+	else if (button->id == 6)
+		*mod = (*mod == RENDERMODE_CARTOON ? 0 : RENDERMODE_CARTOON);
 	update_onoff(button);
 }
 

@@ -48,6 +48,8 @@
 #define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
 #define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
 #define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
+#define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
+#define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
 
 typedef struct	s_texture
 {
@@ -837,10 +839,49 @@ __kernel void raytracer(__global uchar4* pixel,
 	{
 		color *= scene->render_filter;
  	}
- 	else if (scene->render_mod == RENDERMODE_ADD)
+	else if (scene->render_mod == RENDERMODE_ADD)
  	{
  		color = (color + scene->render_filter) / 2.0f;
  	}
-  	color = clamp(color, 0.0f, 1.0f);
+	else if (scene->render_mod == RENDERMODE_NEGATIF)
+	{
+		color.r = 1 - color.r;
+		color.g = 1 - color.g;
+		color.b = 1 - color.b;
+	}
+	else if (scene->render_mod == RENDERMODE_CARTOON)
+	{
+		if (color.x < 0.2f)
+			color.x = 0.0f;
+		if (color.y < 0.2f)
+			color.y = 0.0f;
+		if (color.z < 0.2f)
+			color.z = 0.0f;
+		if (color.x >= 0.2f && color.x < 0.4f)
+			color.x = 0.2f;
+		if (color.y >= 0.2f && color.y < 0.4f)
+			color.y = 0.2f;
+		if (color.z >= 0.2f && color.z < 0.4f)
+			color.z = 0.2f;
+		if (color.x >= 0.4f && color.x < 0.5f)
+			color.x = 0.4f;
+		if (color.y >= 0.4f && color.y < 0.5f)
+			color.y = 0.4f;
+		if (color.z >= 0.4f && color.z < 0.5f)
+			color.z = 0.4f;
+		if (color.x >= 0.5f)
+			color.x = 1.0f;
+		if (color.y >= 0.5f)
+			color.y = 1.0f;
+		if (color.z >= 0.5f)
+			color.z = 1.0f;
+	}
+	/*else if (scene->render_mod == RENDERMODE_COMPLEX)
+	{
+		color.r = color.r + (camera->position.x / 1000);
+		color.g = color.g + (camera->position.y / 1000);
+		color.b = color.b + (camera->position.z / 1000);
+	}*/
+  color = clamp(color, 0.0f, 1.0f);
  	pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
 }
