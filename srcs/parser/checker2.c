@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/30 14:39:59 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/02 20:48:46 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 17:13:13 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void			check_render(t_env *e, t_arg *arg)
 {
 	if (arg->aint[DEBUG] == 0 || arg->aint[DEBUG] == 1)
 		e->scene.render_debug = arg->aint[DEBUG];
-	if (arg->mod >= RENDERMODE_SEPIA && arg->mod <= RENDERMODE_ADD)
+	if (arg->mod >= RENDERMODE && arg->mod <= END_RENDERMODE)
 		e->scene.render_mod = arg->mod;
 	e->scene.render_filter = check_color(arg->color[FILTER - COLOR]);
 }

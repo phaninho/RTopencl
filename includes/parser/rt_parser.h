@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:40:42 by qhonore           #+#    #+#             */
-/*   Updated: 2016/12/16 17:43:39 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 17:20:16 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,42 +16,43 @@
 # include "raytracer/rt_env.h"
 
 # define WIDTH 0
-# define HEIGHT 1
-# define MAXREFLECT 2
-# define MAXREFRACT 3
-# define MATERIALID 4
-# define BLINN 5
-# define DEBUG 6
+# define HEIGHT (WIDTH + 1)
+# define MAXREFLECT (HEIGHT + 1)
+# define MAXREFRACT (MAXREFLECT + 1)
+# define MATERIALID (MAXREFRACT + 1)
+# define BLINN (MATERIALID + 1)
+# define DEBUG (BLINN + 1)
+# define PERLIN (DEBUG + 1)
 
-# define DOUBLE 7
-# define FOV 7
-# define ZNEAR 8
-# define ZFAR 9
-# define RADIUS 10
-# define REFLECTION 11
-# define REFRACTION 12
-# define ATTENUATION 13
-# define ANGLE 14
-# define SHININESS 15
+# define DOUBLE (PERLIN + 1)
+# define FOV (DOUBLE)
+# define ZNEAR (FOV + 1)
+# define ZFAR (ZNEAR + 1)
+# define RADIUS (ZFAR + 1)
+# define REFLECTION (RADIUS + 1)
+# define REFRACTION (REFLECTION + 1)
+# define ATTENUATION (REFRACTION + 1)
+# define ANGLE (ATTENUATION + 1)
+# define SHININESS (ANGLE + 1)
 
-# define VEC 16
-# define NORMAL 16
-# define ROTATION 17
-# define POSITION 18
-# define DIRECTION 19
+# define VEC (SHININESS + 1)
+# define NORMAL (VEC)
+# define ROTATION (NORMAL + 1)
+# define POSITION (ROTATION + 1)
+# define DIRECTION (POSITION + 1)
 
-# define COLOR 20
-# define SPECULAR 21
-# define AMBIENT 22
-# define FILTER 23
+# define COLOR (DIRECTION + 1)
+# define SPECULAR (COLOR + 1)
+# define AMBIENT (SPECULAR + 1)
+# define FILTER (AMBIENT + 1)
 
-# define LOAD 24
-# define MOD 25
+# define LOAD (FILTER + 1)
+# define MOD (LOAD + 1)
 
 typedef struct	s_arg
 {
 	int		type;
-	int		aint[7];
+	int		aint[8];
 	double	adbl[9];
 	VEC3	avec[4];
 	VEC4	color[4];

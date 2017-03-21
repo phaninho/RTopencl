@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   interface_event.c                                  :+:      :+:    :+:   */
+/*   event.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 12:51:00 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/20 17:49:34 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 16:44:49 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,15 +74,15 @@ static void	update_float(t_window *win, float *nb, int val)
 static void	update_objects(t_window *win, t_button *button,\
 														t_objects *obj, int val)
 {
-	if (button->id == 9)
+	if (button->id == 1)
 		update_vec3(win, &(obj->position), val);
-	else if (button->id == 10)
+	else if (button->id == 2)
 		update_vec3(win, &(obj->rotation), val);
-	else if (button->id == 11)
+	else if (button->id == 3)
 		update_vec4(win, &(obj->color), val);
-	else if (button->id == 12)
+	else if (button->id == 4)
 		update_vec3(win, &(obj->normal), val);
-	else if (button->id == 13)
+	else if (button->id == 5)
 		update_float(win, &(obj->radius), val);
 }
 

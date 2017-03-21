@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/23 16:17:44 by qhonore           #+#    #+#             */
-/*   Updated: 2017/02/27 16:51:23 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 17:16:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char		*g_args[] =
 	"material",
 	"blinn",
 	"debug",
+	"perlin",
 	"fov",
 	"znear",
 	"zfar",
@@ -70,6 +71,8 @@ char		*g_mods[] =
 	"grey",
 	"filter",
 	"add",
+	"negative",
+	"cartoon",
 	NULL
 };
 

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/02/27 16:41:46 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 17:26:17 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ static void	check_material(t_env *e, t_parse *p, t_arg *arg)
 	if (arg->adbl[REFRACTION - DOUBLE] >= 0.0f
 	&& arg->adbl[REFRACTION - DOUBLE] <= 1.0f)
 		m->refraction = arg->adbl[REFRACTION - DOUBLE];
+printf("PERLIN: %d\n", arg->aint[PERLIN]);
 	p->mate++;
 }
 

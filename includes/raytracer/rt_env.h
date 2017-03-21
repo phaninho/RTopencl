@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/14 16:19:57 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 17:09:21 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,14 @@
 # define RENDER (TEXTURE + 1)
 
 // Pour le parser et le CL du mod de rendu
-#define RENDERMODE_SEPIA (RENDER + 1)
-#define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
-#define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
-#define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
+# define RENDERMODE (RENDER + 1)
+# define RENDERMODE_SEPIA (RENDERMODE)
+# define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
+# define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
+# define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
+# define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
+# define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
+# define END_RENDERMODE (RENDERMODE_CARTOON)
 
 typedef struct	s_cam
 {

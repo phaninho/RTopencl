@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/20 17:54:05 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 16:43:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ void		button_render_mod(void *param)
 		*mod = (*mod == RENDERMODE_FILTER ? 0 : RENDERMODE_FILTER);
 	else if (button->id == 4)
 		*mod = (*mod == RENDERMODE_ADD ? 0 : RENDERMODE_ADD);
+	else if (button->id == 5)
+		*mod = (*mod == RENDERMODE_NEGATIF ? 0 : RENDERMODE_NEGATIF);
+	else if (button->id == 6)
+		*mod = (*mod == RENDERMODE_CARTOON ? 0 : RENDERMODE_CARTOON);
 	update_onoff(button);
 }
 
@@ -56,13 +60,13 @@ void		button_lights(void *param)
 
 	scene = &(env_get()->scene);
 	button = (t_button*)param;
-	if (button->id == 5 && scene->max_reflect > 0)
+	if (button->id == 1 && scene->max_reflect > 0)
 		scene->max_reflect--;
-	else if (button->id == 6 && scene->max_reflect < 20)
+	else if (button->id == 2 && scene->max_reflect < 20)
 		scene->max_reflect++;
-	else if (button->id == 7 && scene->max_refract > 0)
+	else if (button->id == 3 && scene->max_refract > 0)
 		scene->max_refract--;
-	else if (button->id == 8 && scene->max_refract < 20)
+	else if (button->id == 4 && scene->max_refract < 20)
 		scene->max_refract++;
 }
 
@@ -75,9 +79,9 @@ void		button_objects(void *param)
 	scene = &(env_get()->scene);
 	obj = &(env_get()->objects[scene->obj_index]);
 	button = (t_button*)param;
-	if (button->id == 14 && obj->material_id > 0)
+	if (button->id == 6 && obj->material_id > 0)
 		obj->material_id--;
-	else if (button->id == 15 && obj->material_id < scene->max_material)
+	else if (button->id == 7 && obj->material_id < scene->max_material)
 		obj->material_id++;
 	update_onoff(button);
 }
