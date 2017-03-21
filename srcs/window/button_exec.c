@@ -30,6 +30,8 @@ void		button_render_mod(void *param)
 		*mod = (*mod == RENDERMODE_FILTER ? 0 : RENDERMODE_FILTER);
 	else if (button->id == 4)
 		*mod = (*mod == RENDERMODE_ADD ? 0 : RENDERMODE_ADD);
+	else if (button->id == 5)
+		*mod = (*mod == RENDERMODE_NEGATIF ? 0 : RENDERMODE_NEGATIF);
 	update_onoff(button);
 }
 
