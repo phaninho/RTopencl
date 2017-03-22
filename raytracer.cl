@@ -336,6 +336,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 //	float3	impactDir = soft_normalize(ray->pos - impact);
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
+	if (impact.x == light.position.x && impact.y == light.position.y && impact.z == light.position.z)
+		return (light.color);
 	if (light.type == SPOTLIGHT)
 	{
 		lightDir = soft_normalize(light.position - impact);
@@ -550,6 +552,30 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	}
 	return (deph_min(t0, t1));
 }
+
+static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
+{
+	float3 dist;
+	float a, b, c;
+	float solve;
+	float t0, t1;
+
+	dist = ray->pos - light.position;
+	//float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
+	float3 rdir = ray->dir;
+	c = soft_dot(dist, dist) - 10 * 10;//objects.radius * objects.radius;
+	if (enable && c < EPSILON) // Culling face
+		return (FLT_MAX);
+	a = soft_dot(rdir, rdir);
+	b = soft_dot(dist, rdir);
+	solve = b * b - a * c;
+	if (solve < EPSILON)
+		return (FLT_MAX);
+	t0 = (-b - sqrt(solve)) / a;
+	t1 = (-b + sqrt(solve)) / a;
+	return (deph_min(t0, t1));
+}
+
 /*
 static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
 {
@@ -794,6 +820,20 @@ __kernel void raytracer(__global uchar4* pixel,
 			ray.object = i;
 		}
 		i++;
+	}
+	if (i == scene->max_object)
+	{
+		i = 0;
+		while (i < scene->max_light)
+		{
+			float ld  = light_intersect(&ray, lights[i], scene->znear, 1);
+			if (ld >= EPSILON && ld < ray.deph)
+			{
+				ray.deph = ld;
+				ray.object = scene->max_object + 1;
+			}
+			i++;
+		}
 	}
 	if (ray.object >= 0 && ray.deph < scene->zfar)
 	{
