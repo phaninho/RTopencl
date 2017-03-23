@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 11:10:34 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/21 17:09:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/23 18:29:32 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ void	get_render_mod(t_arg *arg, const char *tag, int *i)
 	{
 		if (!ft_strcmp(name, get_mod(type)))
 		{
-			printf("MOD %d: %s\n", type, get_mod(type));
 			arg->mod = type + RENDERMODE;
 			break ;
 		}

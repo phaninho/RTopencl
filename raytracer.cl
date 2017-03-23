@@ -31,7 +31,11 @@
 # define DISK (TRIANGLE + 1)
 # define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
-# define END_OBJECTS (CONEINF)
+# define PARABOLOID (CONEINF + 1)// variable : pos, normal, dist (distance entre les 2 points)
+# define ELLIPSOID (PARABOLOID + 1)// variable : pos, dist (distance entre les 2 points), normal, radius
+# define TORUS (ELLIPSOID + 1)// variable : pos, normal, Grand radius et petit radius.
+# define SOR (TORUS + 1)// pos, normal, taille(dist), coeficient a b c d.
+# define END_OBJECTS (SOR)
 
 # define LIGHTS (END_OBJECTS + 1)
 # define SPOTLIGHT (LIGHTS)
@@ -93,6 +97,13 @@ typedef struct	s_objects
 	float3		normal;
 	float4		color;
 	float		radius;
+	float3		endpos; // position final cylindre et cone
+	float		radius2; // petit radius pour torus
+	float		a; // coefficient pour sor
+	float		b; // pour sor
+	float		c; // pour sor
+	float		d; // pour sor
+	float		dist; // distance des point pour parabol, epsilloid
 	int			material_id;
 	int			texture_id;
 	int			in_object;
@@ -116,6 +127,9 @@ typedef struct	s_material
 	float		shininess;
 	float		reflection;
 	float		refraction;
+	int			damier;
+	float		tile_size;
+	int			perlin;
 }				t_material;
 
 typedef struct	s_ray
@@ -360,8 +374,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	}
 	//ambient
 	float4	ambient = 0.0f;
-	if (objects.material_id > 0)
-		ambient = light_ambient(objects, light, material[objects.material_id - 1]);
+	if (material)
+		ambient = light_ambient(objects, light, *material);
 	//diffuse
 	float 	diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
 	diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
@@ -370,36 +384,36 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float	specular_coeff = 0.0f;
 	/*if (diffuse_coeff > 0.0f)
 	{
-		if (objects.material_id > 0)
-			specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), material[objects.material_id - 1].shininess);
+		if (material)
+			specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), material->shininess);
 		else
 	//		specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), 64.0f);
 		specular_coeff = clamp(specular_coeff, 0.0f, 1.0f);
 	}*/
 	float4	specular = (float4)(0, 0, 0, 0);
-	/*if (objects.material_id > 0)
-		specular = specular_coeff * material[objects.material_id - 1].specular_color * light.color;
+	/*if (material)
+		specular = specular_coeff * material->specular_color * light.color;
 	//else
 	//	specular = light.color;
 	else
 		specular = specular_coeff * light.color;*/
 		float3 cameradir = normalize(campos  - impact);
-		if (!material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
+		if (material && !(material->blinn) && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
 		{
 				// reflect(-l, n) = 2.0 * dot(n, l) * n - l;
 				float3 reflectionVector = float3_reflect(-lightDir, normal);
 				float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
-				specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
+				specular_coeff = pow(specTmp, material->shininess);
 		}
-		else if (material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
+		else if (material && material->blinn && soft_dot(lightDir, normal) > 0.0)
 		{
 				float3 halfwayVector = soft_normalize(lightDir + cameradir);
 				float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
-				specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
+				specular_coeff = pow(specTmp, material->shininess);
 		}
 
 
-		               /* if (material[objects.material_id - 1].blinn)
+		               /* if (material && material->blinn)
 										{
 		                	float3 halfVector = soft_normalize(lightDir + cameradir);
 		                	specular_coeff = pow(max(0.0f, soft_dot(normal, halfVector)), 25);
@@ -415,7 +429,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	/*float	specular_coeff = 0.0f;
 	if (diffuse_coeff > 0.0f)
 	{
-		if (material->blinn)
+		if (material && material->blinn)
 		{
 			float3 light_calc = lightDir + ray->dir;
 			soft_normalize(light_calc);
@@ -425,10 +439,10 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 			specular_coeff = dot(ray->dir, float3_reflect(-lightDir, normal));
 	}
 	float4	specular;
-	if (objects.material_id > 0)
+	if (material)
 	{
-		specular_coeff = clamp(pow(max(0.0f, specular_coeff), material[objects.material_id - 1].shininess), 0.0f, 1.0f);
-		specular = specular_coeff * material[objects.material_id - 1].specular_color * light.color;
+		specular_coeff = clamp(pow(max(0.0f, specular_coeff), material->shininess), 0.0f, 1.0f);
+		specular = specular_coeff * material->specular_color * light.color;
 	}
 	else
 	{
@@ -678,7 +692,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos);
+					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], (objects[reflect_ray.object].material_id ? &(materials[objects[reflect_ray.object].material_id - 1]) : 0), campos);
 					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -735,7 +749,7 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials, campos);
+					color += light(&refract_ray, objects[refract_ray.object], lights[i], (objects[refract_ray.object].material_id ? &(materials[objects[refract_ray.object].material_id - 1]) : 0), campos);
 					shadow_attenuation *= shadow(refract_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -803,7 +817,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			i = 0;
 			while (i < scene->max_light)
 			{
-				color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
+				color += light(&ray, objects[ray.object], lights[i], (objects[ray.object].material_id ? &(materials[objects[ray.object].material_id - 1]) : 0), camera->position);
 				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}

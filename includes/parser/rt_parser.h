@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:40:42 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/21 17:20:16 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/23 18:38:19 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@
 # define BLINN (MATERIALID + 1)
 # define DEBUG (BLINN + 1)
 # define PERLIN (DEBUG + 1)
+# define DAMIER (PERLIN + 1)
 
-# define DOUBLE (PERLIN + 1)
+# define DOUBLE (DAMIER + 1)
 # define FOV (DOUBLE)
 # define ZNEAR (FOV + 1)
 # define ZFAR (ZNEAR + 1)
@@ -34,14 +35,22 @@
 # define ATTENUATION (REFRACTION + 1)
 # define ANGLE (ATTENUATION + 1)
 # define SHININESS (ANGLE + 1)
+# define TILESIZE (SHININESS + 1)
+# define RADIUS2 (TILESIZE + 1)
+# define OBJ_A (RADIUS2 + 1)
+# define OBJ_B (OBJ_A + 1)
+# define OBJ_C (OBJ_B + 1)
+# define OBJ_D (OBJ_C + 1)
+# define DIST (OBJ_D + 1)
 
-# define VEC (SHININESS + 1)
+# define VEC (DIST + 1)
 # define NORMAL (VEC)
 # define ROTATION (NORMAL + 1)
 # define POSITION (ROTATION + 1)
 # define DIRECTION (POSITION + 1)
+# define ENDPOS (DIRECTION + 1)
 
-# define COLOR (DIRECTION + 1)
+# define COLOR (ENDPOS + 1)
 # define SPECULAR (COLOR + 1)
 # define AMBIENT (SPECULAR + 1)
 # define FILTER (AMBIENT + 1)
@@ -52,9 +61,9 @@
 typedef struct	s_arg
 {
 	int		type;
-	int		aint[8];
-	double	adbl[9];
-	VEC3	avec[4];
+	int		aint[9];
+	double	adbl[16];
+	VEC3	avec[5];
 	VEC4	color[4];
 	char	*data;
 	int		mod;

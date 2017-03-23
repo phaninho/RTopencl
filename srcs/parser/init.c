@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/28 16:14:13 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/14 16:22:01 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/23 18:32:24 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ void	init_objects(t_env *e, int max)
 		e->objects[max].normal = (VEC3){{0.0f, -1.0f, 0.0f}};
 		e->objects[max].color = (VEC4){{255.0f, 255.0f, 255.0f, 255.0f}};
 		e->objects[max].radius = 1.0f;
+		e->objects[max].endpos = (VEC3){{1.0f, 1.0f, 1.0f}};
+		e->objects[max].radius2 = 0.5f;
+		e->objects[max].a = 0.0f;
+		e->objects[max].b = 0.0f;
+		e->objects[max].c = 0.0f;
+		e->objects[max].d = 0.0f;
+		e->objects[max].dist = 0.0f;
 		e->objects[max].material_id = 0;
 		e->objects[max].texture_id = 0;
 		e->objects[max].in_object = 0;
@@ -76,5 +83,8 @@ void	init_materials(t_env *e, int max)
 		e->material[max].shininess = 64.0f;
 		e->material[max].reflection = 0.0f;
 		e->material[max].refraction = 0.0f;
+		e->material[max].damier = 0;
+		e->material[max].tile_size = 10.0f;
+		e->material[max].perlin = 0;
 	}
 }
