@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/21 16:43:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/21 19:30:06 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void		button_objects(void *param)
 	scene = &(env_get()->scene);
 	obj = &(env_get()->objects[scene->obj_index]);
 	button = (t_button*)param;
-	if (button->id == 6 && obj->material_id > 0)
+	if (button->id == 6 && obj->material_id > 1)
 		obj->material_id--;
 	else if (button->id == 7 && obj->material_id < scene->max_material)
 		obj->material_id++;

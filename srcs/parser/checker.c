@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/21 17:26:17 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/23 18:38:00 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ static void	check_object(t_env *e, t_parse *p, t_arg *arg)
 		o->material_id = arg->aint[MATERIALID];
 	if (p->object + 1 != p->in_object)
 		o->in_object = p->in_object;
+	o->endpos = arg->avec[ENDPOS - VEC];
+	o->radius2 = arg->adbl[RADIUS2 - DOUBLE];
+	o->a = arg->adbl[OBJ_A - DOUBLE];
+	o->b = arg->adbl[OBJ_B - DOUBLE];
+	o->c = arg->adbl[OBJ_C - DOUBLE];
+	o->d = arg->adbl[OBJ_D - DOUBLE];
+	o->dist = arg->adbl[DIST - DOUBLE];
 	p->object++;
 }
 
@@ -84,7 +91,12 @@ static void	check_material(t_env *e, t_parse *p, t_arg *arg)
 	if (arg->adbl[REFRACTION - DOUBLE] >= 0.0f
 	&& arg->adbl[REFRACTION - DOUBLE] <= 1.0f)
 		m->refraction = arg->adbl[REFRACTION - DOUBLE];
-printf("PERLIN: %d\n", arg->aint[PERLIN]);
+	if (arg->aint[PERLIN] >= 1)
+		m->perlin = arg->aint[PERLIN];
+	if (arg->aint[DAMIER] >= 1)
+		m->damier = arg->aint[DAMIER];
+	if (arg->adbl[TILESIZE - DOUBLE] >= 1.0f)
+		m->tile_size = arg->adbl[TILESIZE - DOUBLE];
 	p->mate++;
 }
 

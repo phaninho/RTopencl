@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/11 12:49:11 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/23 18:46:17 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ static void		print_env(void)
 	{
 		t_objects obj = e->objects[i];
 		printf("==================== Object %s ====================\n> position: [%f, %f, %f]\n> rotation: [%f, %f, %f]\n> normal: [%f, %f, %f]\n> color: [%f, %f", get_tag(obj.type), obj.position.x, obj.position.y, obj.position.z, obj.rotation.x, obj.rotation.y, obj.rotation.z, obj.normal.x, obj.normal.y, obj.normal.z, obj.color.x, obj.color.y);
-		printf(", %f, %f]\n> radius: %f\n> material_id: %d\n> in_object: %d\n", obj.color.z, obj.color.w, obj.radius, obj.material_id, obj.in_object);
+		printf(", %f, %f]\n> radius: %f\n> material_id: %d\n> in_object: %d\n> endpos: [%f, %f, %f]\n> radius2: %f\n> a: %f\n> b: %f\n> c: %f\n> d: %f\n> dist: %f\n", obj.color.z, obj.color.w, obj.radius, obj.material_id, obj.in_object, obj.endpos.x, obj.endpos.y, obj.endpos.z, obj.radius2, obj.a, obj.b, obj.c, obj.d, obj.dist);
 	}
 
 	for (int i = 0; i < e->scene.max_light; i++)
@@ -182,7 +182,7 @@ static void		print_env(void)
 	for (int i = 0; i < e->scene.max_material; i++)
 	{
 		t_material mate = e->material[i];
-		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction);
+		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> perlin: %d\n> damier: %d\n> tile_size: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.perlin, mate.damier, mate.tile_size);
 	}
 
 	for (int i = 0; i < e->scene.max_texture; i++)

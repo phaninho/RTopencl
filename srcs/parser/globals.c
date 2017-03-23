@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/23 16:17:44 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/21 17:16:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/23 18:26:44 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ char		*g_args[] =
 	"blinn",
 	"debug",
 	"perlin",
+	"damier",
 	"fov",
 	"znear",
 	"zfar",
@@ -31,10 +32,18 @@ char		*g_args[] =
 	"attenuation",
 	"angle",
 	"shininess",
+	"tilesize",
+	"radius2",
+	"a",
+	"b",
+	"c",
+	"d",
+	"dist",
 	"normal",
 	"rotation",
 	"position",
 	"direction",
+	"endpos",
 	"color",
 	"specular",
 	"ambient",
@@ -56,6 +65,10 @@ char		*g_tags[] =
 	"disk",
 	"cylinderinf",
 	"coneinf",
+	"paraboloid",
+	"ellipsoid",
+	"torus",
+	"sor",
 	"spotlight",
 	"pointlight",
 	"dirlight",

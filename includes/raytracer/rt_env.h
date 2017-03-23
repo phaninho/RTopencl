@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/21 17:09:21 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/23 18:36:33 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,11 @@
 # define DISK (TRIANGLE + 1)
 # define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
-# define END_OBJECTS (CONEINF)
+# define PARABOLOID (CONEINF + 1)
+# define ELLIPSOID (PARABOLOID + 1)
+# define TORUS (ELLIPSOID + 1)
+# define SOR (TORUS + 1)
+# define END_OBJECTS (SOR)
 
 # define LIGHTS (END_OBJECTS + 1)
 # define SPOTLIGHT (LIGHTS)
@@ -64,6 +68,13 @@ typedef struct	s_objects
 	VEC3		normal;
 	VEC4		color;
 	float		radius;
+	VEC3		endpos; // position final cylindre et cone
+	float		radius2; // petit radius pour torus
+	float		a; // coefficient pour sor
+	float		b; // pour sor
+	float		c; // pour sor
+	float		d; // pour sor
+	float		dist; // distance des point pour parabol, epsilloid
 	int			material_id;
 	int			texture_id;
 	int			in_object;
@@ -87,6 +98,9 @@ typedef struct	s_material
 	float		shininess;
 	float		reflection;
 	float		refraction;
+	int			damier;
+	float		tile_size;
+	int			perlin;
 }				t_material;
 
 typedef struct	s_texture
