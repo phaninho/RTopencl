@@ -299,7 +299,7 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	return (uv);
 }
 
-static float4	light_ambient(const t_objects obj, const t_light light, const t_material material)
+/*static float4	light_ambient(const t_objects obj, const t_light light, const t_material material)
 {
 	float4	color_ambient = obj.color;
 	//if (light)
@@ -307,10 +307,36 @@ static float4	light_ambient(const t_objects obj, const t_light light, const t_ma
 	//if (material)
 		color_ambient *= material.ambient_color;
 	return (color_ambient);
+}*/
+
+static float4    light_ambient(float4 color, const t_light light, const t_material material)
+{
+    float4    color_ambient = color;
+    //if (light)
+        color_ambient *= light.color;
+    //if (material)
+        color_ambient *= material.ambient_color;
+    return (color_ambient);
 }
+
+
 
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
+	/*if (ray->object == -10)
+	{
+		material->ambient_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
+		material->specular_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
+		material->reflection = 1.0f;
+		material->shininess = 10.0f;
+		material->refraction = 0.0f;
+		material->blinn = 0;
+		objects.type = SPHERE;
+		objects.color = light.color;
+		objects.position = light.position;
+		objects.radius = 10;
+		objects.material_id = -10;
+	}*/
 	float3	impact = ray->pos + ray->dir * ray->deph;
 	float3	lightDir;
 	float	distanceToLight;
@@ -329,6 +355,41 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 
 		//return (light.color);
 	}
+	//int tmp;
+  	if (objects.type == SPHERE)
+    {
+			int	x1;
+		  int	y1;
+		  int	z1;
+			int	tmp;
+
+		  x1 = (int)(floor(impact.x) / 5);
+		  y1 = (int)(floor(impact.y) / 5);
+		  z1 = (int)(floor(impact.z) / 5);
+			if (x1 % 2 == 0)
+		  {
+		  	if (((y1 % 2 == 0) && (z1 % 2 == 0)) || (((y1 % 2 != 0) && (z1 % 2 != 0))))
+					tmp = 1;
+		  	else
+					tmp = 2;
+		  }
+		  else
+		  {
+		  	if ((((y1 % 2 == 0) && (z1 % 2 == 0))) || (((y1 % 2 != 0) && (z1 % 2 != 0))))
+					tmp = 2;
+		  	else
+					tmp = 1;
+		  }
+        /*tmp = (int)(floor(impact.x) * floor(impact.y) - floor(impact.z));
+        tmp = (tmp) % 2;*/
+      if (tmp == 1)
+      {
+            finalColor.x = 0.3f;
+            finalColor.y = 0.3f;
+            finalColor.z = 0.3f;
+            finalColor.w = 1.0f;
+			}
+		}
 	if (light.type == SPOTLIGHT)
 	{
 		lightDir = soft_normalize(light.position - impact);
@@ -354,11 +415,13 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//ambient
 	float4	ambient = 0.0f;
 	if (objects.material_id > 0)
-		ambient = light_ambient(objects, light, material[objects.material_id - 1]);
+		//ambient = light_ambient(objects, light, material[objects.material_id - 1]);
+		ambient = light_ambient(finalColor, light, material[objects.material_id - 1]);
 	//diffuse
 	float 	diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
 	diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
-	float4	diffuse = diffuse_coeff * objects.color * light.color;
+	//float4	diffuse = diffuse_coeff * objects.color * light.color;
+	float4    diffuse = diffuse_coeff * finalColor * light.color;
 	//specular
 	float	specular_coeff = 0.0f;
 	/*if (diffuse_coeff > 0.0f)
@@ -708,7 +771,7 @@ __kernel void raytracer(__global uchar4* pixel,
 		}
 		i++;
 	}
-	if (i == scene->max_object)
+	if (i > 0)
 	{
 		i = 0;
 		while (i < scene->max_light)
@@ -717,12 +780,12 @@ __kernel void raytracer(__global uchar4* pixel,
 			if (ld >= EPSILON && ld < ray.deph)
 			{
 				ray.deph = ld;
-				ray.object = 0;
+				ray.object = -10;
 			}
 			i++;
 		}
 	}
-	if (ray.object >= 0 && ray.deph < scene->zfar)
+	if (ray.object == -10 || (ray.object >= 0 && ray.deph < scene->zfar))
 	{
 		if (scene->max_light > 0)
 		{
