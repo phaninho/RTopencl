@@ -1,5 +1,23 @@
-# define PI 3.14159265359f
-# define EPSILON 0.00001f
+#define PI 3.14159265359f
+#define EPSILON 0.00001f
+// #define SCENE 0
+// #define CAMERA 1
+// #define SPHERE 2
+// #define PLANE 3
+// #define CYLINDER 4
+// #define CONE 5
+// #define TRIANGLE 6
+// #define SPOTLIGHT 7
+// #define POINTLIGHT 8
+// #define DIRLIGHT 9
+// #define MATERIAL 10
+// #define TEXTURE 11
+// #define RENDER 12
+// // Pour le parser et le CL du mod de rendu
+// #define RENDERMODE_SEPIA 13
+// #define RENDERMODE_GRIS 14
+// #define RENDERMODE_FILTER 15
+// #define RENDERMODE_ADD 16
 
 # define SCENE 0
 # define CAMERA (SCENE + 1)
@@ -13,7 +31,11 @@
 # define DISK (TRIANGLE + 1)
 # define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
-# define END_OBJECTS (CONEINF)
+# define PARABOLOID (CONEINF + 1)// variable : pos, normal, dist (distance entre les 2 points)
+# define ELLIPSOID (PARABOLOID + 1)// variable : pos, dist (distance entre les 2 points), normal, radius
+# define TORUS (ELLIPSOID + 1)// variable : pos, normal, Grand radius et petit radius.
+# define SOR (TORUS + 1)// pos, normal, taille(dist), coeficient a b c d.
+# define END_OBJECTS (SOR)
 
 # define LIGHTS (END_OBJECTS + 1)
 # define SPOTLIGHT (LIGHTS)
@@ -32,6 +54,7 @@
 #define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
 #define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
 #define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
+
 
 typedef struct	s_texture
 {
@@ -75,6 +98,13 @@ typedef struct	s_objects
 	float3		normal;
 	float4		color;
 	float		radius;
+	float3		endpos; // position final cylindre et cone
+	float		radius2; // petit radius pour torus
+	float		a; // coefficient pour sor
+	float		b; // pour sor
+	float		c; // pour sor
+	float		d; // pour sor
+	float		dist; // distance des point pour parabol, epsilloid
 	int			material_id;
 	int			texture_id;
 	int			in_object;
@@ -98,6 +128,9 @@ typedef struct	s_material
 	float		shininess;
 	float		reflection;
 	float		refraction;
+	int			damier;
+	float		tile_size;
+	int			perlin;
 }				t_material;
 
 typedef struct	s_ray
@@ -107,8 +140,7 @@ typedef struct	s_ray
 	float	focale;
 	float	deph;
 	int		object;
-}				t_ray;
-
+} 				t_ray;
 static float soft_length(float3 vec)
 {
 	return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
@@ -356,16 +388,16 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 		//return (light.color);
 	}
 	//int tmp;
-  	if (objects.type == SPHERE)
+  	if (objects.type == PLANE && material[objects.material_id - 1].damier)
     {
 			int	x1;
 		  int	y1;
 		  int	z1;
 			int	tmp;
-
-		  x1 = (int)(floor(impact.x) / 5);
-		  y1 = (int)(floor(impact.y) / 5);
-		  z1 = (int)(floor(impact.z) / 5);
+			//printf("%f\n", material[objects.material_id - 1].tile_size);
+		  x1 = (int)(floor(impact.x) / material[objects.material_id - 1].tile_size);
+		  y1 = (int)(floor(impact.y) / material[objects.material_id - 1].tile_size);
+		  z1 = (int)(floor(impact.z) / material[objects.material_id - 1].tile_size);
 			if (x1 % 2 == 0)
 		  {
 		  	if (((y1 % 2 == 0) && (z1 % 2 == 0)) || (((y1 % 2 != 0) && (z1 % 2 != 0))))
