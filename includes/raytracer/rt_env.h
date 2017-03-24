@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/23 18:36:33 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/24 19:35:15 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,22 @@ typedef struct	s_cam
 
 typedef struct	s_objects
 {
-	int			type;
+	VEC4		color;
 	VEC3		position;
 	VEC3		rotation;
 	VEC3		normal;
-	VEC4		color;
-	float		radius;
 	VEC3		endpos; // position final cylindre et cone
+	int			type;
+	int			material_id;
+	int			texture_id;
+	int			in_object;
+	float		radius;
 	float		radius2; // petit radius pour torus
 	float		a; // coefficient pour sor
 	float		b; // pour sor
 	float		c; // pour sor
 	float		d; // pour sor
 	float		dist; // distance des point pour parabol, epsilloid
-	int			material_id;
-	int			texture_id;
-	int			in_object;
 }				t_objects;
 
 typedef struct	s_light

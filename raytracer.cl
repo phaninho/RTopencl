@@ -91,22 +91,22 @@ typedef struct	s_cam
 
 typedef struct	s_objects
 {
-	int			type;
+	float4		color;
 	float3		position;
 	float3		rotation;
 	float3		normal;
-	float4		color;
-	float		radius;
 	float3		endpos; // position final cylindre et cone
+	int			type;
+	int			material_id;
+	int			texture_id;
+	int			in_object;
+	float		radius;
 	float		radius2; // petit radius pour torus
 	float		a; // coefficient pour sor
 	float		b; // pour sor
 	float		c; // pour sor
 	float		d; // pour sor
 	float		dist; // distance des point pour parabol, epsilloid
-	int			material_id;
-	int			texture_id;
-	int			in_object;
 }				t_objects;
 
 typedef struct	s_light
