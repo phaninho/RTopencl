@@ -1,5 +1,23 @@
-# define PI 3.14159265359f
-# define EPSILON 0.00001f
+#define PI 3.14159265359f
+#define EPSILON 0.00001f
+// #define SCENE 0
+// #define CAMERA 1
+// #define SPHERE 2
+// #define PLANE 3
+// #define CYLINDER 4
+// #define CONE 5
+// #define TRIANGLE 6
+// #define SPOTLIGHT 7
+// #define POINTLIGHT 8
+// #define DIRLIGHT 9
+// #define MATERIAL 10
+// #define TEXTURE 11
+// #define RENDER 12
+// // Pour le parser et le CL du mod de rendu
+// #define RENDERMODE_SEPIA 13
+// #define RENDERMODE_GRIS 14
+// #define RENDERMODE_FILTER 15
+// #define RENDERMODE_ADD 16
 
 # define SCENE 0
 # define CAMERA (SCENE + 1)
@@ -29,13 +47,13 @@
 # define TEXTURE (MATERIAL + 1)
 # define RENDER (TEXTURE + 1)
 
+// Pour le parser et le CL du mod de rendu
 #define RENDERMODE_SEPIA (RENDER + 1)
 #define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
 #define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
 #define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
 #define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
 #define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
-
 
 typedef struct	s_texture
 {
@@ -73,22 +91,22 @@ typedef struct	s_cam
 
 typedef struct	s_objects
 {
-	int			type;
+	float4		color;
 	float3		position;
 	float3		rotation;
 	float3		normal;
-	float4		color;
-	float		radius;
 	float3		endpos; // position final cylindre et cone
+	int			type;
+	int			material_id;
+	int			texture_id;
+	int			in_object;
+	float		radius;
 	float		radius2; // petit radius pour torus
 	float		a; // coefficient pour sor
 	float		b; // pour sor
 	float		c; // pour sor
 	float		d; // pour sor
 	float		dist; // distance des point pour parabol, epsilloid
-	int			material_id;
-	int			texture_id;
-	int			in_object;
 }				t_objects;
 
 typedef struct	s_light
@@ -121,7 +139,8 @@ typedef struct	s_ray
 	float	focale;
 	float	deph;
 	int		object;
-} 				t_ray;
+}				t_ray;
+
 static float soft_length(float3 vec)
 {
 	return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
@@ -362,19 +381,19 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 		  int	y1;
 		  int	z1;
 			int	tmp;
-		  x1 = (int)(floor(impact.x) / material[objects.material_id - 1].tile_size);
-		  y1 = (int)(floor(impact.y) / material[objects.material_id - 1].tile_size);
-		  z1 = (int)(floor(impact.z) / material[objects.material_id - 1].tile_size);
-			if (x1 % 2 == 0)
+		  x1 = (int)(floor(impact.x) / material[objects.material_id - 1].tile_size) % 2;
+		  y1 = (int)(floor(impact.y) / material[objects.material_id - 1].tile_size) % 2;
+		  z1 = (int)(floor(impact.z) / material[objects.material_id - 1].tile_size) % 2;
+			if (!x1)
 		  {
-		  	if (((y1 % 2 == 0) && (z1 % 2 == 0)) || (((y1 % 2 != 0) && (z1 % 2 != 0))))
+		  	if (((!y1) && (!z1)) || (((y1) && (z1))))
 					tmp = 1;
 		  	else
 					tmp = 2;
 		  }
 		  else
 		  {
-		  	if ((((y1 % 2 == 0) && (z1 % 2 == 0))) || (((y1 % 2 != 0) && (z1 % 2 != 0))))
+		  	if ((((!y1) && (!z1))) || (((y1) && (z1))))
 					tmp = 2;
 		  	else
 					tmp = 1;
