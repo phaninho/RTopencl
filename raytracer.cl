@@ -270,16 +270,11 @@ static float3        float3_refract(const float3 v, const float3 normal, const f
 static float3 get_normal(t_ray *ray, const t_objects objects)
 {
 	float3 impact = ray->pos + ray->dir * ray->deph;
-
 	if (objects.type == SPHERE)
 	{
 		return (soft_normalize(impact - objects.position));
 	}
-	else if (objects.type == PLANE)
-	{
-		return (soft_normalize(objects.normal));
-	}
-	else if (objects.type == DISK)
+	else if (objects.type == PLANE || objects.type == DISK)
 	{
 		return (soft_normalize(objects.normal));
 	}
@@ -295,35 +290,6 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 		nor.y = -0.01f * nor.y;
 		return (soft_normalize(nor));
 	}
-	else if (objects.type == TORUS)
-	{
-		float k = soft_dot((impact - objects.position), objects.normal);
-		float3 a = impact - objects.position * k;
-		float m = sqrt(pow(objects.radius2, 2) - k * k );
-		return (soft_normalize(impact - a - (objects.position - a) *\
-		 m / (objects.radius + m)));
-	}
-	else if (objects.type == PARABOLOID)
-		return (soft_normalize(impact - objects.position - objects.normal * \
-			(soft_dot((impact-objects.position), objects.normal) + objects.dist)));
-	else if (objects.type == ELLIPSOID)
-	{
-		float A1  = 2 * objects.depth * soft_dot(ray->dir, objects.normal);
-   		float A2  = pow(objects.radius, 2) + 2 * objects.dist * soft_dot(dist, objects.normal) - objects.dist;
-   		a = 4 * pow(objects.radius, 2) * soft_dot(ray->dir, ray->dir) - A1 * A1;
-   		b = 2 * (4 * pow(objects.radius, 2) * soft_dot(ray->dir, dist) - A1 * A2);
-   		float3 Cmid = objects.position + objects.normal * objects.dist / 2;
-  		float3 R = impact - Cmid;
-  		return (soft_normalize( R - objects.normal * (1 - (b * b) / (a * a))* soft_dot(R, objects.normal));
-   	}
-	// else if (objects.type == SOR)
-	// {
-	// 	float m = soft_dot(ray->dir, objects.normal) * ray->deph +\
-	// 	 soft_dot((impact - objects.position),objects.normal);
-	// 	float dval = 3 * objects.a * pow(m,2) + 2 * objects.b * m + objects.c;
-	// 	float3 r = impact - objects.pos - objects.normal * m;
-	// 	return (soft_normalize( r - V * sqrt(soft_dot(r,r))/dval ));
-	// }
 	return ((float3)(0, 0, 0));
 }
 
@@ -508,286 +474,19 @@ static float4 noLight(t_ray *ray, const t_objects objects, __constant t_material
 	return (objColor);
 }
 
-float		solvequadratic(float a, float b, float c)
-{
-	float		discriminant;
-	float		t;
-	float		t0;
-	float		t1;
-
-	t = 0;
-	if ((discriminant = b * b - 4 * a * c) < 0)
-		return (0);
-	else if (discriminant == 0)
-		t = -0.5 * b / a;
-	else if (discriminant >= 0)
-	{
-		discriminant = sqrt(discriminant);
-		t0 = ((-b + discriminant) / (2 * a));
-		t1 = ((-b - discriminant) / (2 * a));
-		t = (t0 < t1) ? t0 : t1;
-	}
-	return (t);
-}
-
-float   findclosest(float *roots, int a)
-{
-	int 	i = 0;
-	float 	t;
-
-	t = roots[i];
-    while (i != a)
-    {
-		if (t > roots[i])
-			t = roots[i];
-		++i;
-	}
-	return (t);
-}
-
-// float 	solvecubic(float a, float b, float c, float d)
-// {
-// 	float roots[3];
-//     int i = 0;
-
-//     if (a == 0)
-//         return (solvequadratic(b, c, d));
-//     b /= a;
-//     c /= a;
-//     d /= a;
-
-//     float S = b / 3.0;
-//     float D = c / 3.0 - S * S;
-//     float E = S * S * S + (d - S * c) / 2.0;
-//     float Froot = sqrt(E * E + D * D * D);
-
-//     float F = -Froot - E;
-
-//     printf("%f\n", F);
-//     if (F == 0)
-//         F = Froot - E;
-//     while (i < 3)
-//     {
-//         // float m = pow(F, (1 / (float)i)) - D / pow(F, (1 / (float)i)) - S;
-//         // printf("%f\n", m );
-//         // printf("%f\n", pow(F, (1 / (float)i)));
-//             roots[i] = pow(F, (1 / (float)i)) - D / pow(F, (1 / (float)i)) - S;
-//         ++i;
-//     }
-//     return (findclosest(roots,);
-// }
-
-float   solvecubic(float x, float a, float b, float c)
-{
-    float roots[3];
-
-
-    if (x == 0)
-        return (solvequadratic(a, b, c));
-    a /= x;
-    b /= x;
-    c /= x;
-
-    float p = (3 * b - a * a) / 3;
-    float q = (3 * pow(a, 3) - 9 * a * b + 27 * c) / 27;
-    if (p == 0 && q == 0)
-    {
-            roots[0] = 0;
-            roots[1] = 0;
-            roots[2] = 0;
-    }
-    else if (p && q)
-    {
-        float discri = pow(q/2,2) + pow(p/3,3);
-        float u = cbrt(((-1 * ( q / 2)) + sqrt(discri)));
-        float v = cbrt((q / 2) + sqrt(discri));
-        if (discri == 0)
-        {
-            roots[0] = 2 * (cbrt(-1 * (q / 2))) - a / 3;
-            roots[1] = -1 * cbrt(-1 * (q / 2)) - a / 3;
-            roots[2] =  cbrt((q / 2)) - a / 3;
-        }
-        else if (discri > 0)
-        {
-            roots[0] = u - v - a / 3;
-            roots[1] = -0.5 * (u - v) + (u + v) * ((sqrt(3) / 2) * I) - a / 3;
-            roots[2] = -0.5 * (u - v) - (u + v) * ((sqrt(3) / 2) * I) - a / 3;
-        }
-        else if (discri < 0)
-        {
-            float r = sqrt(pow(-1 * (p / 3), 3));
-            float phi = cos(-1 * (q / (2 * r)));
-            roots[0] = 2 * cbrt(r) * cos(phi / 3) - a / 3;
-            roots[1] = 2 * cbrt(r) * cos((phi + 2 * M_PI) / 3) - a / 3;
-            roots[2] = 2 * cbrt(r) * cos((phi + 4 * M_PI) / 3) - a / 3;
-        }
-    }
-    else if (p && q == 0)
-    {
-
-        roots[0] = (-1 * a)/3;
-        roots[1] = ( -1 * p) - a / 3;
-        roots[2] = -1 * ( -1 * p) - a / 3;
-    }
-    else if (p == 0 && q)
-    {
-
-        roots[0] = cbrt(-1 * q) - a / 3;
-        roots[1] = cbrt(-1 * q) * ( -0.5 + sqrt(3) * I / 2) - a / 3;
-        roots[2] = cbrt(-1 * q) * ( -0.5 - sqrt(3) * I / 2) - a / 3;
-    }
-
-    return (findclosest(roots, 3));
-}
-// float   solvecubic(float _Complex a, float _Complex b, float _Complex c, float _Complex d)
-//     {
-//         if (a == 0)
-//             return (solvequadratic(a, b, c));
-//         b /= a;
-//         c /= a;
-//         d /= a;
-//         float _Complex roots[3];
-//         float _Complex S = b/3.0;
-//         float _Complex D = c/3.0 - S*S;
-//         float _Complex E = S*S*S + (d - S*c)/2.0;
-//         float _Complex Froot = sqrt(E*E + D*D*D);
-//         float _Complex F = -Froot - E;
-
-//         if (F == 0)
-//         {
-//             F = Froot - E;
-//         }
-//         for (int i=0; i < 3; ++i)
-//         {
-//             const float _Complex G = cbrt(F);
-//             roots[i] = G - D/G - S;
-//         }
-//         return (findclosest((floa,*)roots));
-//     }
-float 	solvequartic(float a, float b, float c, float d, float e)
-{
-    if (a == 0)
-        return (solvecubic(b, c, d, e));
-    b /= a;
-    c /= a;
-    d /= a;
-    e /= a;
-    float roots[4];
-    float b2 = b * b;
-    float b3 = b * b2;
-    float b4 = b2 * b2;
-    float alpha = (-3.0/8.0) * b2 + c;
-    float beta  = b3 / 8.0 - b * c/ 2.0 + d;
-    float gamma = (-3.0 / 256.0) * b4 + b2 * c/16.0 - b * d / 4.0 + e;
-    float alpha2 = alpha * alpha;
-    float t = -b / 4.0;
-    if (beta == 0)
-    {
-        float rad = sqrt(alpha2 - 4.0 * gamma);
-        float r1 = sqrt((-alpha + rad) / 2.0);
-        float r2 = sqrt((-alpha - rad) / 2.0);
-        roots[0] = t + r1;
-        roots[1] = t - r1;
-        roots[2] = t + r2;
-        roots[3] = t - r2;
-    }
-    else
-    {
-        float alpha3 = alpha * alpha2;
-        float P = - (alpha2 / 12.0 + gamma);
-        float Q = - alpha3 / 108.0 + alpha * gamma / 3.0 - beta * beta / 8.0;
-        float R = -Q / 2.0 + sqrt(Q * Q / 4.0 + P * P * P/ 27.0);
-        float U = cbrt(R);
-        float y = (-5.0 / 6.0) * alpha + U;
-        (U == 0 ? y -= cbrt(Q) : P/ (3.0 * U));
-        float W = sqrt(alpha + 2.0 * y);
-        float r1 = sqrt(-(3.0 * alpha + 2.0 * y + 2.0 * beta / W));
-        float r2 = sqrt(-(3.0 * alpha + 2.0 * y - 2.0 * beta / W));
-        roots[0] = t + ( W - r1) / 2.0;
-        roots[1] = t + ( W + r1) / 2.0;
-        roots[2] = t + (-W - r2) / 2.0;
-        roots[3] = t + (-W + r2) / 2.0;
-    }
-    return (findclosest(roots, 4));
-}
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
 	float3 dist;
-	float a, b, c, d, e;
-	float m, n, o, p, q;
+	float a, b, c;
 	float solve;
-	float t0, t1, t;
+	float t0, t1;
 
 	dist = ray->pos - objects.position;
-	float3 rdir = soft_normalize(rotatexyz(ray->dir, objects.rotation));
-	//float3 rdir = ray->dir;
-
-	m = soft_dot(rdir, rdir);
-	n = soft_dot(rdir, dist);
-	o = soft_dot(dist, dist);
-	p = soft_dot(rdir, objects.normal);
-	q = soft_dot(dist, objects.normal);
-
-	// if (objects.type == SOR)
-	// {
-	// 	m = soft_dot(rdir, rdir);
-	// 	n = soft_dot(rdir, dist);
-	// 	o = soft_dot(dist, dist);
-	// 	p = soft_dot(rdir, objects.normal);
-	// 	q = soft_dot(dist, objects.normal);
-
-	// 	a = m - p*p;
- // 		b = 2 * (n - p * q);
- //  		c = o - q * q;
- //  		float max = soft_dot(rdir, objects.normal) * solvequadratic(a, b, c) + soft_dot(dist, objects.normal);
- //  		if (fmax(max,0) > 0 && fmax(max,0) < 50)
-	// 		return (solvequadratic(a, b, c));
-	// 	else
-	// 		return (FLT_MAX);
-	// }
-	if (objects.type == ELLIPSOID)
-	{
-		float A1  = 2 * objects.depth * p;
-   		float A2  = pow(objects.radius, 2) + 2 * objects.dist * q - objects.dist;
-   		a   = 4 * pow(objects.radius, 2) * m - A1 * A1;
-   		b = 2 * (4 * pow(objects.radius, 2) * n - A1 * A2);
-   		c   = 4 * pow(objects.radius, 2) * o - A2 * A2;
-   		return (solvequadratic(a, b, c));
-	}
-	else if (objects.type == PARABOLOID)
-	{
-		a = m - p * p;
- 		b = 2 * (n - p * (q + 2 * objects.dist));
-		c = o - q * (q + 4 * objects.dist);
-		float max = soft_dot(rdir, objects.normal) * solvequadratic(a, b, c) + soft_dot(dist, objects.normal);
-  		if (fmax(max,0) > 0 && fmax(max,0) < 50)
-			return (solvequadratic(a, b, c));
-		else
-			return (FLT_MAX);
-	}
-	else if (objects.type == TORUS)
-	{
-		a = m * m;
-		b = 4 * m * n;
-
-		c = 4 * m * m + 2 * m * o - \
-		2 * (pow(objects.radius,2) + pow(objects.radius2, 2)) * m + \
-		 4 * pow(objects.radius, 2) * pow(p, 2);
-
-		d = 4 * n * o - \
-		4 * (pow(objects.radius, 2) + pow(objects.radius2, 2)) * n + \
-		 8 * pow(objects.radius, 2) * p * q;
-
-		e = pow(o,2) - \
-		2 * (pow(objects.radius, 2) + pow(objects.radius2, 2)) * o + \
-		4 * pow(objects.radius, 2) * pow(q, 2) + \
-		 pow((pow(objects.radius, 2) + pow(objects.radius2, 2)),2);
-		return (solvequartic(a, b, c, d, e));
-	}
-	else if (objects.type == SPHERE)
+	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
+	if (objects.type == SPHERE)
 	{
 		c = soft_dot(dist, dist) - objects.radius * objects.radius;
-		if (enable && c < EPSILON) // Culling face
+		if (enable && c < EPSILON)
 			return (FLT_MAX);
 		a = soft_dot(rdir, rdir);
 		b = soft_dot(dist, rdir);
@@ -803,6 +502,14 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 		if (solve < EPSILON)
 			return (FLT_MAX);
 		return (solve);
+	}
+	else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
+	{
+		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
+ 		if (enable && c < EPSILON) // Culling face
+ 			return (FLT_MAX);
+		a = rdir.x * rdir.x + rdir.z * rdir.z;
+		b = rdir.x * dist.x + rdir.z * dist.z;
 	}
 	else if (objects.type == DISK)
 	{
@@ -821,29 +528,7 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 		else
 			return (FLT_MAX);
 	}
-	else if (objects.type == CYLINDER)
-	{
-		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
- 		if (enable && c < EPSILON) // Culling face
- 			return (FLT_MAX);
-		a = rdir.x * rdir.x + rdir.z * rdir.z;
-		b = rdir.x * dist.x + rdir.z * dist.z;
-	}
-	else if (objects.type == CYLINDERINF)
-	{
-		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
- 		if (enable && c < EPSILON) // Culling face
- 			return (FLT_MAX);
-		a = rdir.x * rdir.x + rdir.z * rdir.z;
-		b = rdir.x * dist.x + rdir.z * dist.z;
-	}
-	else if (objects.type == CONEINF)
-	{
-		a = rdir.x * rdir.x + rdir.z * rdir.z - rdir.y * rdir.y;
-		b = rdir.x * dist.x + rdir.z * dist.z - rdir.y * dist.y;
-		c = dist.x * dist.x + dist.z * dist.z - dist.y * dist.y;
-	}
-	else if (objects.type == CONE)
+	else if (objects.type == CONE || objects.type == CONEINF)
 	{
 		a = rdir.x * rdir.x + rdir.z * rdir.z - rdir.y * rdir.y;
 		b = rdir.x * dist.x + rdir.z * dist.z - rdir.y * dist.y;
@@ -858,16 +543,16 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	t1 = (-b + sqrt(solve)) / a;
 	if (objects.type == CYLINDER)
 	{
-		float max = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
-		if (fmax(max,0) > 0 && fmax(max,0) < 50)
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
 			return (deph_min(t0, t1));
 		else
 			return (FLT_MAX);
 	}
 	if (objects.type == CONE)
 	{
-		float max = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
-		if (fmax(max,0) > 0 && fmax(max,0) < 50)
+		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
+		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
 			return (deph_min(t0, t1));
 		else
 			return (FLT_MAX);
