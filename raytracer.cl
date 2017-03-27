@@ -1,23 +1,5 @@
-#define PI 3.14159265359f
-#define EPSILON 0.00001f
-// #define SCENE 0
-// #define CAMERA 1
-// #define SPHERE 2
-// #define PLANE 3
-// #define CYLINDER 4
-// #define CONE 5
-// #define TRIANGLE 6
-// #define SPOTLIGHT 7
-// #define POINTLIGHT 8
-// #define DIRLIGHT 9
-// #define MATERIAL 10
-// #define TEXTURE 11
-// #define RENDER 12
-// // Pour le parser et le CL du mod de rendu
-// #define RENDERMODE_SEPIA 13
-// #define RENDERMODE_GRIS 14
-// #define RENDERMODE_FILTER 15
-// #define RENDERMODE_ADD 16
+# define PI 3.14159265359f
+# define EPSILON 0.00001f
 
 # define SCENE 0
 # define CAMERA (SCENE + 1)
@@ -47,7 +29,6 @@
 # define TEXTURE (MATERIAL + 1)
 # define RENDER (TEXTURE + 1)
 
-// Pour le parser et le CL du mod de rendu
 #define RENDERMODE_SEPIA (RENDER + 1)
 #define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
 #define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
@@ -373,28 +354,14 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float3	lightDir;
 	float	distanceToLight;
 	float	attenuation = 1.0f;
-//	float3	impactDir = soft_normalize(ray->pos - impact);
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
-	if (impact.x == light.position.x && impact.y == light.position.y && impact.z == light.position.z)
-	{
-		//if (light.color.x > light.color.y && light.color.x > light.color.z)
-			//light.color.x = 1.0f;
-		//else if (light.color.g > light.color.r && light.color.g > light.color.b)
-		//	light.color.g = 1.0f;
-		//else if (light.color.b > light.color.r && light.color.b > light.color.g)
-			//light.color.b = 1.0f;
-
-		//return (light.color);
-	}
-	//int tmp;
   	if (objects.type == PLANE && material[objects.material_id - 1].damier)
     {
 			int	x1;
 		  int	y1;
 		  int	z1;
 			int	tmp;
-			//printf("%f\n", material[objects.material_id - 1].tile_size);
 		  x1 = (int)(floor(impact.x) / material[objects.material_id - 1].tile_size);
 		  y1 = (int)(floor(impact.y) / material[objects.material_id - 1].tile_size);
 		  z1 = (int)(floor(impact.z) / material[objects.material_id - 1].tile_size);
@@ -412,8 +379,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 		  	else
 					tmp = 1;
 		  }
-        /*tmp = (int)(floor(impact.x) * floor(impact.y) - floor(impact.z));
-        tmp = (tmp) % 2;*/
       if (tmp == 1)
       {
             finalColor.x = 0.3f;
@@ -452,18 +417,9 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	//diffuse
 	float 	diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
 	diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
-	//float4	diffuse = diffuse_coeff * objects.color * light.color;
 	float4    diffuse = diffuse_coeff * finalColor * light.color;
 	//specular
 	float	specular_coeff = 0.0f;
-	/*if (diffuse_coeff > 0.0f)
-	{
-		if (objects.material_id > 0)
-			specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), material[objects.material_id - 1].shininess);
-		else
-	//		specular_coeff = pow(max(0.0f, soft_dot(impactDir, float3_reflect(-lightDir, normal))), 64.0f);
-		specular_coeff = clamp(specular_coeff, 0.0f, 1.0f);
-	}*/
 	float4	specular = (float4)(0, 0, 0, 0);
 	float3 cameradir = normalize(campos  - impact);
 	if (!material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
