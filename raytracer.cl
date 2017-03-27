@@ -630,6 +630,124 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	return (1.0f);
 }
 
+static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials, float3 campos)
+{
+	t_ray ray = nray;
+	float3	normal;
+	t_ray	reflect_ray;
+	reflect_ray.object = ray.object;
+	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+	float4	point_color = color;//objects[ray.object].color;
+	float4	reflect_color;
+	int		j = 0;
+	while (j < scene->max_reflect)
+	{
+		if (!materials[objects[ray.object].material_id - 1].reflection)
+			return (color * point_color);
+		int i = 0;
+		reflect_ray.pos = ray.pos + ray.dir * ray.deph;
+		normal = soft_normalize(get_normal(&ray, objects[ray.object]));
+		reflect_ray.deph = scene->zfar;
+		reflect_ray.dir = soft_normalize(float3_reflect(ray.dir, normal));
+		while (i < scene->max_object)
+		{
+			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
+			if (d >= EPSILON && d < reflect_ray.deph && i != ray.object)
+			{
+				reflect_ray.deph = d;
+				reflect_ray.object = i;
+			}
+			i++;
+		}
+		if (reflect_ray.deph < scene->zfar)
+		{
+			if (scene->max_light > 0)
+			{
+				float shadow_attenuation = 1.0f;
+				i = 0;
+				while (i < scene->max_light)
+				{
+					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos);
+					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
+					i++;
+				}
+				color *= (shadow_attenuation);
+				color.w = 1.0f;
+			}
+			else
+				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
+		}
+		else
+			return (clamp(color,  0.0f, 1.0f)  /*(float)(1.0f, 0.0f, 0.0f, 1.0f)*/);
+		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
+		reflect_color = point_color * color;
+		ray = reflect_ray;
+		j++;
+	}
+	return (clamp(reflect_color, 0.0f, 1.0f));
+}
+
+
+static float4		refract_color_in_reflect(__constant t_scene *scene, __constant t_objects *objects, t_ray nray, __constant t_material *materials, __constant t_light *lights, float3 campos)
+{
+	t_ray ray = nray;
+	float3	normal;
+	t_ray	refract_ray;
+	refract_ray.object = ray.object;
+	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+	float4	point_color = objects[ray.object].color;
+	float4	refract_color;
+	int j = 0;
+	while (j < scene->max_refract)
+	{
+		if (!materials[objects[ray.object].material_id - 1].refraction)
+			return (color * point_color);
+		refract_ray.pos = ray.pos + ray.dir * ray.deph;
+		normal = soft_normalize(get_normal(&ray, objects[ray.object]));
+		refract_ray.deph = scene->zfar;
+		refract_ray.dir = soft_normalize(float3_refract(ray.dir, normal, materials[objects[ray.object].material_id - 1].refraction));
+		int i = 0;
+		while (i < scene->max_object)
+		{
+			float d  = intersect(&refract_ray, objects[i], EPSILON, 1);
+			if (d >= EPSILON && d < refract_ray.deph && i != ray.object)
+			{
+				refract_ray.deph = d;
+				refract_ray.object = i;
+			}
+			i++;
+		}
+		if (refract_ray.deph < scene->zfar)
+		{
+			if (scene->max_light > 0)
+			{
+				float shadow_attenuation = 1.0f;
+				i = 0;
+				while (i < scene->max_light)
+				{
+					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials, campos);
+					shadow_attenuation *= shadow(refract_ray, lights[i], objects, scene);
+					i++;
+				}
+				color *= (shadow_attenuation);
+				color.w = 1.0f;
+			}
+			else
+				color = noLight(&refract_ray, objects[refract_ray.object], materials, scene->max_material);
+		}
+		else
+		{
+			return (clamp(color, 0.0f, 1.0f));
+		}
+		point_color += objects[refract_ray.object].color * materials[objects[nray.object].material_id - 1].refraction;
+		refract_color = point_color * color;
+		ray = refract_ray;
+		j++;
+	}
+	return (clamp(refract_color, 0.0f, 1.0f));
+}
+
+
 static float4 reflect_color(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials, float3 campos)
 {
 	t_ray ray = nray;
@@ -680,6 +798,8 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 		else
 			return (clamp(color,  0.0f, 1.0f)  /*(float)(1.0f, 0.0f, 0.0f, 1.0f)*/);
 		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
+		if (scene->max_refract > 0 && materials[objects[reflect_ray.object].material_id - 1].refraction > 0.0)
+			color += refract_color_in_reflect(scene, objects, reflect_ray, materials, lights,campos);
 		reflect_color = point_color * color;
 		ray = reflect_ray;
 		j++;
@@ -739,6 +859,8 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 			return (clamp(color, 0.0f, 1.0f));
 		}
 		point_color += objects[refract_ray.object].color * materials[objects[nray.object].material_id - 1].refraction;
+		if (scene->max_reflect > 0 && materials[objects[refract_ray.object].material_id - 1].reflection > 0.0)
+			color += reflect_color_in_refract(scene, lights, objects, refract_ray, materials, campos);
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
