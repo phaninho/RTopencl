@@ -130,6 +130,7 @@ typedef struct	s_material
 	int			damier;
 	float		tile_size;
 	int			perlin;
+	float		refract_coef;
 }				t_material;
 
 typedef struct	s_ray
@@ -1128,7 +1129,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			color *= (shadow_attenuation);
 			color.w = 1.0f;
 			if (scene->max_refract > 0 && materials[objects[ray.object].material_id - 1].refraction > 0.0)
-				color += (refract_color(scene, objects, ray, materials, lights, camera->position) *1.0f);
+				color += (refract_color(scene, objects, ray, materials, lights, camera->position) * materials[objects[ray.object].material_id - 1].refract_coef);
 			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
 				color += reflect_color(scene, lights, objects, ray, materials, camera->position);
 		}
