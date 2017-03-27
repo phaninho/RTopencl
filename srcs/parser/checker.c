@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/24 19:32:45 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/27 20:06:41 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,9 @@ static void	check_material(t_env *e, t_parse *p, t_arg *arg)
 		m->damier = arg->aint[DAMIER];
 	if (arg->adbl[TILESIZE - DOUBLE] >= 1.0f)
 		m->tile_size = arg->adbl[TILESIZE - DOUBLE];
+	if (arg->adbl[REFRACT_COEF - DOUBLE] >= 0.0f
+	&& arg->adbl[REFRACT_COEF - DOUBLE] <= 1.0f)
+		m->refract_coef = arg->adbl[REFRACT_COEF - DOUBLE];
 	p->mate++;
 }
 

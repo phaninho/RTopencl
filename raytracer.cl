@@ -130,6 +130,7 @@ typedef struct	s_material
 	int			damier;
 	float		tile_size;
 	int			perlin;
+	float		refract_coef;
 }				t_material;
 
 typedef struct	s_ray
@@ -343,6 +344,7 @@ static float4	light_ambient(const t_objects obj, const t_light light, const t_ma
 
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
+	t_material	mat = {objects.color, (float4){255, 255, 255, 255}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
 	float3	impact = ray->pos + ray->dir * ray->deph;
 	float3	lightDir;
 	float	distanceToLight;
@@ -374,8 +376,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	}
 	//ambient
 	float4	ambient = 0.0f;
-	if (material)
-		ambient = light_ambient(objects, light, *material);
+	ambient = light_ambient(objects, light, material ? *material : mat);
 	//diffuse
 	float 	diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
 	diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
@@ -398,12 +399,12 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	else
 		specular = specular_coeff * light.color;*/
 		float3 cameradir = normalize(campos  - impact);
-		if (material && !(material->blinn) && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
+		if ((!material || !(material->blinn)) && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
 		{
 				// reflect(-l, n) = 2.0 * dot(n, l) * n - l;
 				float3 reflectionVector = float3_reflect(-lightDir, normal);
 				float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
-				specular_coeff = pow(specTmp, material->shininess);
+				specular_coeff = pow(specTmp, material ? material->shininess : 10.0f);
 		}
 		else if (material && material->blinn && soft_dot(lightDir, normal) > 0.0)
 		{

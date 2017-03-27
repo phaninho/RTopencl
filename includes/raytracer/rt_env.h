@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/24 19:35:15 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/27 19:59:28 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ typedef struct	s_material
 	int			damier;
 	float		tile_size;
 	int			perlin;
+	float		refract_coef;
 }				t_material;
 
 typedef struct	s_texture

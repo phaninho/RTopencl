@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/24 19:32:13 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/27 20:02:48 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ static void		print_env(void)
 	for (int i = 0; i < e->scene.max_material; i++)
 	{
 		t_material mate = e->material[i];
-		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> perlin: %d\n> damier: %d\n> tile_size: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.perlin, mate.damier, mate.tile_size);
+		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> refract_coef: %f\n> perlin: %d\n> damier: %d\n> tile_size: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.refract_coef, mate.perlin, mate.damier, mate.tile_size);
 	}
 
 	for (int i = 0; i < e->scene.max_texture; i++)

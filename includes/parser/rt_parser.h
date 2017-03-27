@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:40:42 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/23 18:38:19 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/27 20:03:45 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@
 # define OBJ_C (OBJ_B + 1)
 # define OBJ_D (OBJ_C + 1)
 # define DIST (OBJ_D + 1)
+# define REFRACT_COEF (DIST + 1)
 
-# define VEC (DIST + 1)
+# define VEC (REFRACT_COEF + 1)
 # define NORMAL (VEC)
 # define ROTATION (NORMAL + 1)
 # define POSITION (ROTATION + 1)
@@ -62,7 +63,7 @@ typedef struct	s_arg
 {
 	int		type;
 	int		aint[9];
-	double	adbl[16];
+	double	adbl[17];
 	VEC3	avec[5];
 	VEC4	color[4];
 	char	*data;
