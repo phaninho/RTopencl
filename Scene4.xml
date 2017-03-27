@@ -1,8 +1,8 @@
 <scene width="1640" height="1480" maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
 	<camera position="550.0 -90.0 620.0" rotation="0.0 180.0 0.0" />
 
-<!--	<cone position="40.0 0.0 155.0" radius="15.0" color="220 50 50 255" material="1"/>-->
-	<!--<coneinf position="40.0 0.0 105.0" radius="15.0" color="21 50 250 255" material="1"/>-->
+	<cone position="40.0 0.0 155.0" radius="15.0" color="220 50 50 255" material="2"/>-->
+	<coneinf position="40.0 0.0 105.0" radius="15.0" color="21 50 250 255" material="3"/>-->
 
 	<cylinderinf position="300.0 -20.0 -250.0" radius="42.0" color="120 150 200 255" material="2"/>
 	<!--<cylinderinf position="-40.0 -20.0 105.0"   radius="27.0" color="120 150 50 255" material="1"/>
@@ -19,6 +19,7 @@
 	<sphere position="200.0 -20.0 -200.0" radius="50.0" color="55 255 55 255" material="2"/>
 	<sphere position="650.0 -80.0 -280.0" radius="50.0" color="55 55 255 255" material="3"/>
 	<sphere position="800.0 -20.0 -200.0" radius="50.0" color="255 55 55 255" material="3"/>
+	<!--<torus position="700.0 -60.0 -280.0" radius="50.0" radius2="25.0" color="255 55 55 255" material="3">-->
 <!--	<cone position="-0.0 -15.0 155.0" color="255 255 255 255" radius="20" rotation="0.0 0.0 0.0"material="1"/>-->
 
 	<!--<plane position="0.0 0.0 400.0" color="200 200 200 255" normal="0.0 0.0 -1.0" material="1"/>-->

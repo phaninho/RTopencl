@@ -538,17 +538,19 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 {
 	/*if (ray->object == -10)
 	{
-		material->ambient_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
-		material->specular_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
-		material->reflection = 1.0f;
-		material->shininess = 10.0f;
-		material->refraction = 0.0f;
-		material->blinn = 0;
-		objects.type = SPHERE;
-		objects.color = light.color;
-		objects.position = light.position;
-		objects.radius = 10;
-		objects.material_id = -10;
+		t_material *materials;
+		t_objects objects2;
+		materials->ambient_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
+		materials->specular_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
+		materials->reflection = 1.0f;
+		materials->shininess = 10.0f;
+		materials->refraction = 0.0f;
+		materials->blinn = 0;
+		objects2.type = SPHERE;
+		objects2.color = light.color;
+		objects2.position = light.position;
+		objects2.radius = 10;
+		objects2.material_id = -10;
 	}*/
 	float3	impact = ray->pos + ray->dir * ray->deph;
 	float3	lightDir;
