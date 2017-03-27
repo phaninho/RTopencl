@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/28 16:14:13 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/24 19:32:14 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/27 20:04:02 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,6 @@ void	init_materials(t_env *e, int max)
 		e->material[max].damier = 0;
 		e->material[max].tile_size = 10.0f;
 		e->material[max].perlin = 0;
+		e->material[max].refract_coef = 0.0f;
 	}
 }
