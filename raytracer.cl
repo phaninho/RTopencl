@@ -559,37 +559,37 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float	attenuation = 1.0f;
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
-  	if (objects.type == PLANE && material[objects.material_id - 1].damier)
-    {
-			int	x1;
-		  int	y1;
-		  int	z1;
-			int	tmp;
-		  x1 = (int)(floor(impact.x) / material[objects.material_id - 1].tile_size) % 2;
-		  y1 = (int)(floor(impact.y) / material[objects.material_id - 1].tile_size) % 2;
-		  z1 = (int)(floor(impact.z) / material[objects.material_id - 1].tile_size) % 2;
-			if (!x1)
-		  {
-		  	if (((!y1) && (!z1)) || (((y1) && (z1))))
-					tmp = 1;
-		  	else
-					tmp = 2;
-		  }
-		  else
-		  {
-		  	if ((((!y1) && (!z1))) || (((y1) && (z1))))
-					tmp = 2;
-		  	else
-					tmp = 1;
-		  }
-      if (tmp == 1)
-      {
-            finalColor.x = 0.3f;
-            finalColor.y = 0.3f;
-            finalColor.z = 0.3f;
-            finalColor.w = 1.0f;
-			}
+	if (objects.type == PLANE && material[objects.material_id - 1].damier)
+	{
+		int		x1 = (impact.x < 0 ? 1 : 0);
+		int		y1 = (impact.y < 0 ? 1 : 0);
+		int		z1 = (impact.z < 0 ? 1 : 0);
+		int		tmp;
+		x1 += (int)(floor(impact.x) / material[objects.material_id - 1].tile_size) % 2;
+		y1 += (int)(floor(impact.y) / material[objects.material_id - 1].tile_size) % 2;
+		z1 += (int)(floor(impact.z) / material[objects.material_id - 1].tile_size) % 2;
+		if (!x1)
+		{
+			if (((!y1) && (!z1)) || (((y1) && (z1))))
+				tmp = 1;
+			else
+				tmp = 2;
 		}
+		else
+		{
+			if ((((!y1) && (!z1))) || (((y1) && (z1))))
+				tmp = 2;
+			else
+				tmp = 1;
+		}
+		if (tmp == 1)
+		{
+			finalColor.x = 0.3f;
+			finalColor.y = 0.3f;
+			finalColor.z = 0.3f;
+			finalColor.w = 1.0f;
+		}
+	}
 	if (light.type == SPOTLIGHT)
 	{
 		lightDir = soft_normalize(light.position - impact);
