@@ -537,28 +537,13 @@ static float4    light_ambient(float4 color, const t_light light, const t_materi
 
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
-	/*if (ray->object == -10)
-	{
-		t_material *materials;
-		t_objects objects2;
-		materials->ambient_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
-		materials->specular_color = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
-		materials->reflection = 1.0f;
-		materials->shininess = 10.0f;
-		materials->refraction = 0.0f;
-		materials->blinn = 0;
-		objects2.type = SPHERE;
-		objects2.color = light.color;
-		objects2.position = light.position;
-		objects2.radius = 10;
-		objects2.material_id = -10;
-	}*/
+	t_material mat = {light.color, (float4){205, 205, 55, 255}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
 	float3	impact = ray->pos + ray->dir * ray->deph;
 	float3	lightDir;
 	float	distanceToLight;
 	float	attenuation = 1.0f;
 	float3	normal = get_normal(ray, objects);
-	float4	finalColor = objects.color;
+	float4	finalColor = material ? objects.color : (float4)(5.0f, 0.0f, 255.0f, 255.0f);
 	if (objects.type == PLANE && material[objects.material_id - 1].damier)
 	{
 		int		x1 = (impact.x < 0 ? 1 : 0);
@@ -616,7 +601,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float4	ambient = 0.0f;
 	if (objects.material_id > 0)
 		//ambient = light_ambient(objects, light, material[objects.material_id - 1]);
-		ambient = light_ambient(finalColor, light, material[objects.material_id - 1]);
+		ambient = light_ambient(finalColor, light, material ? *material : mat);
 	//diffuse
 	float 	diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
 	diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
@@ -625,13 +610,13 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float	specular_coeff = 0.0f;
 	float4	specular = (float4)(0, 0, 0, 0);
 	float3 cameradir = normalize(campos  - impact);
-	if (!material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
+	if (material && !material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
 	{
 			float3 reflectionVector = float3_reflect(-lightDir, normal);
 			float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
 			specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
 	}
-	else if (material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
+	else if (material && material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
 	{
 			float3 halfwayVector = soft_normalize(lightDir + cameradir);
 			float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
@@ -769,7 +754,7 @@ static float light_intersect(t_ray *ray, const t_light light, const float znear,
 
 	dist = ray->pos - light.position;
 	float3 rdir = ray->dir;
-	c = soft_dot(dist, dist) - 10 * 10;//objects.radius * objects.radius;
+	c = soft_dot(dist, dist) - 5 * 5;//objects.radius * objects.radius;
 	if (enable && c < EPSILON) // Culling face
 		return (FLT_MAX);
 	a = soft_dot(rdir, rdir);
@@ -1122,7 +1107,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			i = 0;
 			while (i < scene->max_light)
 			{
-				color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
+				color += light(&ray, objects[ray.object], lights[i], (objects[ray.object].material_id ? materials : 0), camera->position);
 				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}

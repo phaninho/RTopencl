@@ -1,8 +1,8 @@
 <scene width="1640" height="1480" maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
 	<camera position="550.0 -90.0 620.0" rotation="0.0 180.0 0.0" />
 
-	<cone position="40.0 0.0 155.0" radius="15.0" color="220 50 50 255" material="2"/>-->
-	<coneinf position="40.0 0.0 105.0" radius="15.0" color="21 50 250 255" material="3"/>-->
+	<cone position="40.0 0.0 155.0" radius="65.0" color="220 50 50 255" material="2"/>-->
+	<!--<coneinf position="40.0 0.0 105.0" radius="15.0" color="21 50 250 255" material="3"/>-->
 
 	<cylinderinf position="300.0 -20.0 -250.0" radius="42.0" color="120 150 200 255" material="2"/>
 	<!--<cylinderinf position="-40.0 -20.0 105.0"   radius="27.0" color="120 150 50 255" material="1"/>
