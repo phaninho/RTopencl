@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 12:51:00 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/21 16:44:49 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/29 20:11:55 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,6 @@ static void	update_float(t_window *win, float *nb, int val)
 		*nb -= val;
 }
 
-// static void	update_int(t_window *win, int *nb, int val)
-// {
-// 	if (reset_key(&win->keys[SDL_SCANCODE_KP_PLUS]))
-// 		*nb += val;
-// 	else if (reset_key(&win->keys[SDL_SCANCODE_KP_MINUS]))
-// 		*nb -= val;
-// }
-
 static void	update_objects(t_window *win, t_button *button,\
 														t_objects *obj, int val)
 {
@@ -91,16 +83,24 @@ void		update_scene(t_window *win)
 	t_objects	*obj;
 	t_button	*button;
 	t_scene		*scene;
+	t_interface	*inter;
 	int			val;
 
 	scene = &(env_get()->scene);
-	obj = &(env_get()->objects[scene->obj_index]);
+	inter = get_interface();
+	obj = &(env_get()->objects[inter->index]);
 	val = win->keys[SDL_SCANCODE_LSHIFT] ? 10 : 1;
 	if ((button = get_on_button(2)))
 		update_objects(win, button, obj, val);
-	if (reset_key(&win->keys[SDL_SCANCODE_LEFT]) && scene->obj_index > 0)
-		scene->obj_index--;
+	if (reset_key(&win->keys[SDL_SCANCODE_LEFT]) && inter->index > 0)
+		inter->index--;
 	else if (reset_key(&win->keys[SDL_SCANCODE_RIGHT])
-	&& scene->obj_index + 1 < scene->max_object)
-		scene->obj_index++;
+	&& ((inter->type == TYPE_OBJECT && inter->index + 1 < scene->max_object)
+	|| (inter->type == TYPE_LIGHT && inter->index + 1 < scene->max_light) ||
+	(inter->type == TYPE_MATERIAL && inter->index + 1 < scene->max_material)))
+		inter->index++;
+	else if (reset_key(&win->keys[SDL_SCANCODE_UP]) && inter->type < 4)
+		inter->type++;
+	else if (reset_key(&win->keys[SDL_SCANCODE_DOWN]) && inter->type > 1)
+		inter->type--;
 }

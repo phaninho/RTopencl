@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/27 20:02:48 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/29 15:29:46 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,8 @@ static void	rt_init(void)
 	t_env	*env;
 
 	env = env_get();
+	env->interface.index = 0;
+	env->interface.type = 1;
 	window = window_get();
 	window->render = &cl_render;
 	window->update = &update;
@@ -199,10 +201,10 @@ int				main(int ac, char **av)
 	window = window_get();
 	window->width = WIN_W;
 	window->height = WIN_H;
-	if (!window_init())
-		die("Error: Window init!");
 	if (ac < 2)
 		die("Usage: ./RT [scene_file]");
+	if (!window_init())
+		die("Error: Window init!");
 	parse_file(env_get(), av[1]);
 	print_env();
 	thread_init();

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 12:56:52 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/20 12:46:35 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/28 13:51:30 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ void		draw_buttons(void)
 	win = window_get();
 	i = -1;
 	while (get_button(++i)->exec)
-		draw_onoff(win, get_button(i));
+		if (get_button(i)->show)
+			draw_onoff(win, get_button(i));
 	i = -1;
 	while (get_slider(++i)->exec)
-		draw_slider(win, get_slider(i));
+		if (get_slider(i)->show)
+			draw_slider(win, get_slider(i));
 }

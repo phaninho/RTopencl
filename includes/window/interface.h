@@ -6,14 +6,14 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/20 13:16:38 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/29 15:27:46 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INTERFACE_H
 # define INTERFACE_H
 
-#include "raytracer/rt_env.h"
+# include "raytracer/rt_env.h"
 
 # define DARK_GREY 0x646464
 # define WHITE 0xf0f0f0
@@ -26,6 +26,11 @@
 # define SLIDER 1
 
 # define CENTER_X (win->width - win->interface.w / 2)
+
+# define TYPE_FILTER 1
+# define TYPE_OBJECT 2
+# define TYPE_LIGHT 3
+# define TYPE_MATERIAL 4
 
 typedef struct s_font	t_font;
 typedef struct s_button	t_button;
@@ -56,6 +61,7 @@ struct		s_button
 	SDL_Rect	rect;
 	int			on;
 	int			type;
+	int			show;
 };
 
 struct		s_slider
@@ -66,8 +72,10 @@ struct		s_slider
 	int			val;
 	int			vert;
 	int			color;
+	int			show;
 };
 
+t_interface	*get_interface(void);
 t_font		*get_font(void);
 void		init_font(void);
 void		draw_ui(void);
