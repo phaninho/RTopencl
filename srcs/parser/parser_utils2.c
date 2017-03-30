@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 11:10:34 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/23 18:29:32 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 12:34:00 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,21 @@
 
 void	malloc_elements(t_env *e, t_parse *p)
 {
-	if (!(e->objects = (t_objects*)malloc(sizeof(t_objects) * p->object)))
+	if (!p->object)
+		e->objects = NULL;
+	else if (!(e->objects = (t_objects*)malloc(sizeof(t_objects) * p->object)))
 		die("malloc failure (e->objects)");
-	if (!(e->light = (t_light*)malloc(sizeof(t_light) * p->light)))
+	if (!p->light)
+		e->light = NULL;
+	else if (!(e->light = (t_light*)malloc(sizeof(t_light) * p->light)))
 		die("malloc failure (e->light)");
-	if (!(e->material = (t_material*)malloc(sizeof(t_material) * p->mate)))
+	if (!p->mate)
+		e->material = NULL;
+	else if (!(e->material = (t_material*)malloc(sizeof(t_material) * p->mate)))
 		die("malloc failure (e->material)");
-	if (!(e->texture = (t_texture*)malloc(sizeof(t_texture) * p->texture)))
+	if (!p->texture)
+		e->texture = NULL;
+	else if (!(e->texture = (t_texture*)malloc(sizeof(t_texture) * p->texture)))
 		die("malloc failure (e->texture)");
 	e->scene.max_object = p->object;
 	e->scene.max_texture = p->texture;

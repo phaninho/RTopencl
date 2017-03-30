@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/29 15:27:46 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 13:22:33 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,14 @@ void		button_clicked(int x, int y);
 void		draw_buttons(void);
 void		slider_move(t_slider *button);
 void		update_onoff(t_button *button);
+void		update_showed(t_interface *inter, int type);
 t_button	*get_on_button(int type);
 
 void		button_render_mod(void *button);
 void		slider_render_mod(void *button);
-void		button_lights(void *param);
+void		button_scene(void *param);
 void		button_objects(void *param);
+void		button_lights(void *param);
 
 void		update_scene(t_window *win);
 

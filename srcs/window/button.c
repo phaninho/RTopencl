@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/28 15:23:30 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 13:36:14 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ t_button	g_buttons[] =
 	{4, button_render_mod, "ADD", {WIN_W - 185, 110, 100, 35}, 0, 1, 1},
 	{5, button_render_mod, "NEGATIF", {WIN_W - 290, 150, 100, 35}, 0, 1, 1},
 	{6, button_render_mod, "CARTOON", {WIN_W - 185, 150, 100, 35}, 0, 1, 1},
-	{1, button_lights, "-", {WIN_W - 130, 230, 20, 20}, 0, 0, 1},
-	{2, button_lights, "+", {WIN_W - 70, 230, 20, 20}, 0, 0, 1},
-	{3, button_lights, "-", {WIN_W - 130, 260, 20, 20}, 0, 0, 1},
-	{4, button_lights, "+", {WIN_W - 70, 260, 20, 20}, 0, 0, 1},
+	{1, button_scene, "-", {WIN_W - 130, 230, 20, 20}, 0, 0, 1},
+	{2, button_scene, "+", {WIN_W - 70, 230, 20, 20}, 0, 0, 1},
+	{3, button_scene, "-", {WIN_W - 130, 260, 20, 20}, 0, 0, 1},
+	{4, button_scene, "+", {WIN_W - 70, 260, 20, 20}, 0, 0, 1},
 	{1, button_objects, "Position:", {WIN_W - 290, 358, 90, 25}, 0, 2, 1},
 	{2, button_objects, "Rotation:", {WIN_W - 290, 388, 90, 25}, 0, 2, 1},
 	{3, button_objects, "Color:", {WIN_W - 290, 418, 90, 25}, 0, 2, 1},
@@ -34,6 +34,11 @@ t_button	g_buttons[] =
 	{5, button_objects, "Radius:", {WIN_W - 290, 478, 90, 25}, 0, 2, 1},
 	{6, button_objects, "<", {WIN_W - 185, 510, 20, 20}, 0, 2, 1},
 	{7, button_objects, ">", {WIN_W - 135, 510, 20, 20}, 0, 2, 1},
+	{1, button_lights, "Position:", {WIN_W - 290, 358, 110, 25}, 0, 3, 0},
+	{2, button_lights, "Direction:", {WIN_W - 290, 388, 110, 25}, 0, 3, 0},
+	{3, button_objects, "Color:", {WIN_W - 290, 418, 110, 25}, 0, 3, 0},
+	{4, button_objects, "Attenuation:", {WIN_W - 290, 448, 110, 25}, 0, 3, 0},
+	{5, button_objects, "Angle:", {WIN_W - 290, 478, 110, 25}, 0, 3, 0},
 	{0, NULL, NULL, {0, 0, 0, 0}, 0, 0, 0}
 };
 

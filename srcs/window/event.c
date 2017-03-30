@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 12:51:00 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/29 20:11:55 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 13:32:41 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,23 @@ static void	update_objects(t_window *win, t_button *button,\
 		update_float(win, &(obj->radius), val);
 }
 
+static void	update_lights(t_window *win, t_button *button,\
+														t_light *lgt, int val)
+{
+	if (button->id == 1)
+		update_vec3(win, &(lgt->position), val);
+	else if (button->id == 2)
+		update_vec3(win, &(lgt->direction), val);
+	else if (button->id == 3)
+		update_vec4(win, &(lgt->color), val);
+	else if (button->id == 4)
+		update_float(win, &(lgt->attenuation), val);
+	else if (button->id == 5)
+		update_float(win, &(lgt->angle), val);
+}
+
 void		update_scene(t_window *win)
 {
-	t_objects	*obj;
 	t_button	*button;
 	t_scene		*scene;
 	t_interface	*inter;
@@ -88,10 +102,11 @@ void		update_scene(t_window *win)
 
 	scene = &(env_get()->scene);
 	inter = get_interface();
-	obj = &(env_get()->objects[inter->index]);
 	val = win->keys[SDL_SCANCODE_LSHIFT] ? 10 : 1;
-	if ((button = get_on_button(2)))
-		update_objects(win, button, obj, val);
+	if ((button = get_on_button(TYPE_OBJECT)))
+		update_objects(win, button, &(env_get()->objects[inter->index]), val);
+	else if ((button = get_on_button(TYPE_LIGHT)))
+		update_lights(win, button, &(env_get()->light[inter->index]), val);
 	if (reset_key(&win->keys[SDL_SCANCODE_LEFT]) && inter->index > 0)
 		inter->index--;
 	else if (reset_key(&win->keys[SDL_SCANCODE_RIGHT])
@@ -100,7 +115,7 @@ void		update_scene(t_window *win)
 	(inter->type == TYPE_MATERIAL && inter->index + 1 < scene->max_material)))
 		inter->index++;
 	else if (reset_key(&win->keys[SDL_SCANCODE_UP]) && inter->type < 4)
-		inter->type++;
-	else if (reset_key(&win->keys[SDL_SCANCODE_DOWN]) && inter->type > 1)
-		inter->type--;
+		update_showed(inter, inter->type + 1);
+	else if (reset_key(&win->keys[SDL_SCANCODE_DOWN]) && inter->type > 2)
+		update_showed(inter, inter->type - 1);
 }
