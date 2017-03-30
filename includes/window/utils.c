@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:06:38 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/20 17:50:51 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 13:28:05 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,23 @@ t_button	*get_on_button(int type)
 		if (get_button(i)->type == type && get_button(i)->on)
 			return (get_button(i));
 	return (NULL);
+}
+
+void		update_showed(t_interface *inter, int type)
+{
+	int		i;
+
+	inter->index = 0;
+	i = -1;
+	while (get_button(++i)->exec)
+		if (get_button(i)->type == inter->type)
+		{
+			get_button(i)->show = 0;
+			get_button(i)->on = 0;
+		}
+	inter->type = type;
+	i = -1;
+	while (get_button(++i)->exec)
+		if (get_button(i)->type == inter->type)
+			get_button(i)->show = 1;
 }

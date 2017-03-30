@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/27 19:59:28 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/29 15:27:38 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <OpenCL/opencl.h>
 # include "utils/rt_math.h"
+
 # define EPSILON 0.00001f
 # define SCENE 0
 # define CAMERA (SCENE + 1)
@@ -129,13 +130,19 @@ typedef struct	s_scene
 	int			render_debug;
 	int			render_mod;
 	VEC4		render_filter;
-	int			obj_index;
 }				t_scene;
+
+typedef struct	s_interface
+{
+	int		index;
+	int		type;
+}				t_interface;
 
 typedef struct	s_env
 {
 	t_scene		scene;
 	t_cam		camera;
+	t_interface	interface;
 	t_objects	*objects;
 	t_light		*light;
 	t_material	*material;

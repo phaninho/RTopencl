@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/21 19:30:06 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 16:53:06 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void		slider_render_mod(void *param)
 		filter->z = (double)slider->val / 100.0f;
 }
 
-void		button_lights(void *param)
+void		button_scene(void *param)
 {
 	t_scene		*scene;
 	t_button	*button;
@@ -75,13 +75,32 @@ void		button_objects(void *param)
 	t_objects	*obj;
 	t_button	*button;
 	t_scene		*scene;
+	t_interface	*inter;
 
 	scene = &(env_get()->scene);
-	obj = &(env_get()->objects[scene->obj_index]);
+	inter = get_interface();
+	obj = &(env_get()->objects[inter->index]);
 	button = (t_button*)param;
 	if (button->id == 6 && obj->material_id > 1)
 		obj->material_id--;
 	else if (button->id == 7 && obj->material_id < scene->max_material)
 		obj->material_id++;
+	else if (button->id != 6 && button->id != 7)
+		update_onoff(button);
+}
+
+void		button_lights(void *param)
+{
+	t_button	*button;
+
+	button = (t_button*)param;
+	update_onoff(button);
+}
+
+void		button_materials(void *param)
+{
+	t_button	*button;
+
+	button = (t_button*)param;
 	update_onoff(button);
 }
