@@ -537,7 +537,7 @@ static float4    light_ambient(float4 color, const t_light light, const t_materi
 
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
-	t_material mat = {(float4){1.0f, 1.0f, 1.0f, 1.0f}, (float4){1.0f, 1.0f, 1.0f, 1.0f}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
+	t_material mat = {(float4){1.0f, 1.0f, 1.0f, 1.0f}, (float4){0.5f, 0.8f, 1.0f, 1.0f}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
 	float3	impact = ray->pos + ray->dir * ray->deph;
 	float3	lightDir;
 	float	distanceToLight;
@@ -626,7 +626,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float4 specular1 = specular * ambient;
 	float4	linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
 	finalColor = clamp(linearColor, 0.0f, 1.0f);
-	finalColor.w = 1.0f;
+	//finalColor.w = 1.0f;
 	return (finalColor);
 }
 
@@ -751,7 +751,7 @@ static float light_intersect(t_ray *ray, const t_light light, const float znear,
 	float a, b, c;
 	float solve;
 	float t0, t1;
-	float light_radius = 10.f;
+	float light_radius = 8.0f;
 	dist = ray->pos - light.position;
 	float3 rdir = ray->dir;
 	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
@@ -857,7 +857,7 @@ static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_l
 					i++;
 				}
 				color *= (shadow_attenuation);
-				color.w = 1.0f;
+				//color.w = 1.0f;
 			}
 			else
 				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
@@ -915,7 +915,7 @@ static float4		refract_color_in_reflect(__constant t_scene *scene, __constant t_
 					i++;
 				}
 				color *= (shadow_attenuation);
-				color.w = 1.0f;
+				//color.w = 1.0f;
 			}
 			else
 				color = noLight(&refract_ray, objects[refract_ray.object], materials, scene->max_material);
@@ -975,7 +975,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 					i++;
 				}
 				color *= (shadow_attenuation);
-				color.w = 1.0f;
+				//color.w = 1.0f;
 			}
 			else
 				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
@@ -1034,7 +1034,7 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 					i++;
 				}
 				color *= (shadow_attenuation);
-				color.w = 1.0f;
+				//color.w = 0.4f;
 			}
 			else
 				color = noLight(&refract_ray, objects[refract_ray.object], materials, scene->max_material);
@@ -1134,7 +1134,7 @@ __kernel void raytracer(__global uchar4* pixel,
 				i++;
 			}
 			color *= (shadow_attenuation);
-			color.w = 1.0f;
+			//color.w = 1.0f;
 			if (scene->max_refract > 0 && materials[objects[ray.object].material_id - 1].refraction > 0.0)
 				color += (refract_color(scene, objects, ray, materials, lights, camera->position) * materials[objects[ray.object].material_id - 1].refract_coef);
 			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
