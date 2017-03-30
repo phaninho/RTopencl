@@ -1199,6 +1199,13 @@ __kernel void raytracer(__global uchar4* pixel,
 		if (color.z >= 0.5f)
 			color.z = 1.0f;
 	}
+	float2 coor;
   color = clamp(color, 0.0f, 1.0f);
- 	pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
+	if (scene->max_texture)
+		 coor = getTextureUV(&ray, objects[ray.object]);
+	//if (coor && index == (int)(coor.y * textures->width + coor.x * textures->height))
+		//printf("%d\n", (int)(coor.y * textures->width + coor.x * textures->height));
+	//	pixel[index] = (uchar4)textures->data[(int)(coor.y * textures->width + coor.x * textures->height)];
+	//else
+ 		pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
 }
