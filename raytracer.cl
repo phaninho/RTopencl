@@ -537,13 +537,13 @@ static float4    light_ambient(float4 color, const t_light light, const t_materi
 
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
-	t_material mat = {light.color, (float4){205, 205, 55, 255}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
+	t_material mat = {(float4){1.0f, 1.0f, 1.0f, 1.0f}, (float4){1.0f, 1.0f, 1.0f, 1.0f}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
 	float3	impact = ray->pos + ray->dir * ray->deph;
 	float3	lightDir;
 	float	distanceToLight;
 	float	attenuation = 1.0f;
 	float3	normal = get_normal(ray, objects);
-	float4	finalColor = material ? objects.color : (float4)(5.0f, 0.0f, 255.0f, 255.0f);
+	float4	finalColor = objects.color;
 	if (objects.type == PLANE && material[objects.material_id - 1].damier)
 	{
 		int		x1 = (impact.x < 0 ? 1 : 0);
@@ -599,7 +599,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	}
 	//ambient
 	float4	ambient = 0.0f;
-	if (objects.material_id > 0)
+	if (objects.material_id == -1 || objects.material_id > 0)
 		//ambient = light_ambient(objects, light, material[objects.material_id - 1]);
 		ambient = light_ambient(finalColor, light, material ? *material : mat);
 	//diffuse
@@ -751,10 +751,10 @@ static float light_intersect(t_ray *ray, const t_light light, const float znear,
 	float a, b, c;
 	float solve;
 	float t0, t1;
-
+	float light_radius = 10.f;
 	dist = ray->pos - light.position;
 	float3 rdir = ray->dir;
-	c = soft_dot(dist, dist) - 5 * 5;//objects.radius * objects.radius;
+	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
 	if (enable && c < EPSILON) // Culling face
 		return (FLT_MAX);
 	a = soft_dot(rdir, rdir);
@@ -1068,6 +1068,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	float4 color;
 	float shadow_attenuation = 1.0f;
 	t_ray ray;
+	t_objects obj;
 	float4 cc = (float4)(0, 0, 0, 1);
 	ray.deph = scene->zfar;
 	ray.pos = (float3)(camera->position.x, camera->position.y, camera->position.z);
@@ -1095,6 +1096,24 @@ __kernel void raytracer(__global uchar4* pixel,
 			{
 				ray.deph = ld;
 				ray.object = -10;
+				obj.color = lights[i].color;
+				//if (obj.color.z)
+					//printf("%f\n", lights[i].color.z);
+				obj.position = lights[i].position;
+				obj.rotation = (float3)(0.0f, 0.0f, 0.0f);
+				obj.normal = (float3)(0.0f, 1.0f, 0.0f);
+				obj.endpos = (float3)(1.0f, 1.0f, 1.0f);
+				obj.type = SPHERE;
+				obj.material_id = -1;
+				obj.texture_id = -1;
+				obj.in_object = 0;
+				obj.radius = 20.0f;
+				obj.radius2 = 0.0f;
+				obj.a = 0.0f;
+				obj.b = 0.0f;
+				obj.c = 0.0f;
+				obj.d = 0.0f;
+				obj.dist = 0.0f;
 			}
 			i++;
 		}
@@ -1107,7 +1126,10 @@ __kernel void raytracer(__global uchar4* pixel,
 			i = 0;
 			while (i < scene->max_light)
 			{
-				color += light(&ray, objects[ray.object], lights[i], (objects[ray.object].material_id ? materials : 0), camera->position);
+				if (ray.object == -10)
+					color += light(&ray, obj, lights[i], 0, camera->position);
+				else
+					color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
 				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}
