@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 13:36:14 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 17:24:12 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,16 @@ t_button	g_buttons[] =
 	{3, button_objects, "Color:", {WIN_W - 290, 418, 110, 25}, 0, 3, 0},
 	{4, button_objects, "Attenuation:", {WIN_W - 290, 448, 110, 25}, 0, 3, 0},
 	{5, button_objects, "Angle:", {WIN_W - 290, 478, 110, 25}, 0, 3, 0},
+	{1, button_materials, "Ambient:", {WIN_W - 290, 328, 110, 25}, 0, 4, 0},
+	{2, button_materials, "Specular:", {WIN_W - 290, 358, 110, 25}, 0, 4, 0},
+	{3, button_materials, "Blinn:", {WIN_W - 290, 388, 110, 25}, 0, 4, 0},
+	{4, button_materials, "Shininess:", {WIN_W - 290, 418, 110, 25}, 0, 4, 0},
+	{5, button_materials, "Reflection:", {WIN_W - 290, 448, 110, 25}, 0, 4, 0},
+	{6, button_materials, "Refraction:", {WIN_W - 290, 478, 110, 25}, 0, 4, 0},
+	{7, button_materials, "Coef:", {WIN_W - 110, 478, 50, 25}, 0, 4, 0},
+	{8, button_materials, "Damier:", {WIN_W - 290, 508, 110, 25}, 0, 4, 0},
+	{9, button_materials, "Tile Size:", {WIN_W - 290, 538, 110, 25}, 0, 4, 0},
+	{10, button_materials, "Perlin:", {WIN_W - 290, 568, 110, 25}, 0, 4, 0},
 	{0, NULL, NULL, {0, 0, 0, 0}, 0, 0, 0}
 };
 

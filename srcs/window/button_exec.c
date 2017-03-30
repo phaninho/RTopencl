@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 13:24:48 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 16:53:06 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,16 @@ void		button_objects(void *param)
 
 void		button_lights(void *param)
 {
-	t_light		*lgt;
 	t_button	*button;
-	t_scene		*scene;
-	t_interface	*inter;
 
-	scene = &(env_get()->scene);
-	inter = get_interface();
-	lgt = &(env_get()->light[inter->index]);
+	button = (t_button*)param;
+	update_onoff(button);
+}
+
+void		button_materials(void *param)
+{
+	t_button	*button;
+
 	button = (t_button*)param;
 	update_onoff(button);
 }

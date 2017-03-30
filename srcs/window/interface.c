@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 13:37:37 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/30 17:05:05 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,18 @@ static void	draw_material(t_window *win, t_material *materials,\
 	if (!materials)
 		return ;
 	mat = &materials[inter->index];
+	draw_vec4(to_255(mat->ambient_color), (t_vec2i){CENTER_X - 5, 340},\
+																DARK_GREY, 40);
+	draw_vec4(to_255(mat->specular_color), (t_vec2i){CENTER_X - 5, 370},\
+																DARK_GREY, 40);
+	draw_number(mat->blinn, CENTER_X + 20, 400, DARK_GREY);
+	draw_number(mat->shininess, CENTER_X + 20, 430, DARK_GREY);
+	draw_number(mat->reflection * 100, CENTER_X + 20, 460, DARK_GREY);
+	draw_number(mat->refraction * 100, CENTER_X + 20, 490, DARK_GREY);
+	draw_number(mat->refract_coef * 100, CENTER_X + 120, 490, DARK_GREY);
+	draw_number(mat->damier, CENTER_X + 20, 520, DARK_GREY);
+	draw_number(mat->tile_size, CENTER_X + 20, 550, DARK_GREY);
+	draw_number(mat->perlin, CENTER_X + 20, 580, DARK_GREY);
 }
 
 void		draw_ui(void)
