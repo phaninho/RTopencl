@@ -863,7 +863,7 @@ static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_l
 				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
 		}
 		else
-			return (clamp(color,  0.0f, 1.0f)  /*(float)(1.0f, 0.0f, 0.0f, 1.0f)*/);
+			return (clamp(color,  0.0f, 1.0f));
 		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
 		reflect_color = point_color * color;
 		ray = reflect_ray;
@@ -1058,7 +1058,8 @@ __kernel void raytracer(__global uchar4* pixel,
 	__constant t_cam *camera,
 	__constant t_objects *objects,
 	__constant t_light *lights,
-	__constant t_material *materials)
+	__constant t_material *materials,
+	__constant t_texture *textures)
 {
 	int xmax = get_global_size(0);
 	int ymax = get_global_size(1);
@@ -1097,8 +1098,6 @@ __kernel void raytracer(__global uchar4* pixel,
 				ray.deph = ld;
 				ray.object = -10;
 				obj.color = lights[i].color;
-				//if (obj.color.z)
-					//printf("%f\n", lights[i].color.z);
 				obj.position = lights[i].position;
 				obj.rotation = (float3)(0.0f, 0.0f, 0.0f);
 				obj.normal = (float3)(0.0f, 1.0f, 0.0f);

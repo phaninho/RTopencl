@@ -67,6 +67,8 @@ static void kernel_init(t_window *window)
 		die("OpenCL error: buffer ligths");
 	if (env->scene.max_light > 0)
 		cl->mem_light = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_light) * env->scene.max_light, NULL, &err);
+	if (env->scene.max_texture > 0)
+		cl->mem_texture = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_texture) * env->scene.max_texture, NULL, &err);
 	if (err != CL_SUCCESS)
 		die("OpenCL error: buffer material");
 }
@@ -131,6 +133,19 @@ static void cl_render(void)
 	{
 		if ((err = clSetKernelArg(cl->kernel, 5, sizeof(cl_mem), NULL)) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Material");
+	}
+	// Texture
+	if (env->scene.max_texture > 0 && cl->mem_texture != NULL)
+	{
+		if ((err = clSetKernelArg(cl->kernel, 6, sizeof(cl_mem), (void *) &(cl->mem_texture))) != CL_SUCCESS)
+			die("OpenCL error: Kernel set arg 1, texture");
+		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_texture, CL_TRUE, 0, sizeof(t_texture) * env->scene.max_texture, env->texture, 0, NULL, NULL)) != CL_SUCCESS)
+			die("OpenCL error: Enqueue Write Buffer, texture");
+	}
+	else
+	{
+		if ((err = clSetKernelArg(cl->kernel, 6, sizeof(cl_mem), NULL)) != CL_SUCCESS)
+			die("OpenCL error: Kernel set arg 1, texture");
 	}
 	if ((err = clEnqueueNDRangeKernel(cl->queue, cl->kernel, 2, 0, (size_t[2]){window->width, window->height}, NULL, 0, NULL, NULL)) != CL_SUCCESS)
 		die("OpenCL error: Enqueue Range Kernel");
