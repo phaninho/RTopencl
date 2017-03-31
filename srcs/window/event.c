@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 12:51:00 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/31 20:27:11 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/31 20:32:01 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,8 @@ static void	update_lights(t_window *win, t_button *button,\
 	else if (button->id == 3)
 		update_vec4(win, &(lgt->color), val);
 	else if (button->id == 4)
-		check_float(update_float(win, &(lgt->attenuation), val / 100), 1.0f, 0.0f);
+		check_float(update_float(win, &(lgt->attenuation), val / 100), 1.0f,\
+																		0.0f);
 	else if (button->id == 5)
 		check_float(update_float(win, &(lgt->angle), val), 360.0f, -360.0f);
 }
