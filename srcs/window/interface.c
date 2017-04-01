@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/31 20:28:05 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/01 19:02:25 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 #include "parser/rt_parser.h"
-
-t_interface	*get_interface(void)
-{
-	return (&(env_get()->interface));
-}
 
 static void	draw_filter_n_scene(t_window *win, t_scene *scene)
 {

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:11:09 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 16:39:20 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/01 19:06:28 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,15 @@ void		slider_move(t_slider *button);
 void		update_onoff(t_button *button);
 void		update_showed(t_interface *inter, int type);
 t_button	*get_on_button(int type);
+
+int			reset_key(int *key);
+void		check_int(int *nb, int max, int min);
+void		check_float(float *nb, float max, float min);
+void		check_vec3(VEC3 *vec, VEC3 max, VEC3 min);
+int			*update_int(t_window *win, int *nb, float val);
+float		*update_float(t_window *win, float *nb, float val);
+VEC4		*update_vec4(t_window *win, VEC4 *vec, float val);
+VEC3		*update_vec3(t_window *win, VEC3 *vec, float val);
 
 void		button_render_mod(void *button);
 void		slider_render_mod(void *button);
