@@ -140,14 +140,14 @@ typedef struct	s_interface
 
 typedef struct	s_env
 {
-	t_scene		scene;
-	t_cam		camera;
+	t_scene			scene;
+	t_cam				camera;
 	t_interface	interface;
-	t_objects	*objects;
-	t_light		*light;
+	t_objects		*objects;
+	t_light			*light;
 	t_material	*material;
-	t_texture	*texture;
-}				t_env;
+	t_texture		*texture;
+}								t_env;
 
 t_env			*env_get(void);
 void			env_init(void);

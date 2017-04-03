@@ -2,7 +2,7 @@
 	<camera position="-25.0 25.0 -400.0" rotation="0.0 0.0 0.0" />
 	<!--<sphere position="0.0 50.0 -150.0" normal="0.0 1.0 0.0" radius="3.0" color="0 255 0 255" material="1"/>
 	<sphere position="0 0.0 0.0" normal="0.0 1.0 0.0" radius="10.0" color="0 55 255 255" material="1"/>-->
-	<sphere position="-175.0 15.0 15.0" normal="0.0 1.0 0.0" radius="40.0" color="205 0 0 255" material="1"/>
+	<sphere position="-175.0 15.0 15.0" normal="0.0 1.0 0.0" radius="40.0" color="205 0 0 255" material="1" texture="1"/>
 	<sphere position="-30.0 15.0 65.0" normal="0.0 1.0 0.0" radius="40.0" color="0 180 0 255" material="1"/>
 	<sphere position="40.0 40.0 40.0" normal="0.0 1.0 0.0" radius="40.0" color="100 100 155 255" material="1"/>
 	<sphere position="-20.0 110.0 90.0" normal="0.0 1.0 0.0" radius="40.0" color="255 255 255 0" material="1"/>

@@ -55,6 +55,9 @@ static void	check_object(t_env *e, t_parse *p, t_arg *arg)
 	o->c = arg->adbl[OBJ_C - DOUBLE];
 	o->d = arg->adbl[OBJ_D - DOUBLE];
 	o->dist = arg->adbl[DIST - DOUBLE];
+	if (arg->aint[TEXTUREID] >= 1
+	&& arg->aint[TEXTUREID] <= e->scene.max_texture)
+		o->texture_id = arg->aint[TEXTUREID];
 	p->object++;
 }
 

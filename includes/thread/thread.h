@@ -30,6 +30,7 @@ typedef struct	s_thread
 	cl_mem				mem_material;
 	cl_mem				mem_light;
 	cl_mem				mem_texture;
+	cl_mem				mem_data;
 	cl_program			program;
 	cl_kernel			kernel;
 }				t_thread;
