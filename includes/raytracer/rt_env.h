@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/29 15:27:38 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/01 19:07:43 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,14 +140,14 @@ typedef struct	s_interface
 
 typedef struct	s_env
 {
-	t_scene			scene;
-	t_cam				camera;
+	t_scene		scene;
+	t_cam		camera;
 	t_interface	interface;
-	t_objects		*objects;
-	t_light			*light;
+	t_objects	*objects;
+	t_light		*light;
 	t_material	*material;
-	t_texture		*texture;
-}								t_env;
+	t_texture	*texture;
+}				t_env;
 
 t_env			*env_get(void);
 void			env_init(void);

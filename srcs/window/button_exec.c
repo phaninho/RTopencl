@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 16:53:06 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/01 19:00:26 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,6 @@ void		button_objects(void *param)
 }
 
 void		button_lights(void *param)
-{
-	t_button	*button;
-
-	button = (t_button*)param;
-	update_onoff(button);
-}
-
-void		button_materials(void *param)
 {
 	t_button	*button;
 

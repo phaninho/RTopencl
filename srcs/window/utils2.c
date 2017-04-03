@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:06:38 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 13:28:05 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/01 19:03:31 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,62 +16,9 @@
 #include "raytracer/rt_env.h"
 #include "parser/rt_parser.h"
 
-t_vec2i		*last_click(void)
+t_interface	*get_interface(void)
 {
-	static t_vec2i	pos = (t_vec2i){0, 0};
-
-	return (&pos);
-}
-
-VEC4		to_255(VEC4 color)
-{
-	color.x *= 255;
-	color.y *= 255;
-	color.z *= 255;
-	color.w *= 255;
-	return (color);
-}
-
-void		slider_move(t_slider *s)
-{
-	t_vec2i		*vec;
-	SDL_Rect	rec;
-
-	vec = last_click();
-	if (s->vert)
-		s->val = (vec->y - s->rect.y - 1) * 100 / s->rect.h;
-	else
-		s->val = (vec->x - s->rect.x) * 100 / s->rect.w;
-}
-
-void		update_onoff(t_button *button)
-{
-	int		i;
-
-	if (button->type)
-	{
-		if (button->on)
-			button->on = 0;
-		else
-		{
-			i = -1;
-			while (get_button(++i)->exec)
-				if (get_button(i)->type == button->type)
-					get_button(i)->on = 0;
-			button->on = 1;
-		}
-	}
-}
-
-t_button	*get_on_button(int type)
-{
-	int		i;
-
-	i = -1;
-	while (get_button(++i)->exec)
-		if (get_button(i)->type == type && get_button(i)->on)
-			return (get_button(i));
-	return (NULL);
+	return (&(env_get()->interface));
 }
 
 void		update_showed(t_interface *inter, int type)
@@ -91,4 +38,36 @@ void		update_showed(t_interface *inter, int type)
 	while (get_button(++i)->exec)
 		if (get_button(i)->type == inter->type)
 			get_button(i)->show = 1;
+}
+
+void		check_vec3(VEC3 *vec, VEC3 max, VEC3 min)
+{
+	if (vec->x > max.x)
+		vec->x = max.x;
+	else if (vec->x < min.x)
+		vec->x = min.x;
+	if (vec->y > max.y)
+		vec->y = max.y;
+	else if (vec->y < min.y)
+		vec->y = min.y;
+	if (vec->z > max.z)
+		vec->z = max.z;
+	else if (vec->z < min.z)
+		vec->z = min.z;
+}
+
+void		check_float(float *nb, float max, float min)
+{
+	if (*nb > max)
+		*nb = max;
+	else if (*nb < min)
+		*nb = min;
+}
+
+void		check_int(int *nb, int max, int min)
+{
+	if (*nb > max)
+		*nb = max;
+	else if (*nb < min)
+		*nb = min;
 }

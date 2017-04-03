@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 17:24:12 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/31 17:09:38 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,11 @@ t_button	g_buttons[] =
 	{3, button_scene, "-", {WIN_W - 130, 260, 20, 20}, 0, 0, 1},
 	{4, button_scene, "+", {WIN_W - 70, 260, 20, 20}, 0, 0, 1},
 	{1, button_objects, "Position:", {WIN_W - 290, 358, 90, 25}, 0, 2, 1},
-	{2, button_objects, "Rotation:", {WIN_W - 290, 388, 90, 25}, 0, 2, 1},
-	{3, button_objects, "Color:", {WIN_W - 290, 418, 90, 25}, 0, 2, 1},
-	{4, button_objects, "Normal:", {WIN_W - 290, 448, 90, 25}, 0, 2, 1},
-	{5, button_objects, "Radius:", {WIN_W - 290, 478, 90, 25}, 0, 2, 1},
-	{6, button_objects, "<", {WIN_W - 185, 510, 20, 20}, 0, 2, 1},
-	{7, button_objects, ">", {WIN_W - 135, 510, 20, 20}, 0, 2, 1},
+	// {2, button_objects, "Rotation:", {WIN_W - 290, 388, 90, 25}, 0, 2, 1},
+	{3, button_objects, "Color:", {WIN_W - 290, 388, 90, 25}, 0, 2, 1},
+	{5, button_objects, "Radius:", {WIN_W - 290, 418, 90, 25}, 0, 2, 1},
+	{6, button_objects, "<", {WIN_W - 185, 450, 20, 20}, 0, 2, 1},
+	{7, button_objects, ">", {WIN_W - 135, 450, 20, 20}, 0, 2, 1},
 	{1, button_lights, "Position:", {WIN_W - 290, 358, 110, 25}, 0, 3, 0},
 	{2, button_lights, "Direction:", {WIN_W - 290, 388, 110, 25}, 0, 3, 0},
 	{3, button_objects, "Color:", {WIN_W - 290, 418, 110, 25}, 0, 3, 0},

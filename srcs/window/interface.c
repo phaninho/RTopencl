@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 17:05:05 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/01 19:02:25 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
 #include "parser/rt_parser.h"
-
-t_interface	*get_interface(void)
-{
-	return (&(env_get()->interface));
-}
 
 static void	draw_filter_n_scene(t_window *win, t_scene *scene)
 {
@@ -45,12 +40,11 @@ static void	draw_object(t_window *win, t_objects *objects, t_interface *inter)
 	draw_text("Type:", CENTER_X - 80, 340, DARK_GREY);
 	draw_text(get_tag(obj->type), CENTER_X, 340, DARK_GREY);
 	draw_vec3(obj->position, (t_vec2i){CENTER_X - 25, 370}, DARK_GREY, 50);
-	draw_vec3(obj->rotation, (t_vec2i){CENTER_X - 25, 400}, DARK_GREY, 50);
-	draw_vec4(to_255(obj->color), (t_vec2i){CENTER_X - 25, 430}, DARK_GREY, 40);
-	draw_vec3(obj->normal, (t_vec2i){CENTER_X - 25, 460}, DARK_GREY, 50);
-	draw_number(obj->radius, CENTER_X, 490, DARK_GREY);
-	draw_text("Material:", CENTER_X - 90, 520, DARK_GREY);
-	draw_number(obj->material_id, CENTER_X, 520, DARK_GREY);
+	// draw_vec3(obj->rotation, (t_vec2i){CENTER_X - 25, 400}, DARK_GREY, 50);
+	draw_vec4(to_255(obj->color), (t_vec2i){CENTER_X - 25, 400}, DARK_GREY, 40);
+	draw_number(obj->radius, CENTER_X, 430, DARK_GREY);
+	draw_text("Material:", CENTER_X - 90, 460, DARK_GREY);
+	draw_number(obj->material_id, CENTER_X, 460, DARK_GREY);
 }
 
 static void	draw_light(t_window *win, t_light *light, t_interface *inter)
@@ -67,7 +61,7 @@ static void	draw_light(t_window *win, t_light *light, t_interface *inter)
 	draw_vec3(lgt->position, (t_vec2i){CENTER_X - 5, 370}, DARK_GREY, 50);
 	draw_vec3(lgt->direction, (t_vec2i){CENTER_X - 5, 400}, DARK_GREY, 50);
 	draw_vec4(to_255(lgt->color), (t_vec2i){CENTER_X - 5, 430}, DARK_GREY, 40);
-	draw_number(lgt->attenuation, CENTER_X + 20, 460, DARK_GREY);
+	draw_number(lgt->attenuation * 100, CENTER_X + 20, 460, DARK_GREY);
 	draw_number(lgt->angle, CENTER_X + 20, 490, DARK_GREY);
 }
 

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/27 20:06:41 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/03/31 16:44:44 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ static void	check_object(t_env *e, t_parse *p, t_arg *arg)
 	o->c = arg->adbl[OBJ_C - DOUBLE];
 	o->d = arg->adbl[OBJ_D - DOUBLE];
 	o->dist = arg->adbl[DIST - DOUBLE];
-	if (arg->aint[TEXTUREID] >= 1
-	&& arg->aint[TEXTUREID] <= e->scene.max_texture)
-		o->texture_id = arg->aint[TEXTUREID];
 	p->object++;
 }
 
@@ -68,6 +65,9 @@ static void	check_light(t_env *e, t_parse *p, t_arg *arg)
 	l = &(e->light[p->light]);
 	l->type = p->type;
 	l->position = arg->avec[POSITION - VEC];
+	l->position.x += 0.01f;
+	l->position.y += 0.01f;
+	l->position.z += 0.01f;
 	l->color = check_color(arg->color[COLOR - COLOR]);
 	if (arg->adbl[ATTENUATION - DOUBLE] >= 0.0f)
 		l->attenuation = arg->adbl[ATTENUATION - DOUBLE];

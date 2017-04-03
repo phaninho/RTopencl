@@ -33,7 +33,7 @@ typedef struct	s_thread
 	cl_mem				mem_data;
 	cl_program			program;
 	cl_kernel			kernel;
-}				t_thread;
+} t_thread;
 
 t_thread		*thread_get(void);
 void			thread_init(void);

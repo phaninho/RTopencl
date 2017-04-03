@@ -24,9 +24,8 @@
 # define DEBUG (BLINN + 1)
 # define PERLIN (DEBUG + 1)
 # define DAMIER (PERLIN + 1)
-# define TEXTUREID (DAMIER + 1)
 
-# define DOUBLE (TEXTUREID + 1)
+# define DOUBLE (DAMIER + 1)
 # define FOV (DOUBLE)
 # define ZNEAR (FOV + 1)
 # define ZFAR (ZNEAR + 1)
@@ -63,7 +62,7 @@
 typedef struct	s_arg
 {
 	int		type;
-	int		aint[10];
+	int		aint[9];
 	double	adbl[17];
 	VEC3	avec[5];
 	VEC4	color[4];

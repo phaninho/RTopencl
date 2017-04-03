@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 12:51:00 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/30 17:23:24 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/01 19:05:25 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,62 +16,7 @@
 #include "raytracer/rt_env.h"
 #include "parser/rt_parser.h"
 
-static int	reset_key(int *key)
-{
-	if (*key)
-		return ((*key)--);
-	return (0);
-}
-
-static void	update_vec3(t_window *win, VEC3 *vec, float val)
-{
-	if (reset_key(&win->keys[SDL_SCANCODE_KP_4]))
-		vec->x += val;
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_6]))
-		vec->x -= val;
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_8]))
-		vec->z -= val;
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_5]))
-		vec->z += val;
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_PLUS]))
-		vec->y -= val;
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_MINUS]))
-		vec->y += val;
-}
-
-static void	update_vec4(t_window *win, VEC4 *vec, float val)
-{
-	if (reset_key(&win->keys[SDL_SCANCODE_KP_4]))
-		vec->x = (vec->x - val / 255.0 < 0 ? 0 : vec->x - val / 255.0);
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_6]))
-		vec->x = (vec->x + val / 255.0 > 1 ? 1 : vec->x + val / 255.0);
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_8]))
-		vec->z = (vec->z + val / 255.0 > 1 ? 1 : vec->z + val / 255.0);
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_5]))
-		vec->z = (vec->z - val / 255.0 < 0 ? 0 : vec->z - val / 255.0);
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_PLUS]))
-		vec->y = (vec->y + val / 255.0 > 1 ? 1 : vec->y + val / 255.0);
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_MINUS]))
-		vec->y = (vec->y - val / 255.0 < 0 ? 0 : vec->y - val / 255.0);
-}
-
-static void	update_float(t_window *win, float *nb, float val)
-{
-	if (reset_key(&win->keys[SDL_SCANCODE_KP_PLUS]))
-		*nb += val;
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_MINUS]))
-		*nb -= val;
-}
-
-static void	update_int(t_window *win, int *nb, float val)
-{
-	if (reset_key(&win->keys[SDL_SCANCODE_KP_PLUS]))
-		*nb += val;
-	else if (reset_key(&win->keys[SDL_SCANCODE_KP_MINUS]))
-		*nb -= val;
-}
-
-static void	update_objects(t_window *win, t_button *button,\
+static void		update_objects(t_window *win, t_button *button,\
 													t_objects *obj, float val)
 {
 	if (button->id == 1)
@@ -81,27 +26,29 @@ static void	update_objects(t_window *win, t_button *button,\
 	else if (button->id == 3)
 		update_vec4(win, &(obj->color), val);
 	else if (button->id == 4)
-		update_vec3(win, &(obj->normal), val);
+		update_vec3(win, &(obj->normal), 1);
 	else if (button->id == 5)
 		update_float(win, &(obj->radius), val);
 }
 
-static void	update_lights(t_window *win, t_button *button,\
+static void		update_lights(t_window *win, t_button *button,\
 														t_light *lgt, float val)
 {
 	if (button->id == 1)
 		update_vec3(win, &(lgt->position), val);
 	else if (button->id == 2)
-		update_vec3(win, &(lgt->direction), val);
+		check_vec3(update_vec3(win, &(lgt->direction), val),\
+						(VEC3){1.0f, 1.0f, 1.0f}, (VEC3){-1.0f, -1.0f, -1.0f});
 	else if (button->id == 3)
 		update_vec4(win, &(lgt->color), val);
 	else if (button->id == 4)
-		update_float(win, &(lgt->attenuation), val);
+		check_float(update_float(win, &(lgt->attenuation), val / 100), 1.0f,\
+																		0.0f);
 	else if (button->id == 5)
-		update_float(win, &(lgt->angle), val);
+		check_float(update_float(win, &(lgt->angle), val), 360.0f, -360.0f);
 }
 
-static void	update_mates(t_window *win, t_button *button,\
+static void		update_mates(t_window *win, t_button *button,\
 													t_material *mat, float val)
 {
 	if (button->id == 1)
@@ -109,24 +56,27 @@ static void	update_mates(t_window *win, t_button *button,\
 	else if (button->id == 2)
 		update_vec4(win, &(mat->specular_color), val);
 	else if (button->id == 3)
-		update_int(win, &(mat->blinn), val);
+		update_int(win, &(mat->blinn), 1);
 	else if (button->id == 4)
-		update_float(win, &(mat->shininess), val);
+		check_float(update_float(win, &(mat->shininess), val), 1000.0f, 0.0f);
 	else if (button->id == 5)
-		update_float(win, &(mat->reflection), val);
+		check_float(update_float(win, &(mat->reflection), val / 100), 1.0f,\
+																		0.0f);
 	else if (button->id == 6)
-		update_float(win, &(mat->refraction), val);
+		check_float(update_float(win, &(mat->refraction), val / 100), 1.0f,\
+																		0.0f);
 	else if (button->id == 7)
-		update_float(win, &(mat->refract_coef), val);
+		check_float(update_float(win, &(mat->refract_coef), val / 100), 1.0f,\
+																		0.0f);
 	else if (button->id == 8)
-		update_int(win, &(mat->damier), val);
+		update_int(win, &(mat->damier), 1);
 	else if (button->id == 9)
 		update_float(win, &(mat->tile_size), val);
 	else if (button->id == 10)
-		update_int(win, &(mat->perlin), val);
+		update_int(win, &(mat->perlin), 1);
 }
 
-void		update_scene(t_window *win)
+void			update_scene(t_window *win)
 {
 	t_button	*button;
 	t_scene		*scene;

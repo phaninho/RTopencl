@@ -51,6 +51,7 @@ void		thread_init(void)
 	cl->mem_object = NULL;
 	cl->mem_material = NULL;
 	cl->mem_light = NULL;
+	cl->mem_data = NULL;
 }
 
 void		thread_end(void)
@@ -77,6 +78,8 @@ void		thread_end(void)
 		err = clReleaseMemObject(cl->mem_object);
 	if (cl->mem_material != NULL)
 		err = clReleaseMemObject(cl->mem_material);
+	if (cl->mem_data != NULL)
+		err = clReleaseMemObject(cl->mem_data);
 	if (cl->mem_light != NULL)
 		err = clReleaseMemObject(cl->mem_light);
 }

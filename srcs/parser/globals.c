@@ -23,7 +23,6 @@ char		*g_args[] =
 	"debug",
 	"perlin",
 	"damier",
-	"texture",
 	"fov",
 	"znear",
 	"zfar",
