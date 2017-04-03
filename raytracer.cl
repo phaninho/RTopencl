@@ -482,9 +482,12 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	float3 normal = get_normal(ray, objects);
 	if (objects.type == SPHERE)
 	{
-		uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
-		uv.y = 0.5f - (asin(normal.y)) / PI;
+		uv.x = atan2(normal.x, normal.z) / (2 * PI) + 0.5;
+		uv.y = normal.y * 0.5 + 0.5;
+		//uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
+		//uv.y = 0.5f - (asin(normal.y)) / PI;
 	}
+
 	else if (objects.type == PLANE)
 	{
 		float3 uAxis = (float3)(normal.y, normal.z, -normal.x);
@@ -1059,7 +1062,8 @@ __kernel void raytracer(__global uchar4* pixel,
 	__constant t_objects *objects,
 	__constant t_light *lights,
 	__constant t_material *materials,
-	__constant t_texture *textures)
+	__constant t_texture *textures,
+	__global char	*data)
 {
 	int xmax = get_global_size(0);
 	int ymax = get_global_size(1);
@@ -1201,11 +1205,19 @@ __kernel void raytracer(__global uchar4* pixel,
 	}
 	float2 coor;
   color = clamp(color, 0.0f, 1.0f);
-	if (scene->max_texture)
-		 coor = getTextureUV(&ray, objects[ray.object]);
-	//if (coor && index == (int)(coor.y * textures->width + coor.x * textures->height))
+	if (objects[ray.object].texture_id > 0 && objects[ray.object].texture_id <= scene->max_texture)
+	{
+		if (scene->max_texture)
+			 coor = getTextureUV(&ray, objects[ray.object]);
 		//printf("%d\n", (int)(coor.y * textures->width + coor.x * textures->height));
-	//	pixel[index] = (uchar4)textures->data[(int)(coor.y * textures->width + coor.x * textures->height)];
-	//else
+		__constant t_texture	*texture = &textures[objects[ray.object].texture_id - 1];
+		uchar4 								*text = data;
+		coor.x = coor.x * (float)texture->width;
+		coor.y = coor.y * (float)texture->height;
+		int pos = (int)(coor.y * (float)texture->width + coor.x);
+		printf("r%d, g%d, b%d, a%d\n", text[pos].x, text[pos].y, text[pos].z, text[pos].w);
+		pixel[index] = text[(int)(coor.y * (float)texture->width + coor.x)];
+	}
+	else
  		pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
 }
