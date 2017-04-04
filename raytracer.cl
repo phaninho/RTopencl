@@ -141,7 +141,26 @@ typedef struct	s_ray
 	float	deph;
 	int		object;
 }				t_ray;
+/*
+typedef struct s_lensinterface
+{
+	float3	center;
+	float		radius;
+	float3	n;
+	float		sa;
+	float		dl;
+	bool		flat;
+}					t_lensinterface;
 
+typedef struct s_intersection
+{
+	float3	pos;
+	float3	norm;
+	float		theta;
+	bool		hit;
+	bool		inverted;
+}					t_intersection;
+*/
 static float soft_length(float3 vec)
 {
 	return half_sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
@@ -488,10 +507,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float	attenuation = 1.0f;
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
-	if (objects.type == PLANE)
-    {
-        finalColor = perlin_wood(impact, 0.01);
-    }
+	if (material[objects.material_id - 1].perlin)
+      finalColor = perlin_wood(impact, 0.01);
 	if (objects.type == PLANE && material[objects.material_id - 1].damier)
 	{
 		int		x1 = (impact.x < 0 ? 1 : 0);
