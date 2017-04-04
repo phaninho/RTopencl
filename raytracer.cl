@@ -144,7 +144,7 @@ typedef struct	s_ray
 
 static float soft_length(float3 vec)
 {
-	return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	return half_sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
 static float3 soft_normalize(float3 vec)
@@ -165,8 +165,8 @@ static float3 rotatex(float3 vec, float degree)
 	float3 nvec = (float3)(0, 0, 0);
 	float rx = degree * PI / 180.0f;
 	nvec.x = vec.x;
-	nvec.y = vec.y * cosf(rx) - vec.z * sinf(rx);
-	nvec.z = vec.y * sinf(rx) + vec.z * cosf(rx);
+	nvec.y = vec.y * half_cos(rx) - vec.z * half_sin(rx);
+	nvec.z = vec.y * half_sin(rx) + vec.z * half_cos(rx);
 	return (nvec);
 }
 
@@ -174,9 +174,9 @@ static float3 rotatey(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float ry = degree * PI / 180.0f;
-	nvec.x = vec.z * sinf(ry) + vec.x * cosf(ry);
+	nvec.x = vec.z * half_sin(ry) + vec.x * half_cos(ry);
 	nvec.y = vec.y;
-	nvec.z = vec.z * cosf(ry) - vec.x * sinf(ry);
+	nvec.z = vec.z * half_cos(ry) - vec.x * half_sin(ry);
 	return (nvec);
 }
 
@@ -184,8 +184,8 @@ static float3 rotatez(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float rz = degree * PI / 180.0f;
-	nvec.x = vec.x * cosf(rz) - vec.y * sinf(rz);
-	nvec.y = vec.x * sinf(rz) + vec.y * cosf(rz);
+	nvec.x = vec.x * half_cos(rz) - vec.y * half_sin(rz);
+	nvec.y = vec.x * half_sin(rz) + vec.y * half_cos(rz);
 	nvec.z = vec.z;
 	return (nvec);
 }
@@ -237,209 +237,9 @@ static float3        float3_refract(const float3 v, const float3 normal, const f
     }
     float eta = etai - etat;
     float k = 1 - eta * eta * (1 - cosi * cosi);
-    return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
+    return (k < 0 ? 0 : eta * v + (eta * cosi - half_sqrt(soft_dot(k, k))) * n);
 }
 
-
-/*tatic float3		float3_refract(const float3 v, const float3 normal,float n)
-{
-	float ct1 = soft_dot(normal, -1 * v);
-	float ct2 = sqrt(1 - n * n * (1 - ct1 * ct1));
-	return (n * v + (n * ct1 - ct2) * normal);
-}*/
-	/*float k = 1.0f - eta * eta * (1.0f - soft_dot(normal, v) * soft_dot(normal, v));
-    if (k < 0.0f)
-        return ((float3)(0, 0, 0));
-    else
-        return (eta * v - (eta * soft_dot(normal, v) + sqrtf(k)) * normal);*/
-
-	/*float air = 1.33f;
-	float n = eta / air;
-	float cosI = -(soft_dot(normal, v));
-	float sinT2 = eta * eta * (1.0f - cosI * cosI);
-	if (sinT2 > 1.0)
-		return ((float3)(0, 0, 0));
-	float cosT = sqrt(1.0 - sinT2);
-	return (v * n + normal * (n * cosI - cosT));*/
-	/*float n = -(soft_dot(normal, v));
-	float k = 1.f - eta * eta * (1.f - n * n);
-	if (k < 0.0f)
-		return ((float3)(0, 0, 0));
-	return (eta * v + (eta * n - sqrtf(k)) * normal);
-}*/
-
-# define SWAP(a,b) {float tmp; tmp = a; a = b; b = tmp;}
-
-static float		solvequadratic(float a, float b, float c)
-{
-	float		discriminant;
-	float		t;
-	float		t0;
-	float		t1;
-
-	t = 0;
-	if ((discriminant = b * b - 4 * a * c) < 0)
-		return (0);
-	else if (discriminant == 0)
-		t = -0.5 * b / a;
-	else if (discriminant >= 0)
-	{
-		discriminant = sqrt(discriminant);
-		t0 = ((-b + discriminant) / (2 * a));
-		t1 = ((-b - discriminant) / (2 * a));
-		t = (t0 < t1) ? t0 : t1;
-	}
-	return (t);
-}
-
-static float   isreal(float *roots)
-{
-  int   i;
-
-  i = 0;
-  while (roots[i])
-    ++i;
-  return (roots[i]);
-}
-
-static float   findclosest(float *roots, int a)
-{
-	int 	i = 0;
-	float 	t;
-
-	t = isreal(roots);
-  while (i != a)
-  {
-    if (t > roots[i])
-      t = roots[i];
-		++i;
-	}
-	return (t);
-}
-
-static float   solvecubic(float x, float a, float b, float c)
-{
-  if (x == 0)
-    return (solvequadratic(a, b, c));
-
-  float roots[3];
-  float q = (a * a - 3 * b);
-  float r = (2 * a * a * a - 9 * a * b + 27 * c);
-
-  float Q = q / 9;
-  float R = r / 54;
-
-  float Q3 = Q * Q * Q;
-  float R2 = R * R;
-
-  float CR2 = 729 * r * r;
-  float CQ3 = 2916 * q * q * q;
-
-  if (R == 0 && Q == 0)
-  {
-    roots[0] = - a / 3 ;
-    roots[1] = - a / 3 ;
-    roots[2] = - a / 3 ;
-    return (findclosest(roots, 3));
-  }
-  else if (CR2 == CQ3)
-  {
-    float sqrtQ = sqrt (Q);
-    if (R > 0)
-      {
-        roots[0] = -2 * sqrtQ  - a / 3;
-        roots[1] = sqrtQ - a / 3;
-        roots[2] = sqrtQ - a / 3;
-      }
-    else
-      {
-        roots[0] = - sqrtQ  - a / 3;
-        roots[1] = - sqrtQ - a / 3;
-        roots[2] = 2 * sqrtQ - a / 3;
-      }
-    return (findclosest(roots, 3));
-  }
-  else if (R2 < Q3)
-  {
-    float sgnR = (R >= 0 ? 1 : -1);
-    float ratio = sgnR * sqrt (R2 / Q3);
-    float theta = acos (ratio);
-    float norm = -2 * sqrt (Q);
-    roots[0] = norm * cos (theta / 3) - a / 3;
-    roots[1] = norm * cos ((theta + 2.0 * M_PI) / 3) - a / 3;
-    roots[2] = norm * cos ((theta - 2.0 * M_PI) / 3) - a / 3;
-
-    if (roots[0] > roots[1])
-      SWAP(roots[0], roots[1]);
-
-    if (roots[1] > roots[2])
-    {
-      SWAP(roots[1], roots[2]);
-
-      if (roots[0] > roots[1])
-        SWAP(roots[0], roots[1]);
-    }
-
-    return (findclosest(roots, 3));
-  }
-  else
-  {
-    float sgnR = (R >= 0 ? 1 : -1);
-    float A = -sgnR * pow(fabs(R) + sqrt(R2 - Q3), 1.0f/3.0f);
-    float B = Q / A ;
-    roots[0] = A + B - a / 3;
-    roots[1] = A + B - a / 3;
-    roots[2] = A + B - a / 3;
-    return (findclosest(roots, 3));
-  }
-}
-
-static float 	solvequartic(float a, float b, float c, float d, float e)
-{
-    if (a == 0)
-        return (solvecubic(b, c, d, e));
-    float roots[4];
-    b /= a;
-    c /= a;
-    d /= a;
-    e /= a;
-    float b2 = b * b;
-    float b3 = b * b2;
-    float b4 = b2 * b2;
-    float alpha = (-3.0/8.0) * b2 + c;
-    float beta  = b3 / 8.0 - b * c/ 2.0 + d;
-    float gamma = (-3.0 / 256.0) * b4 + b2 * c/16.0 - b * d / 4.0 + e;
-    float alpha2 = alpha * alpha;
-    float t = -b / 4.0;
-    if (beta == 0)
-    {
-        float rad = sqrt(alpha2 - 4.0 * gamma);
-        float r1 = sqrt((-alpha + rad) / 2.0);
-        float r2 = sqrt((-alpha - rad) / 2.0);
-        roots[0] = t + r1;
-        roots[1] = t - r1;
-        roots[2] = t + r2;
-        roots[3] = t - r2;
-    }
-    else
-    {
-        float alpha3 = alpha * alpha2;
-        float P = - (alpha2 / 12.0 + gamma);
-        float Q = - alpha3 / 108.0 + alpha * gamma / 3.0 - beta * beta / 8.0;
-        float R = -Q / 2.0 + sqrt(Q * Q / 4.0 + P * P * P/ 27.0);
-        float U = cbrt(R);
-        float y = (-5.0 / 6.0) * alpha + U;
-        (U == 0 ? y -= cbrt(Q) : P/ (3.0 * U));
-        float W = sqrt(alpha + 2.0 * y);
-        float r1 = sqrt(-(3.0 * alpha + 2.0 * y + 2.0 * beta / W));
-        float r2 = sqrt(-(3.0 * alpha + 2.0 * y - 2.0 * beta / W));
-        roots[0] = t + ( W - r1) / 2.0;
-        roots[1] = t + ( W + r1) / 2.0;
-        roots[2] = t + (-W - r2) / 2.0;
-        roots[3] = t + (-W + r2) / 2.0;
-    }
-    return (findclosest(roots, 4));
-}
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
 {
@@ -468,7 +268,7 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 	{
 		float k = soft_dot((impact - objects.position), objects.normal);
 		float3 a = impact - objects.position * k;
-		float m = sqrt(pow(objects.radius2, 2) - k * k );
+		float m = half_sqrt(pow(objects.radius2, 2) - k * k );
 		return (soft_normalize(impact - a - (objects.position - a) *\
 		 m / (objects.radius + m)));
 }
@@ -482,12 +282,9 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	float3 normal = get_normal(ray, objects);
 	if (objects.type == SPHERE)
 	{
-		uv.x = atan2(normal.x, normal.z) / (2 * PI) + 0.5;
-		uv.y = normal.y * 0.5 + 0.5;
-		//uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
-		//uv.y = 0.5f - (asin(normal.y)) / PI;
+		uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
+		uv.y = 0.5f - (asin(normal.y)) / PI;
 	}
-
 	else if (objects.type == PLANE)
 	{
 		float3 uAxis = (float3)(normal.y, normal.z, -normal.x);
@@ -501,7 +298,7 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	{
 		/*uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
 		uv.y = impact.y - objects.position.y;
-		uv.x = uv.x * sqrt(objects.radius);
+		uv.x = uv.x * half_sqrt(objects.radius);
 		uv.y = uv.y / objects.radius;
 		uv.x = uv.x - floor(uv.x);
 		uv.y = uv.y - floor(uv.y);*/
@@ -526,6 +323,150 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	return (color_ambient);
 }*/
 
+constant int    g_tab[512] = {  151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,
+                                142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,
+                                203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,
+                                74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,
+                                105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,
+                                187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,
+                                64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,
+                                47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,
+                                153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,
+                                112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,
+                                235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,
+                                127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,
+                                156,180,151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,
+                                142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,
+                                203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168, 68,175,
+                                74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,
+                                105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,
+                                187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,
+                                64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,
+                                47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,
+                                153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,
+                                112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,
+                                235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,
+                                127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180};
+static float    fade(float curve)
+{
+    return (curve * curve * curve * (curve * (curve * 6 - 15) + 10));
+}
+static float    perl(float curve, float a, float b)
+{
+    return (a + curve * (b - a));
+}
+static int floormaison(float n)
+{
+    int tmp;
+    if (n > 0)
+    {
+        tmp = (int)n;
+        return (tmp);
+    }
+    tmp = (int)n - 1;
+    return (tmp);
+}
+static float    grad(int hash, float x, float y, float z)
+{
+    int h;
+    float vec1;
+    float vec2;
+    h = hash & 15;
+    if (h < 8 || h == 12 || h == 13)
+        vec1 = x;
+    else
+        vec1 = y;
+    if (h < 4 || h == 12 || h == 13)
+        vec2 = y;
+    else
+        vec2 = z;
+    return (((h & 1) == 0 ? vec1 : -vec1) + ((h & 2) == 0 ? vec2 : -vec2));
+}
+static float    get_perlin(float x, float y, float z)
+{
+    float3  vec;
+    int     unit[3];
+    int     coord[6];
+    float3 tmp;
+    unit[0] = floormaison(x) & 255;
+    unit[1] = floormaison(y) & 255;
+    unit[2] = floormaison(z) & 255;
+    x -= (float)floormaison(x);
+    y -= (float)floormaison(y);
+    z -= (float)floormaison(z);
+    vec.x = fade(x);
+    vec.y = fade(y);
+    vec.z = fade(z);
+    coord[0] = g_tab[unit[0] + unit[1]];
+    coord[1] = g_tab[coord[0]] + unit[2];
+    coord[2] = g_tab[coord[0] + 1] + unit[2];
+    coord[3] = g_tab[unit[0] + 1] + unit[1];
+    coord[4] = g_tab[coord[3]] + unit[2];
+    coord[5] = g_tab[coord[3] + 1] + unit[2];
+    return (perl(vec.z, perl(vec.y, perl(vec.x, grad(g_tab[coord[1]], x, y, z),
+        grad(g_tab[coord[4]], x - 1, y, z)),
+        perl(vec.x, grad(g_tab[coord[2]], x, y - 1, z),
+        grad(g_tab[coord[5]], x - 1, y - 1, z))),
+        perl(vec.y, perl(vec.x, grad(g_tab[coord[1] + 1], x, y, z - 1),
+        grad(g_tab[coord[4] + 1], x - 1, y, z - 1)),
+        perl(vec.x, grad(g_tab[coord[2] + 1], x, y - 1, z - 1),
+        grad(g_tab[coord[5] + 1], x - 1, y - 1, z - 1)))));
+    //return (0);
+}
+static  float limit(float x, float n1, float n2)
+{
+    if (x < n1)
+        return (n1);
+    if (x > n2)
+        return (n2);
+    return (x);
+}
+static float4   perlin_wood(float3 inter, float frequency)
+{
+    float pn = 0.0f;
+    float4 color1 = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
+    float4 color2;
+    float4 color3;
+    float t1, t2, t3;
+    color1.x = 0.9f;
+    color1.y = 0.9f;
+    color1.z = 0.9f;
+    color1.w = 1.0f;
+    float tmp = get_perlin(frequency * inter.x, frequency * inter.y, frequency * inter.z);
+    tmp *= (tmp < 0.0f ? -1.0f : 1.0f);
+    pn += 20.0f * tmp;
+    int i = (int)pn;
+    pn = pn - (float)i;
+
+    if (pn < 0.4f)
+    {
+        color1.x = limit(0.78f * ((pn - 0.2f) / (0.4f - 0.2f)) + 0.47f * ((0.4f - pn) / (0.4f - 0.2f)), 0.0f, 1.0f);
+        color1.y = limit(0.47f * ((pn - 0.2f) / (0.4f - 0.2f)) + 0.08f * ((0.4f - pn) / (0.4f - 0.2f)), 0.0f, 1.0f);
+        color1.z = limit(0.08f * ((pn - 0.2f) / (0.4f - 0.2f)) + 0.78f * ((0.4f - pn) / (0.4f - 0.2f)), 0.0f, 1.0f);
+    }
+    else if (pn >= 0.4f && pn < 0.6f)
+    {
+        color1.x = limit(0.47f * ((pn - 0.4f) / (0.6f - 0.4f)) + 0.08f * ((0.6f - pn) / (0.6f - 0.4f)), 0.0f, 1.0f);
+        color1.y = limit(0.08f * ((pn - 0.4f) / (0.6f - 0.4f)) + 0.47f * ((0.6f - pn) / (0.6f - 0.4f)), 0.0f, 1.0f);
+        color1.z = limit(0.78f * ((pn - 0.4f) / (0.6f - 0.4f)) + 0.78f * ((0.6f - pn) / (0.6f - 0.4f)), 0.0f, 1.0f);
+    }
+    else if (pn >= 0.6f)
+    {
+        color1.x = 0.08f;
+        color1.y = 0.47f;
+        color1.z = 0.78f;
+    }
+    return (color1);
+}
+/*static float4 light_ambient(const t_objects obj, const t_light light, const t_material material)
+{
+    float4  color_ambient = obj.color;
+    //if (light)
+        color_ambient *= light.color;
+    //if (material)
+        color_ambient *= material.ambient_color;
+    return (color_ambient);
+}*/
 static float4    light_ambient(float4 color, const t_light light, const t_material material)
 {
     float4    color_ambient = color;
@@ -538,7 +479,7 @@ static float4    light_ambient(float4 color, const t_light light, const t_materi
 
 
 
-static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
+static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos, int reflect_iteration)
 {
 	t_material mat = {(float4){1.0f, 1.0f, 1.0f, 1.0f}, (float4){0.5f, 0.8f, 1.0f, 1.0f}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
 	float3	impact = ray->pos + ray->dir * ray->deph;
@@ -547,6 +488,10 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float	attenuation = 1.0f;
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
+	if (objects.type == PLANE)
+    {
+        finalColor = perlin_wood(impact, 0.01);
+    }
 	if (objects.type == PLANE && material[objects.material_id - 1].damier)
 	{
 		int		x1 = (impact.x < 0 ? 1 : 0);
@@ -625,7 +570,10 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 			float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
 			specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
 	}
-	specular = ambient + diffuse + specular_coeff;
+	if (!reflect_iteration)
+		specular = ambient + diffuse + specular_coeff;
+	//else
+		//specular = diffuse + ambient;
 	float4 specular1 = specular * ambient;
 	float4	linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
 	finalColor = clamp(linearColor, 0.0f, 1.0f);
@@ -711,7 +659,7 @@ q = 1.0f;//soft_dot(dist, objects.normal);
 			return (FLT_MAX);
 		float3 impact = (ray->pos + rdir * solve);
 		float3 v = impact - objects.position;
-		if (sqrt(soft_dot(v,v)) <= 50)
+		if (half_sqrt(soft_dot(v,v)) <= 50)
 				return (solve);
 		else
 			return (FLT_MAX);
@@ -727,8 +675,8 @@ q = 1.0f;//soft_dot(dist, objects.normal);
 	solve = b * b - a * c;
 	if (solve < EPSILON)
 		return (FLT_MAX);
-	t0 = (-b - sqrt(solve)) / a;
-	t1 = (-b + sqrt(solve)) / a;
+	t0 = (-b - half_sqrt(solve)) / a;
+	t1 = (-b + half_sqrt(solve)) / a;
 	if (objects.type == CYLINDER)
 	{
 		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
@@ -765,8 +713,8 @@ static float light_intersect(t_ray *ray, const t_light light, const float znear,
 	solve = b * b - a * c;
 	if (solve < EPSILON)
 		return (FLT_MAX);
-	t0 = (-b - sqrt(solve)) / a;
-	t1 = (-b + sqrt(solve)) / a;
+	t0 = (-b - half_sqrt(solve)) / a;
+	t1 = (-b + half_sqrt(solve)) / a;
 	return (deph_min(t0, t1));
 }
 
@@ -789,7 +737,7 @@ static float	shadow(t_ray ray, const t_light light, __constant t_objects *object
 	}
 	ray_light.deph = scene->zfar;
 	if (light.type == SPOTLIGHT || light.type == POINTLIGHT)
-		ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
+		ray_light.deph = half_sqrt(soft_dot(ray_light.dir, ray_light.dir));
 	while (i < scene->max_object)
 	{
 		if (i != ray.object)
@@ -855,7 +803,7 @@ static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_l
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos);
+					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos, j);
 					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -913,7 +861,7 @@ static float4		refract_color_in_reflect(__constant t_scene *scene, __constant t_
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials, campos);
+					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials, campos, j);
 					shadow_attenuation *= shadow(refract_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -973,7 +921,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos);
+					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos, j);
 					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -1032,7 +980,7 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials, campos);
+					color += light(&refract_ray, objects[refract_ray.object], lights[i], materials, campos, j);
 					shadow_attenuation *= shadow(refract_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -1130,9 +1078,9 @@ __kernel void raytracer(__global uchar4* pixel,
 			while (i < scene->max_light)
 			{
 				if (ray.object == -10)
-					color += light(&ray, obj, lights[i], 0, camera->position);
+					color += light(&ray, obj, lights[i], 0, camera->position, 0);
 				else
-					color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
+					color += light(&ray, objects[ray.object], lights[i], materials, camera->position, 0);
 				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}

@@ -13,8 +13,8 @@
 	<plane position="0.0 0.0 500.0" color="0 100 100 255" normal="0.0 0.0 -1.0" material="2"/>
 	<plane position="0.0 -200.0 0.0" color="205 100 100 255" normal="0.0 1.0 0.0" material="2"/>
 	<plane position="0.0 200.0 0.0" color="120 55 105 255" normal="0.0 -1.0 0.0" material="2"/>
-	<!--<cylinder position="40.0 0.0 155.0" normal="0.0 1.0 0.0" radius="15.0" color="50 50 50 255" material="1"/>-->
-	<!--<cone position="-0.0 -15.0 155.0" color="255 255 255 255" rotation="0.0 0.0 0.0"material="1"/>-->
+	<cylinder position="40.0 0.0 155.0" normal="0.0 1.0 0.0" radius="15.0" color="50 50 50 255" material="1"/>-->
+	<cone position="-0.0 -15.0 155.0" color="255 255 255 255" rotation="0.0 0.0 0.0"material="1"/>-->
 	<!--<plane position="0.0 0.0 300.0" color="205 205 205  255" normal="0.0 0.01 -1.0" material="1"/>
 	<plane position="0.0 0.0 -100.0" color="205 205 205 255" normal="0.0 -0.01 1.0" material="1"/>-->
 <!--	<spotlight position="0.0 50.0 -50.0" color="255 255 255" direction="-0.4 -1.4 -0.1" attenuation="1" angle="45"/>-->
