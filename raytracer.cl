@@ -880,27 +880,27 @@ q = 1.0f;//soft_dot(dist, objects.normal);
 	return (deph_min(t0, t1));
 }
 
-static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
-{
-	float3 dist;
-	float a, b, c;
-	float solve;
-	float t0, t1;
-	float light_radius = 8.0f;
-	dist = ray->pos - light.position;
-	float3 rdir = ray->dir;
-	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
-	if (enable && c < EPSILON) // Culling face
-		return (FLT_MAX);
-	a = soft_dot(rdir, rdir);
-	b = soft_dot(dist, rdir);
-	solve = b * b - a * c;
-	if (solve < EPSILON)
-		return (FLT_MAX);
-	t0 = (-b - sqrt(solve)) / a;
-	t1 = (-b + sqrt(solve)) / a;
-	return (deph_min(t0, t1));
-}
+// static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
+// {
+// 	float3 dist;
+// 	float a, b, c;
+// 	float solve;
+// 	float t0, t1;
+// 	float light_radius = 8.0f;
+// 	dist = ray->pos - light.position;
+// 	float3 rdir = ray->dir;
+// 	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
+// 	if (enable && c < EPSILON) // Culling face
+// 		return (FLT_MAX);
+// 	a = soft_dot(rdir, rdir);
+// 	b = soft_dot(dist, rdir);
+// 	solve = b * b - a * c;
+// 	if (solve < EPSILON)
+// 		return (FLT_MAX);
+// 	t0 = (-b - sqrt(solve)) / a;
+// 	t1 = (-b + sqrt(solve)) / a;
+// 	return (deph_min(t0, t1));
+// }
 
 static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
 {
@@ -1223,7 +1223,7 @@ __kernel void raytracer(__global uchar4* pixel,
 		}
 		i++;
 	}
-	if (i > 0)
+	/*if (i > 0)
 	{
 		i = 0;
 		while (i < scene->max_light)
@@ -1252,7 +1252,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			}
 			i++;
 		}
-	}
+	}*/
 	if (ray.object == -10 || (ray.object >= 0 && ray.deph < scene->zfar))
 	{
 		if (scene->max_light > 0)
