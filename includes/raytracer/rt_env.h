@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 02:29:30 by mgallo            #+#    #+#             */
-/*   Updated: 2017/04/01 19:07:43 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 16:39:58 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,7 @@ typedef struct	s_material
 	float		shininess;
 	float		reflection;
 	float		refraction;
-	int			damier;
-	float		tile_size;
+	float		damier;
 	int			perlin;
 	float		refract_coef;
 }				t_material;

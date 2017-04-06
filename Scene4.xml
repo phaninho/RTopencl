@@ -47,7 +47,7 @@
 
 	<!--<triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
 
-	<material specular="150 150 150 255" blinn = "1" ambient="125 125 125 255" reflection="0" refraction="0" damier="1" tilesize="100" shininess="10"/>
+	<material specular="150 150 150 255" blinn = "1" ambient="125 125 125 255" reflection="0" refraction="0" damier="100" shininess="10"/>
 	<material specular="255 255 255 255" blinn = "1" ambient="125 125 125 255" reflection="0" refract_coef="0.1" refraction="1" shininess="10"/>
 	<material specular="255 255 225 255" blinn = "1" ambient="125 125 125 255" reflection="1" refraction="0" shininess="1"/>
 	<!--<texture load="texture.png"/>-->

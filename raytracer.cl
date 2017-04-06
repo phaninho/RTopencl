@@ -80,6 +80,7 @@ typedef struct	s_scene
 	int			render_debug;
 	int			render_mod;
 	float4		render_filter;
+	int			obj_index;
 }				t_scene;
 
 typedef struct	s_cam
@@ -126,8 +127,7 @@ typedef struct	s_material
 	float		shininess;
 	float		reflection;
 	float		refraction;
-	int			damier;
-	float		tile_size;
+	float		damier;
 	int			perlin;
 	float		refract_coef;
 }				t_material;
@@ -481,9 +481,16 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	float3 normal = get_normal(ray, objects);
 	if (objects.type == SPHERE)
 	{
-		uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
-		uv.y = 0.5f - (asin(normal.y)) / PI;
+		uv.x = atan2(normal.x, normal.z) / (2 * PI) + 0.5;
+		uv.y = normal.y * 0.5 + 0.5;
+		//uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
+		//uv.y = 0.5f - (asin(normal.y)) / PI;
 	}
+
+	//normal = Normalize(sphere_surface_point - sphere_center);
+	//u = atan2(normal.x, normal.z) / (2*pi) + 0.5;
+	//v = normal.y * 0.5 + 0.5;
+
 	else if (objects.type == PLANE)
 	{
 		float3 uAxis = (float3)(normal.y, normal.z, -normal.x);
@@ -511,17 +518,142 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	}
 	return (uv);
 }
-
-/*static float4	light_ambient(const t_objects obj, const t_light light, const t_material material)
+/*
+constant int    g_tab[512] = {  151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,
+                                142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,
+                                203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,
+                                74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,
+                                105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,
+                                187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,
+                                64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,
+                                47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,
+                                153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,
+                                112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,
+                                235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,
+                                127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,
+                                156,180,151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,
+                                142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,
+                                203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168, 68,175,
+                                74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,
+                                105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,
+                                187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,
+                                64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,
+                                47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,
+                                153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,
+                                112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,
+                                235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,
+                                127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180};
+static float    fade(float curve)
 {
-	float4	color_ambient = obj.color;
-	//if (light)
-		color_ambient *= light.color;
-	//if (material)
-		color_ambient *= material.ambient_color;
-	return (color_ambient);
-}*/
-
+    return (curve * curve * curve * (curve * (curve * 6 - 15) + 10));
+}
+static float    perl(float curve, float a, float b)
+{
+    return (a + curve * (b - a));
+}
+static int floormaison(float n)
+{
+    int tmp;
+    if (n > 0)
+    {
+        tmp = (int)n;
+        return (tmp);
+    }
+    tmp = (int)n - 1;
+    return (tmp);
+}
+static float    grad(int hash, float x, float y, float z)
+{
+    int h;
+    float vec1;
+    float vec2;
+    h = hash & 15;
+    if (h < 8 || h == 12 || h == 13)
+        vec1 = x;
+    else
+        vec1 = y;
+    if (h < 4 || h == 12 || h == 13)
+        vec2 = y;
+    else
+        vec2 = z;
+    return (((h & 1) == 0 ? vec1 : -vec1) + ((h & 2) == 0 ? vec2 : -vec2));
+}
+static float    get_perlin(float x, float y, float z)
+{
+    float3  vec;
+    int     unit[3];
+    int     coord[6];
+    float3 tmp;
+    unit[0] = floormaison(x) & 255;
+    unit[1] = floormaison(y) & 255;
+    unit[2] = floormaison(z) & 255;
+    x -= (float)floormaison(x);
+    y -= (float)floormaison(y);
+    z -= (float)floormaison(z);
+    vec.x = fade(x);
+    vec.y = fade(y);
+    vec.z = fade(z);
+    coord[0] = g_tab[unit[0] + unit[1]];
+    coord[1] = g_tab[coord[0]] + unit[2];
+    coord[2] = g_tab[coord[0] + 1] + unit[2];
+    coord[3] = g_tab[unit[0] + 1] + unit[1];
+    coord[4] = g_tab[coord[3]] + unit[2];
+    coord[5] = g_tab[coord[3] + 1] + unit[2];
+    return (perl(vec.z, perl(vec.y, perl(vec.x, grad(g_tab[coord[1]], x, y, z),
+        grad(g_tab[coord[4]], x - 1, y, z)),
+        perl(vec.x, grad(g_tab[coord[2]], x, y - 1, z),
+        grad(g_tab[coord[5]], x - 1, y - 1, z))),
+        perl(vec.y, perl(vec.x, grad(g_tab[coord[1] + 1], x, y, z - 1),
+        grad(g_tab[coord[4] + 1], x - 1, y, z - 1)),
+        perl(vec.x, grad(g_tab[coord[2] + 1], x, y - 1, z - 1),
+        grad(g_tab[coord[5] + 1], x - 1, y - 1, z - 1)))));
+    //return (0);
+}
+static  float limit(float x, float n1, float n2)
+{
+    if (x < n1)
+        return (n1);
+    if (x > n2)
+        return (n2);
+    return (x);
+}
+static float4   perlin_wood(float3 inter, float frequency)
+{
+    float pn = 0.0f;
+    float4 color1 = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
+    float4 color2;
+    float4 color3;
+    float t1, t2, t3;
+    color1.x = 0.9f;
+    color1.y = 0.9f;
+    color1.z = 0.9f;
+    color1.w = 1.0f;
+    float tmp = get_perlin(frequency * inter.x, frequency * inter.y, frequency * inter.z);
+    tmp *= (tmp < 0.0f ? -1.0f : 1.0f);
+    pn += 20.0f * tmp;
+    int i = (int)pn;
+    pn = pn - (float)i;
+    if (pn < 0.4f)
+    {
+        color1.x = limit(0.78f * ((pn - 0.2f) / (0.4f - 0.2f)) + 0.47f * ((0.4f - pn) / (0.4f - 0.2f)), 0.0f, 1.0f);
+        color1.y = limit(0.47f * ((pn - 0.2f) / (0.4f - 0.2f)) + 0.08f * ((0.4f - pn) / (0.4f - 0.2f)), 0.0f, 1.0f);
+        color1.z = limit(0.08f * ((pn - 0.2f) / (0.4f - 0.2f)) + 0.78f * ((0.4f - pn) / (0.4f - 0.2f)), 0.0f, 1.0f);
+    }
+    else if (pn >= 0.4f && pn < 0.6f)
+    {
+        color1.x = limit(0.47f * ((pn - 0.4f) / (0.6f - 0.4f)) + 0.08f * ((0.6f - pn) / (0.6f - 0.4f)), 0.0f, 1.0f);
+        color1.y = limit(0.08f * ((pn - 0.4f) / (0.6f - 0.4f)) + 0.47f * ((0.6f - pn) / (0.6f - 0.4f)), 0.0f, 1.0f);
+        color1.z = limit(0.78f * ((pn - 0.4f) / (0.6f - 0.4f)) + 0.78f * ((0.6f - pn) / (0.6f - 0.4f)), 0.0f, 1.0f);
+    }
+    else if (pn >= 0.6f)
+    {
+        color1.x = 0.08f;
+        color1.y = 0.47f;
+        color1.z = 0.78f;
+    }
+    return (color1);
+}
+*/
 static float4    light_ambient(float4 color, const t_light light, const t_material material)
 {
     float4    color_ambient = color;
@@ -543,15 +675,17 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float	attenuation = 1.0f;
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
+	//if (material[objects.material_id - 1].perlin)
+    //  finalColor = perlin_wood(impact, 0.01);
 	if (objects.type == PLANE && material[objects.material_id - 1].damier)
 	{
 		int		x1 = (impact.x < 0 ? 1 : 0);
 		int		y1 = (impact.y < 0 ? 1 : 0);
 		int		z1 = (impact.z < 0 ? 1 : 0);
 		int		tmp;
-		x1 += (int)(floor(impact.x) / material[objects.material_id - 1].tile_size) % 2;
-		y1 += (int)(floor(impact.y) / material[objects.material_id - 1].tile_size) % 2;
-		z1 += (int)(floor(impact.z) / material[objects.material_id - 1].tile_size) % 2;
+		x1 += (int)(floor(impact.x) / material[objects.material_id - 1].damier) % 2;
+		y1 += (int)(floor(impact.y) / material[objects.material_id - 1].damier) % 2;
+		z1 += (int)(floor(impact.z) / material[objects.material_id - 1].damier) % 2;
 		if (!x1)
 		{
 			if (((!y1) && (!z1)) || (((y1) && (z1))))
@@ -744,27 +878,27 @@ q = 1.0f;//soft_dot(dist, objects.normal);
 	return (deph_min(t0, t1));
 }
 
-static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
-{
-	float3 dist;
-	float a, b, c;
-	float solve;
-	float t0, t1;
-	float light_radius = 8.0f;
-	dist = ray->pos - light.position;
-	float3 rdir = ray->dir;
-	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
-	if (enable && c < EPSILON) // Culling face
-		return (FLT_MAX);
-	a = soft_dot(rdir, rdir);
-	b = soft_dot(dist, rdir);
-	solve = b * b - a * c;
-	if (solve < EPSILON)
-		return (FLT_MAX);
-	t0 = (-b - sqrt(solve)) / a;
-	t1 = (-b + sqrt(solve)) / a;
-	return (deph_min(t0, t1));
-}
+// static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
+// {
+// 	float3 dist;
+// 	float a, b, c;
+// 	float solve;
+// 	float t0, t1;
+// 	float light_radius = 8.0f;
+// 	dist = ray->pos - light.position;
+// 	float3 rdir = ray->dir;
+// 	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
+// 	if (enable && c < EPSILON) // Culling face
+// 		return (FLT_MAX);
+// 	a = soft_dot(rdir, rdir);
+// 	b = soft_dot(dist, rdir);
+// 	solve = b * b - a * c;
+// 	if (solve < EPSILON)
+// 		return (FLT_MAX);
+// 	t0 = (-b - sqrt(solve)) / a;
+// 	t1 = (-b + sqrt(solve)) / a;
+// 	return (deph_min(t0, t1));
+// }
 
 static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
 {
@@ -1085,7 +1219,7 @@ __kernel void raytracer(__global uchar4* pixel,
 		}
 		i++;
 	}
-	if (i > 0)
+	/*if (i > 0)
 	{
 		i = 0;
 		while (i < scene->max_light)
@@ -1114,7 +1248,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			}
 			i++;
 		}
-	}
+	}*/
 	if (ray.object == -10 || (ray.object >= 0 && ray.deph < scene->zfar))
 	{
 		if (scene->max_light > 0)
@@ -1199,11 +1333,5 @@ __kernel void raytracer(__global uchar4* pixel,
 	}
 	float2 coor;
   color = clamp(color, 0.0f, 1.0f);
-	if (scene->max_texture)
-		 coor = getTextureUV(&ray, objects[ray.object]);
-	//if (coor && index == (int)(coor.y * textures->width + coor.x * textures->height))
-		//printf("%d\n", (int)(coor.y * textures->width + coor.x * textures->height));
-	//	pixel[index] = (uchar4)textures->data[(int)(coor.y * textures->width + coor.x * textures->height)];
-	//else
- 		pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
+	pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
 }

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/31 16:44:44 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 16:56:52 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,8 @@ static void	check_material(t_env *e, t_parse *p, t_arg *arg)
 		m->refraction = arg->adbl[REFRACTION - DOUBLE];
 	if (arg->aint[PERLIN] >= 1)
 		m->perlin = arg->aint[PERLIN];
-	if (arg->aint[DAMIER] >= 1)
-		m->damier = arg->aint[DAMIER];
-	if (arg->adbl[TILESIZE - DOUBLE] >= 1.0f)
-		m->tile_size = arg->adbl[TILESIZE - DOUBLE];
+	if (arg->adbl[DAMIER - DOUBLE] >= 10.0f)
+		m->damier = arg->adbl[DAMIER - DOUBLE];
 	if (arg->adbl[REFRACT_COEF - DOUBLE] >= 0.0f
 	&& arg->adbl[REFRACT_COEF - DOUBLE] <= 1.0f)
 		m->refract_coef = arg->adbl[REFRACT_COEF - DOUBLE];

@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/30 12:21:04 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 16:57:54 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ static void kernel_init(t_window *window)
 	if (env->scene.max_material > 0)
 		cl->mem_material = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_material) * env->scene.max_material, NULL, &err);
 	if (err != CL_SUCCESS)
-		die("OpenCL error: buffer ligths");
+		die("OpenCL error: buffer material");
 	if (env->scene.max_light > 0)
 		cl->mem_light = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_light) * env->scene.max_light, NULL, &err);
 	if (err != CL_SUCCESS)
-		die("OpenCL error: buffer material");
+		die("OpenCL error: buffer ligths");
 }
 
 static void cl_render(void)
@@ -172,7 +172,7 @@ static void		print_env(void)
 	{
 		t_objects obj = e->objects[i];
 		printf("==================== Object %s ====================\n> position: [%f, %f, %f]\n> rotation: [%f, %f, %f]\n> normal: [%f, %f, %f]\n> color: [%f, %f", get_tag(obj.type), obj.position.x, obj.position.y, obj.position.z, obj.rotation.x, obj.rotation.y, obj.rotation.z, obj.normal.x, obj.normal.y, obj.normal.z, obj.color.x, obj.color.y);
-		printf(", %f, %f]\n> radius: %f\n> material_id: %d\n> in_object: %d\n> endpos: [%f, %f, %f]\n> radius2: %f\n> a: %f\n> b: %f\n> c: %f\n> d: %f\n> dist: %f\n", obj.color.z, obj.color.w, obj.radius, obj.material_id, obj.in_object, obj.endpos.x, obj.endpos.y, obj.endpos.z, obj.radius2, obj.a, obj.b, obj.c, obj.d, obj.dist);
+		printf(", %f, %f]\n> radius: %f\n> material_id: %d\n> in_object: %d\n> endpos: [%f, %f, %f]\n> radius2: %f\n> a: %f\n> b: %f\n> c: %f\n> d: %f\n> dist: %f\n> texture_id: %d\n", obj.color.z, obj.color.w, obj.radius, obj.material_id, obj.in_object, obj.endpos.x, obj.endpos.y, obj.endpos.z, obj.radius2, obj.a, obj.b, obj.c, obj.d, obj.dist, obj.texture_id);
 	}
 
 	for (int i = 0; i < e->scene.max_light; i++)
@@ -184,7 +184,7 @@ static void		print_env(void)
 	for (int i = 0; i < e->scene.max_material; i++)
 	{
 		t_material mate = e->material[i];
-		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> refract_coef: %f\n> perlin: %d\n> damier: %d\n> tile_size: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.refract_coef, mate.perlin, mate.damier, mate.tile_size);
+		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> refract_coef: %f\n> perlin: %d\n> damier: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.refract_coef, mate.perlin, mate.damier);
 	}
 
 	for (int i = 0; i < e->scene.max_texture; i++)
