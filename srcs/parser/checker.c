@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 16:56:52 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 17:18:32 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void	check_light(t_env *e, t_parse *p, t_arg *arg)
 	l->position.y += 0.01f;
 	l->position.z += 0.01f;
 	l->color = check_color(arg->color[COLOR - COLOR]);
-	if (arg->adbl[ATTENUATION - DOUBLE] >= 0.0f)
+	if (arg->adbl[ATTENUATION - DOUBLE] >= 0.1f)
 		l->attenuation = arg->adbl[ATTENUATION - DOUBLE];
 	l->direction = arg->avec[DIRECTION - VEC];
 	if (arg->adbl[ANGLE - DOUBLE] >= .0f && arg->adbl[ANGLE - DOUBLE] <= 360.0f)

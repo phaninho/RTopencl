@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/28 16:14:13 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 16:56:22 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 17:18:43 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	init_lights(t_env *e, int max)
 		e->light[max].type = POINTLIGHT;
 		e->light[max].position = (VEC3){{0.0f, 0.0f, 0.0f}};
 		e->light[max].color = (VEC4){{255.0f, 255.0f, 255.0f, 255.0f}};
-		e->light[max].attenuation = 0.0f;
+		e->light[max].attenuation = 0.1f;
 		e->light[max].direction = (VEC3){{0.0f, 0.0f, 0.0f}};
 		e->light[max].angle = 0.0f;
 	}
