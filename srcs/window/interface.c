@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/01 19:02:25 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 16:41:56 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,7 @@ static void	draw_material(t_window *win, t_material *materials,\
 	draw_number(mat->refraction * 100, CENTER_X + 20, 490, DARK_GREY);
 	draw_number(mat->refract_coef * 100, CENTER_X + 120, 490, DARK_GREY);
 	draw_number(mat->damier, CENTER_X + 20, 520, DARK_GREY);
-	draw_number(mat->tile_size, CENTER_X + 20, 550, DARK_GREY);
-	draw_number(mat->perlin, CENTER_X + 20, 580, DARK_GREY);
+	draw_number(mat->perlin, CENTER_X + 20, 550, DARK_GREY);
 }
 
 void		draw_ui(void)

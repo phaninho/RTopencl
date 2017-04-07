@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:43:39 by mgallo            #+#    #+#             */
-/*   Updated: 2016/11/26 09:17:33 by mgallo           ###   ########.fr       */
+/*   Updated: 2017/04/06 16:41:33 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,9 @@ typedef struct	s_thread
 	cl_mem				mem_object;
 	cl_mem				mem_material;
 	cl_mem				mem_light;
-	cl_mem				mem_texture;
-	cl_mem				mem_data;
 	cl_program			program;
 	cl_kernel			kernel;
-} t_thread;
+}				t_thread;
 
 t_thread		*thread_get(void);
 void			thread_init(void);

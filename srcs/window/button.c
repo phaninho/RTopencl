@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/03/31 17:09:38 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 16:42:13 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ t_button	g_buttons[] =
 	{6, button_materials, "Refraction:", {WIN_W - 290, 478, 110, 25}, 0, 4, 0},
 	{7, button_materials, "Coef:", {WIN_W - 110, 478, 50, 25}, 0, 4, 0},
 	{8, button_materials, "Damier:", {WIN_W - 290, 508, 110, 25}, 0, 4, 0},
-	{9, button_materials, "Tile Size:", {WIN_W - 290, 538, 110, 25}, 0, 4, 0},
-	{10, button_materials, "Perlin:", {WIN_W - 290, 568, 110, 25}, 0, 4, 0},
+	{10, button_materials, "Perlin:", {WIN_W - 290, 538, 110, 25}, 0, 4, 0},
 	{0, NULL, NULL, {0, 0, 0, 0}, 0, 0, 0}
 };
 

@@ -6,7 +6,7 @@
 /*   By: mgallo <mgallo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:04:39 by mgallo            #+#    #+#             */
-/*   Updated: 2017/03/30 12:21:04 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 16:57:54 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,11 @@ static void kernel_init(t_window *window)
 	if (env->scene.max_material > 0)
 		cl->mem_material = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_material) * env->scene.max_material, NULL, &err);
 	if (err != CL_SUCCESS)
-		die("OpenCL error: buffer ligths");
+		die("OpenCL error: buffer material");
 	if (env->scene.max_light > 0)
 		cl->mem_light = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_light) * env->scene.max_light, NULL, &err);
-	if (env->scene.max_texture > 0)
-		cl->mem_texture = clCreateBuffer(cl->context, CL_MEM_READ_ONLY, sizeof(t_texture) * env->scene.max_texture, NULL, &err);
 	if (err != CL_SUCCESS)
-		die("OpenCL error: buffer material");
-	cl->mem_data = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, (env->texture[0].width * env->texture[0].height *  4) * sizeof(char), NULL, &err);
-	if (err != CL_SUCCESS)
-		die("OpenCL error: buffer pixel");
+		die("OpenCL error: buffer ligths");
 }
 
 static void cl_render(void)
@@ -137,32 +132,6 @@ static void cl_render(void)
 		if ((err = clSetKernelArg(cl->kernel, 5, sizeof(cl_mem), NULL)) != CL_SUCCESS)
 			die("OpenCL error: Kernel set arg 1, Material");
 	}
-	// Texture
-	if (env->scene.max_texture > 0 && cl->mem_texture != NULL)
-	{
-		if ((err = clSetKernelArg(cl->kernel, 6, sizeof(cl_mem), (void *) &(cl->mem_texture))) != CL_SUCCESS)
-			die("OpenCL error: Kernel set arg 1, texture");
-		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_texture, CL_TRUE, 0, sizeof(t_texture) * env->scene.max_texture, env->texture, 0, NULL, NULL)) != CL_SUCCESS)
-			die("OpenCL error: Enqueue Write Buffer, texture");
-	}
-	else
-	{
-		if ((err = clSetKernelArg(cl->kernel, 6, sizeof(cl_mem), NULL)) != CL_SUCCESS)
-			die("OpenCL error: Kernel set arg 1, texture");
-	}
-
-	if (env->scene.max_texture > 0 && cl->mem_data != NULL)
-	{
-		if ((err = clSetKernelArg(cl->kernel, 7, sizeof(cl_mem), (void *) &(cl->mem_data))) != CL_SUCCESS)
-			die("OpenCL error: Kernel set arg 1, texture");
-		if ((err = clEnqueueWriteBuffer(cl->queue, cl->mem_data, CL_TRUE, 0, sizeof(char) * (env->texture[0].width * env->texture[0].height * 4), env->texture[0].data, 0, NULL, NULL)) != CL_SUCCESS)
-			die("OpenCL error: Enqueue Write Buffer, data");
-	}
-	else
-	{
-		if ((err = clSetKernelArg(cl->kernel, 7, sizeof(cl_mem), NULL)) != CL_SUCCESS)
-			die("OpenCL error: Kernel set arg 1, data");
-	}
 	if ((err = clEnqueueNDRangeKernel(cl->queue, cl->kernel, 2, 0, (size_t[2]){window->width, window->height}, NULL, 0, NULL, NULL)) != CL_SUCCESS)
 		die("OpenCL error: Enqueue Range Kernel");
 	clFinish(cl->queue);
@@ -215,7 +184,7 @@ static void		print_env(void)
 	for (int i = 0; i < e->scene.max_material; i++)
 	{
 		t_material mate = e->material[i];
-		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> refract_coef: %f\n> perlin: %d\n> damier: %d\n> tile_size: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.refract_coef, mate.perlin, mate.damier, mate.tile_size);
+		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> refract_coef: %f\n> perlin: %d\n> damier: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.refract_coef, mate.perlin, mate.damier);
 	}
 
 	for (int i = 0; i < e->scene.max_texture; i++)

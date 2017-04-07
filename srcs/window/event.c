@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 12:51:00 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/01 19:05:25 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/06 17:16:07 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,8 @@ static void		update_objects(t_window *win, t_button *button,\
 		update_vec3(win, &(obj->rotation), val);
 	else if (button->id == 3)
 		update_vec4(win, &(obj->color), val);
-	else if (button->id == 4)
-		update_vec3(win, &(obj->normal), 1);
 	else if (button->id == 5)
-		update_float(win, &(obj->radius), val);
+		check_float(update_float(win, &(obj->radius), val), 10000.0f, EPSILON);
 }
 
 static void		update_lights(t_window *win, t_button *button,\
@@ -37,15 +35,16 @@ static void		update_lights(t_window *win, t_button *button,\
 	if (button->id == 1)
 		update_vec3(win, &(lgt->position), val);
 	else if (button->id == 2)
-		check_vec3(update_vec3(win, &(lgt->direction), val),\
-						(VEC3){1.0f, 1.0f, 1.0f}, (VEC3){-1.0f, -1.0f, -1.0f});
+		check_vec3(update_vec3(win, &(lgt->direction),\
+					(lgt->type == DIRLIGHT ? 1 : 2)), (VEC3){1.0f, 1.0f, 1.0f},\
+												(VEC3){-1.0f, -1.0f, -1.0f});
 	else if (button->id == 3)
 		update_vec4(win, &(lgt->color), val);
 	else if (button->id == 4)
 		check_float(update_float(win, &(lgt->attenuation), val / 100), 1.0f,\
 																		0.0f);
 	else if (button->id == 5)
-		check_float(update_float(win, &(lgt->angle), val), 360.0f, -360.0f);
+		check_float(update_float(win, &(lgt->angle), val), 360.0f, 0.0f);
 }
 
 static void		update_mates(t_window *win, t_button *button,\
@@ -56,11 +55,11 @@ static void		update_mates(t_window *win, t_button *button,\
 	else if (button->id == 2)
 		update_vec4(win, &(mat->specular_color), val);
 	else if (button->id == 3)
-		update_int(win, &(mat->blinn), 1);
+		check_int(update_int(win, &(mat->blinn), 1), 1, 0);
 	else if (button->id == 4)
 		check_float(update_float(win, &(mat->shininess), val), 1000.0f, 0.0f);
 	else if (button->id == 5)
-		check_float(update_float(win, &(mat->reflection), val / 100), 1.0f,\
+		check_float(update_float(win, &(mat->reflection), val / 100), 0.5f,\
 																		0.0f);
 	else if (button->id == 6)
 		check_float(update_float(win, &(mat->refraction), val / 100), 1.0f,\
@@ -69,11 +68,9 @@ static void		update_mates(t_window *win, t_button *button,\
 		check_float(update_float(win, &(mat->refract_coef), val / 100), 1.0f,\
 																		0.0f);
 	else if (button->id == 8)
-		update_int(win, &(mat->damier), 1);
-	else if (button->id == 9)
-		update_float(win, &(mat->tile_size), val);
+		check_float(update_float(win, &(mat->damier), val * 10), 1000.0f, 0.0f);
 	else if (button->id == 10)
-		update_int(win, &(mat->perlin), 1);
+		check_int(update_int(win, &(mat->perlin), 1), 1, 0);
 }
 
 void			update_scene(t_window *win)
