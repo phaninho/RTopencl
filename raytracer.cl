@@ -686,8 +686,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
             finalColor.w = 1.0f;
         }
     }
-    //if (material[objects.material_id].perlin)
-      //finalColor = perlin_wood(impact, 0.1f);
+    if (material[objects.material_id].perlin)
+      finalColor = perlin_wood(impact, 0.1f);
     /*if (objects.type == SPHERE)
     {
         finalColor = perlin_wood(impact, 0.1f);
@@ -725,7 +725,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     float4    diffuse = diffuse_coeff * finalColor * light.color;
     //specular
     float   specular_coeff = 0.0f;
-    float4  specular = (float4)(0, 0, 0, 0);
+    float4  specular = material[objects.material_id - 1].specular_color;
     float3 cameradir = normalize(campos  - impact);
     if (material && !material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
     {
