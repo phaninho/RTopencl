@@ -648,99 +648,103 @@ static float4    light_ambient(float4 color, const t_light light, const t_materi
 
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
-	t_material mat = {(float4){1.0f, 1.0f, 1.0f, 1.0f}, (float4){0.5f, 0.8f, 1.0f, 1.0f}, 0, 10.0f, 0.0f, 0.0f, 0, 10.0f, 0, 0.0f};
-	float3	impact = ray->pos + ray->dir * ray->deph;
-	float3	lightDir;
-	float	distanceToLight;
-	float	attenuation = 1.0f;
-	float3	normal = get_normal(ray, objects);
-	float4	finalColor = objects.color;
-	if (material[objects.material_id - 1].perlin)
-      finalColor = perlin_wood(impact, 0.01);
-	if (material[objects.material_id - 1].damier)
-	{
-		int		x1 = (impact.x < 0 ? 1 : 0);
-		int		y1 = (impact.y < 0 ? 1 : 0);
-		int		z1 = (impact.z < 0 ? 1 : 0);
-		int		tmp;
-		x1 += (int)(floor(impact.x) / material[objects.material_id - 1].damier) % 2;
-		y1 += (int)(floor(impact.y) / material[objects.material_id - 1].damier) % 2;
-		z1 += (int)(floor(impact.z) / material[objects.material_id - 1].damier) % 2;
-		if (!x1)
-		{
-			if (((!y1) && (!z1)) || (((y1) && (z1))))
-				tmp = 1;
-			else
-				tmp = 2;
-		}
-		else
-		{
-			if ((((!y1) && (!z1))) || (((y1) && (z1))))
-				tmp = 2;
-			else
-				tmp = 1;
-		}
-		if (tmp == 1)
-		{
-			finalColor.x = 0.3f;
-			finalColor.y = 0.3f;
-			finalColor.z = 0.3f;
-			finalColor.w = 1.0f;
-		}
-	}
-	if (light.type == SPOTLIGHT)
-	{
-		lightDir = soft_normalize(light.position - impact);
-		float3 coneDirection = soft_normalize(-light.direction);
-		float3 raydirection = lightDir;
-		float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
-		lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
-		if(lightToSurfaceAngle > light.angle / 2)
-    		attenuation = light.attenuation;
-	}
-	else if (light.type == POINTLIGHT)
-	{
-		lightDir = soft_normalize(light.position - impact);
-		//attenuation
-		distanceToLight = soft_length(light.position - impact);
-		attenuation = 1.0f / (1.0f + light.attenuation * pow(distanceToLight, 2.0f));
-	}
-	else if (light.type == DIRLIGHT)
-	{
-		lightDir = soft_normalize(light.direction);
-		attenuation = 1.0f;
-	}
-	//ambient
-	float4	ambient = 0.0f;
-	if (objects.material_id == -1 || objects.material_id > 0)
-		//ambient = light_ambient(objects, light, material[objects.material_id - 1]);
-		ambient = light_ambient(finalColor, light, material ? *material : mat);
-	//diffuse
-	float 	diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
-	diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
-	float4    diffuse = diffuse_coeff * finalColor * light.color;
-	//specular
-	float	specular_coeff = 0.0f;
-	float4	specular = (float4)(0, 0, 0, 0);
-	float3 cameradir = normalize(campos  - impact);
-	if (material && !material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
-	{
-			float3 reflectionVector = float3_reflect(-lightDir, normal);
-			float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
-			specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
-	}
-	else if (material && material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
-	{
-			float3 halfwayVector = soft_normalize(lightDir + cameradir);
-			float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
-			specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
-	}
-	specular = ambient + diffuse + specular_coeff;
-	float4 specular1 = specular * ambient;
-	float4	linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
-	finalColor = clamp(linearColor, 0.0f, 1.0f);
-	//finalColor.w = 1.0f;
-	return (finalColor);
+    float3  impact = ray->pos + ray->dir * ray->deph;
+    float3  lightDir;
+    float   distanceToLight;
+    float   attenuation = 1.0f;
+    float3  normal = get_normal(ray, objects);
+    float4  finalColor = objects.color;
+
+    if (material[objects.material_id - 1].damier)
+    {
+        int     x1 = (impact.x < 0 ? 1 : 0);
+        int     y1 = (impact.y < 0 ? 1 : 0);
+        int     z1 = (impact.z < 0 ? 1 : 0);
+        int     tmp;
+        x1 += (int)(floor(impact.x) / material[objects.material_id - 1].damier) % 2;
+        y1 += (int)(floor(impact.y) / material[objects.material_id - 1].damier) % 2;
+        z1 += (int)(floor(impact.z) / material[objects.material_id - 1].damier) % 2;
+        if (!x1)
+        {
+            if (((!y1) && (!z1)) || (((y1) && (z1))))
+                tmp = 1;
+            else
+                tmp = 2;
+        }
+        else
+        {
+            if ((((!y1) && (!z1))) || (((y1) && (z1))))
+                tmp = 2;
+            else
+                tmp = 1;
+        }
+        if (tmp == 1)
+        {
+            finalColor.x = 0.3f;
+            finalColor.y = 0.3f;
+            finalColor.z = 0.3f;
+            finalColor.w = 1.0f;
+        }
+    }
+    //if (material[objects.material_id].perlin)
+      //finalColor = perlin_wood(impact, 0.1f);
+    /*if (objects.type == SPHERE)
+    {
+        finalColor = perlin_wood(impact, 0.1f);
+    }*/
+    if (light.type == SPOTLIGHT)
+    {
+        lightDir = soft_normalize(light.position - impact);
+        float3 coneDirection = soft_normalize(-light.direction);
+        float3 raydirection = lightDir;
+        float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
+        lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
+        if(lightToSurfaceAngle > light.angle / 2)
+            attenuation = light.attenuation;
+    }
+    else if (light.type == POINTLIGHT)
+    {
+        lightDir = soft_normalize(light.position - impact);
+        //attenuation
+        distanceToLight = soft_length(light.position - impact);
+        attenuation = 1.0f / (1.0f + light.attenuation * pow(distanceToLight, 2.0f));
+    }
+    else if (light.type == DIRLIGHT)
+    {
+        lightDir = soft_normalize(light.direction);
+        attenuation = 1.0f;
+    }
+    //ambient
+    float4  ambient = 0.0f;
+    if (objects.material_id == -1 || objects.material_id > 0)
+        //ambient = light_ambient(objects, light, material[objects.material_id - 1]);
+        ambient = light_ambient(finalColor, light, *material);
+    //diffuse
+    float   diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
+    diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
+    float4    diffuse = diffuse_coeff * finalColor * light.color;
+    //specular
+    float   specular_coeff = 0.0f;
+    float4  specular = (float4)(0, 0, 0, 0);
+    float3 cameradir = normalize(campos  - impact);
+    if (material && !material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
+    {
+            float3 reflectionVector = float3_reflect(-lightDir, normal);
+            float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
+            specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
+    }
+    else if (material && material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
+    {
+            float3 halfwayVector = soft_normalize(lightDir + cameradir);
+            float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
+            specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
+    }
+    specular = ambient + diffuse + specular_coeff;
+    float4 specular1 = specular * ambient;
+    float4  linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
+    finalColor = clamp(linearColor, 0.0f, 1.0f);
+    //finalColor.w = 1.0f;
+    return (finalColor);
 }
 
 static float4 noLight(t_ray *ray, const t_objects objects, __constant t_material *material, const int max_material)
@@ -858,74 +862,49 @@ q = 1.0f;//soft_dot(dist, objects.normal);
 	return (deph_min(t0, t1));
 }
 
-// static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
-// {
-// 	float3 dist;
-// 	float a, b, c;
-// 	float solve;
-// 	float t0, t1;
-// 	float light_radius = 8.0f;
-// 	dist = ray->pos - light.position;
-// 	float3 rdir = ray->dir;
-// 	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
-// 	if (enable && c < EPSILON) // Culling face
-// 		return (FLT_MAX);
-// 	a = soft_dot(rdir, rdir);
-// 	b = soft_dot(dist, rdir);
-// 	solve = b * b - a * c;
-// 	if (solve < EPSILON)
-// 		return (FLT_MAX);
-// 	t0 = (-b - sqrt(solve)) / a;
-// 	t1 = (-b + sqrt(solve)) / a;
-// 	return (deph_min(t0, t1));
-// }
-
-static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
+static float    shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
 {
-	t_ray  ray_light;
-	int i = 0;
-	ray_light.object = -1;
-	ray_light.pos = ray.pos + ray.dir * ray.deph;
-
-	float3	lightDir;
-
-	if (light.type == POINTLIGHT || light.type == SPOTLIGHT)
-		ray_light.dir = light.position - ray_light.pos;
-
-	else if (light.type == DIRLIGHT)
-	{
-		ray_light.dir = light.direction;
-		ray_light.deph = scene->zfar;
-	}
-	ray_light.deph = scene->zfar;
-	if (light.type == SPOTLIGHT || light.type == POINTLIGHT)
-		ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
-	while (i < scene->max_object)
-	{
-		if (i != ray.object)
-		{
-			float d  = intersect(&ray_light, objects[i], scene->znear, 1);
-			if (d >= EPSILON && d < ray_light.deph)
-			{
-				ray_light.deph = d;
-				ray_light.object = i;
-				if (light.type == SPOTLIGHT)
-				{
-					lightDir = soft_normalize(light.position - ray_light.pos);
-					float3 coneDirection = soft_normalize(-light.direction);
-					float3 raydirection = lightDir;
-					float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
-					lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
-					if(lightToSurfaceAngle > light.angle / 2)
-						return (1.0f);
-					return(0.5f);
-				}
-				return (0.5f);
-			}
-		}
-		i++;
-	}
-	return (1.0f);
+    t_ray  ray_light;
+    int i = 0;
+    ray_light.object = -1;
+    ray_light.pos = ray.pos + ray.dir * ray.deph;
+    float3  lightDir;
+    if (light.type == POINTLIGHT || light.type == SPOTLIGHT)
+        ray_light.dir = light.position - ray_light.pos;
+    else if (light.type == DIRLIGHT)
+    {
+        ray_light.dir = light.direction;
+        ray_light.deph = scene->zfar;
+    }
+    ray_light.deph = scene->zfar;
+    if (light.type == SPOTLIGHT || light.type == POINTLIGHT)
+        ray_light.deph = sqrt(soft_dot(ray_light.dir, ray_light.dir));
+    while (i < scene->max_object)
+    {
+        if (i != ray.object)
+        {
+            float d  = intersect(&ray_light, objects[i], scene->znear, 1);
+            if (d >= EPSILON && d < ray_light.deph)
+            {
+                ray_light.deph = d;
+                ray_light.object = i;
+                if (light.type == SPOTLIGHT)
+                {
+                    lightDir = soft_normalize(light.position - ray_light.pos);
+                    float3 coneDirection = soft_normalize(-light.direction);
+                    float3 raydirection = lightDir;
+                    float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
+                    lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
+                    if(lightToSurfaceAngle > light.angle / 2)
+                        return (1.0f);
+                    return(0.5f);
+                }
+                return (0.5f);
+            }
+        }
+        i++;
+    }
+    return (1.0f);
 }
 
 static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_light *lights, __constant t_objects *objects, t_ray nray, __constant t_material *materials, float3 campos)

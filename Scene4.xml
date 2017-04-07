@@ -1,4 +1,4 @@
-<scene width="1640" height="1480" maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
+ll<scene width="1640" height="1480" maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
 	<camera position="550.0 -90.0 620.0" rotation="0.0 180.0 0.0" />
 
 	<cone position="40.0 0.0 155.0" radius="65.0" color="220 50 50 255" material="2"/>-->
@@ -31,7 +31,7 @@
 
 <!--	<spotlight position="40.0 -40.0 280.0" color="255 255 255" direction="0.0 1.0 -1.0" attenuation="0.001" angle="50"/>-->
 	<!--<pointlight position="200 -500.0 1000.0" color="150 150 150" attenuation="0.01"/>-->
-	<spotlight position="650.0 25.0 -200.0" color="0 0 200" attenuation="0.01" direction="1.0 0.25 -0.5" angle="65"/>
+	<spotlight position="650.0 25.0 -200.0" color="200 150 200" attenuation="0.01" direction="1.0 0.25 -0.5" angle="65"/>
 	<!--<pointlight position="550.0 25.0 -200.0" color="0 200 0" attenuation="0.01" direction="0.75 0.25 -0.5" angle="65"/>
 	<pointlight position="450.0 25.0 -200.0" color="200 0 0" attenuation="0.01" direction="0.5 0.25 -0.5" angle="65"/>-->
 		<!--<pointlight position="90.0 -40.0 200.0" color="255 255 255" attenuation="0.01" material="1"/>
