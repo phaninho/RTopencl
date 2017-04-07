@@ -519,7 +519,7 @@ static float2 getTextureUV(t_ray *ray, const t_objects objects)
 	}
 	return (uv);
 }
-/*
+
 constant int    g_tab[512] = {  151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,
                                 142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,
                                 203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,
@@ -655,7 +655,7 @@ static float4   perlin_wood(float3 inter, float frequency)
     }
     return (color1);
 }
-*/
+
 static float4    light_ambient(float4 color, const t_light light, const t_material material)
 {
     float4    color_ambient = color;
@@ -677,8 +677,12 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 	float	attenuation = 1.0f;
 	float3	normal = get_normal(ray, objects);
 	float4	finalColor = objects.color;
-	//if (material[objects.material_id - 1].perlin)
-    //  finalColor = perlin_wood(impact, 0.01);
+	if (material[objects.material_id - 1].perlin)
+      finalColor = perlin_wood(impact, 0.01f);
+			float4	ambient = 0.0f;
+		if (objects.material_id == -1 || objects.material_id > 0)
+			//ambient = light_ambient(objects, light, material[objects.material_id - 1]);
+			ambient = light_ambient(finalColor, light, material ? *material : mat);
 	if (objects.type == PLANE && material[objects.material_id - 1].damier)
 	{
 		int		x1 = (impact.x < 0 ? 1 : 0);
@@ -718,7 +722,10 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 		float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
 		lightToSurfaceAngle = degrees(acos(lightToSurfaceAngle));
 		if(lightToSurfaceAngle > light.angle / 2)
+		//{
     		attenuation = light.attenuation;
+			//	ambient *= 0.5f;
+		//}
 	}
 	else if (light.type == POINTLIGHT)
 	{
@@ -732,11 +739,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
 		lightDir = soft_normalize(light.direction);
 		attenuation = 1.0f;
 	}
-	//ambient
-	float4	ambient = 0.0f;
-	if (objects.material_id == -1 || objects.material_id > 0)
-		//ambient = light_ambient(objects, light, material[objects.material_id - 1]);
-		ambient = light_ambient(finalColor, light, material ? *material : mat);
 	//diffuse
 	float 	diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
 	diffuse_coeff = clamp(diffuse_coeff, 0.0f, 1.0f);
@@ -880,27 +882,27 @@ q = 1.0f;//soft_dot(dist, objects.normal);
 	return (deph_min(t0, t1));
 }
 
-// static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
-// {
-// 	float3 dist;
-// 	float a, b, c;
-// 	float solve;
-// 	float t0, t1;
-// 	float light_radius = 8.0f;
-// 	dist = ray->pos - light.position;
-// 	float3 rdir = ray->dir;
-// 	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
-// 	if (enable && c < EPSILON) // Culling face
-// 		return (FLT_MAX);
-// 	a = soft_dot(rdir, rdir);
-// 	b = soft_dot(dist, rdir);
-// 	solve = b * b - a * c;
-// 	if (solve < EPSILON)
-// 		return (FLT_MAX);
-// 	t0 = (-b - sqrt(solve)) / a;
-// 	t1 = (-b + sqrt(solve)) / a;
-// 	return (deph_min(t0, t1));
-// }
+static float light_intersect(t_ray *ray, const t_light light, const float znear, const int enable)
+{
+	float3 dist;
+	float a, b, c;
+	float solve;
+	float t0, t1;
+	float light_radius = 8.0f;
+	dist = ray->pos - light.position;
+	float3 rdir = ray->dir;
+	c = soft_dot(dist, dist) - light_radius * light_radius;//objects.radius * objects.radius;
+	if (enable && c < EPSILON) // Culling face
+		return (FLT_MAX);
+	a = soft_dot(rdir, rdir);
+	b = soft_dot(dist, rdir);
+	solve = b * b - a * c;
+	if (solve < EPSILON)
+		return (FLT_MAX);
+	t0 = (-b - sqrt(solve)) / a;
+	t1 = (-b + sqrt(solve)) / a;
+	return (deph_min(t0, t1));
+}
 
 static float	shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)
 {
