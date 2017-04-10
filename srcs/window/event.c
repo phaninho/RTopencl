@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 12:51:00 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 17:16:07 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/10 12:42:47 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,8 @@ static void		update_lights(t_window *win, t_button *button,\
 	if (button->id == 1)
 		update_vec3(win, &(lgt->position), val);
 	else if (button->id == 2)
-		check_vec3(update_vec3(win, &(lgt->direction),\
-					(lgt->type == DIRLIGHT ? 1 : 2)), (VEC3){1.0f, 1.0f, 1.0f},\
-												(VEC3){-1.0f, -1.0f, -1.0f});
+		check_vec3(update_vec3(win, &(lgt->direction), 1),\
+						(VEC3){1.0f, 1.0f, 1.0f}, (VEC3){-1.0f, -1.0f, -1.0f});
 	else if (button->id == 3)
 		update_vec4(win, &(lgt->color), val);
 	else if (button->id == 4)
