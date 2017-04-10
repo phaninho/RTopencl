@@ -377,7 +377,7 @@ static float4    light_ambient(float4 color, const t_light light, const t_materi
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
     float3  impact = ray->pos + ray->dir * ray->deph;
-    float3  lightDir = soft_normalize(light.position - impact);
+    float3  lightDir = light.direction;
     float   distanceToLight;
     float   attenuation = 1.0f;
     float3  normal = get_normal(ray, objects);
@@ -414,9 +414,9 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
             finalColor.z = 0.3f;
             finalColor.w = 1.0f;
         }
-    }
-    if (light.type == SPOTLIGHT)
+    }    if (light.type == SPOTLIGHT)
     {
+        lightDir = soft_normalize(light.position - impact);
         float3 coneDirection = soft_normalize(-light.direction);
         float3 raydirection = lightDir;
         float lightToSurfaceAngle = soft_dot(coneDirection, raydirection);
@@ -426,6 +426,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     }
     else if (light.type == POINTLIGHT)
     {
+        lightDir = soft_normalize(light.position - impact);
         //attenuation
         distanceToLight = soft_length(light.position - impact);
         attenuation = 1.0f / (1.0f + light.attenuation * pow(distanceToLight, 2.0f));
@@ -506,7 +507,7 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	else if (objects.type == PLANE)
 	{
 		a = soft_dot(-objects.normal, rdir);
- 		if (enable && a < EPSILON)
+ 		if (enable && a < EPSILON) // Culling face
  			return (FLT_MAX);
  		b = soft_dot(-objects.normal, ray->pos);
  		c = soft_dot(-objects.normal, objects.position);
@@ -518,7 +519,7 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
 	{
 		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
- 		if (enable && c < EPSILON)
+ 		if (enable && c < EPSILON) // Culling face
  			return (FLT_MAX);
 		a = rdir.x * rdir.x + rdir.z * rdir.z;
 		b = rdir.x * dist.x + rdir.z * dist.z;
@@ -623,7 +624,7 @@ static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_l
 	t_ray	reflect_ray;
 	reflect_ray.object = ray.object;
 	float4	color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	float4	point_color = color;
+	float4	point_color = color;//objects[ray.object].color;
 	float4	reflect_color;
 	int		j = 0;
 	while (j < scene->max_reflect)
@@ -658,6 +659,7 @@ static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_l
 					i++;
 				}
 				color *= (shadow_attenuation);
+				//color.w = 1.0f;
 			}
 			else
 				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
@@ -723,7 +725,7 @@ static float4		refract_color_in_reflect(__constant t_scene *scene, __constant t_
 		{
 			return (clamp(color, 0.0f, 1.0f));
 		}
-		point_color += objects[refract_ray.object].color;
+		point_color += objects[refract_ray.object].color * materials[objects[nray.object].material_id - 1].refraction;
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
@@ -769,7 +771,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 				i = 0;
 				while (i < scene->max_light)
 				{
-					color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos);
+						color += light(&reflect_ray, objects[reflect_ray.object], lights[i], materials, campos);
 					shadow_attenuation *= shadow(reflect_ray, lights[i], objects, scene);
 					i++;
 				}
@@ -782,7 +784,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 			return (clamp(color,  0.0f, 1.0f));
 		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
 		if (scene->max_refract > 0 && materials[objects[reflect_ray.object].material_id - 1].refraction > 0.0)
-			color += refract_color_in_reflect(scene, objects, reflect_ray, materials, lights,campos) * materials[objects[reflect_ray.object].material_id - 1].refract_coef;
+			color += refract_color_in_reflect(scene, objects, reflect_ray, materials, lights,campos);
 		reflect_color = point_color * color;
 		ray = reflect_ray;
 		j++;
