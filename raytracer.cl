@@ -415,8 +415,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
             finalColor.w = 1.0f;
         }
     }
-    if (material[objects.material_id].perlin)
-      finalColor = perlin_wood(impact, 0.1f);
     if (light.type == SPOTLIGHT)
     {
         float3 coneDirection = soft_normalize(-light.direction);
