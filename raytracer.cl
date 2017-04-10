@@ -1,23 +1,5 @@
-#define PI 3.14159265359f
-#define EPSILON 0.00001f
-// #define SCENE 0
-// #define CAMERA 1
-// #define SPHERE 2
-// #define PLANE 3
-// #define CYLINDER 4
-// #define CONE 5
-// #define TRIANGLE 6
-// #define SPOTLIGHT 7
-// #define POINTLIGHT 8
-// #define DIRLIGHT 9
-// #define MATERIAL 10
-// #define TEXTURE 11
-// #define RENDER 12
-// // Pour le parser et le CL du mod de rendu
-// #define RENDERMODE_SEPIA 13
-// #define RENDERMODE_GRIS 14
-// #define RENDERMODE_FILTER 15
-// #define RENDERMODE_ADD 16
+# define PI 3.14159265359f
+# define EPSILON 0.00001f
 
 # define SCENE 0
 # define CAMERA (SCENE + 1)
@@ -31,10 +13,10 @@
 # define DISK (TRIANGLE + 1)
 # define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
-# define PARABOLOID (CONEINF + 1)// variable : pos, normal, dist (distance entre les 2 points)
-# define ELLIPSOID (PARABOLOID + 1)// variable : pos, dist (distance entre les 2 points), normal, radius
-# define TORUS (ELLIPSOID + 1)// variable : pos, normal, Grand radius et petit radius.
-# define SOR (TORUS + 1)// pos, normal, taille(dist), coeficient a b c d.
+# define PARABOLOID (CONEINF + 1)
+# define ELLIPSOID (PARABOLOID + 1)
+# define TORUS (ELLIPSOID + 1)
+# define SOR (TORUS + 1)
 # define END_OBJECTS (SOR)
 
 # define LIGHTS (END_OBJECTS + 1)
@@ -47,13 +29,12 @@
 # define TEXTURE (MATERIAL + 1)
 # define RENDER (TEXTURE + 1)
 
-// Pour le parser et le CL du mod de rendu
-#define RENDERMODE_SEPIA (RENDER + 1)
-#define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
-#define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
-#define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
-#define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
-#define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
+# define RENDERMODE_SEPIA (RENDER + 1)
+# define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
+# define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
+# define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
+# define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
+# define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
 
 typedef struct	s_texture
 {
@@ -164,8 +145,8 @@ static float3 rotatex(float3 vec, float degree)
 	float3 nvec = (float3)(0, 0, 0);
 	float rx = degree * PI / 180.0f;
 	nvec.x = vec.x;
-	nvec.y = vec.y * cosf(rx) - vec.z * sinf(rx);
-	nvec.z = vec.y * sinf(rx) + vec.z * cosf(rx);
+	nvec.y = vec.y * half_cos(rx) - vec.z * half_sin(rx);
+	nvec.z = vec.y * half_sin(rx) + vec.z * half_cos(rx);
 	return (nvec);
 }
 
@@ -173,9 +154,9 @@ static float3 rotatey(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float ry = degree * PI / 180.0f;
-	nvec.x = vec.z * sinf(ry) + vec.x * cosf(ry);
+	nvec.x = vec.z * half_sin(ry) + vec.x * half_cos(ry);
 	nvec.y = vec.y;
-	nvec.z = vec.z * cosf(ry) - vec.x * sinf(ry);
+	nvec.z = vec.z * half_cos(ry) - vec.x * half_sin(ry);
 	return (nvec);
 }
 
@@ -183,8 +164,8 @@ static float3 rotatez(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float rz = degree * PI / 180.0f;
-	nvec.x = vec.x * cosf(rz) - vec.y * sinf(rz);
-	nvec.y = vec.x * sinf(rz) + vec.y * cosf(rz);
+	nvec.x = vec.x * half_cos(rz) - vec.y * half_sin(rz);
+	nvec.y = vec.x * half_sin(rz) + vec.y * half_cos(rz);
 	nvec.z = vec.z;
 	return (nvec);
 }
@@ -236,208 +217,7 @@ static float3        float3_refract(const float3 v, const float3 normal, const f
     }
     float eta = etai - etat;
     float k = 1 - eta * eta * (1 - cosi * cosi);
-    return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
-}
-
-
-/*tatic float3		float3_refract(const float3 v, const float3 normal,float n)
-{
-	float ct1 = soft_dot(normal, -1 * v);
-	float ct2 = sqrt(1 - n * n * (1 - ct1 * ct1));
-	return (n * v + (n * ct1 - ct2) * normal);
-}*/
-	/*float k = 1.0f - eta * eta * (1.0f - soft_dot(normal, v) * soft_dot(normal, v));
-    if (k < 0.0f)
-        return ((float3)(0, 0, 0));
-    else
-        return (eta * v - (eta * soft_dot(normal, v) + sqrtf(k)) * normal);*/
-
-	/*float air = 1.33f;
-	float n = eta / air;
-	float cosI = -(soft_dot(normal, v));
-	float sinT2 = eta * eta * (1.0f - cosI * cosI);
-	if (sinT2 > 1.0)
-		return ((float3)(0, 0, 0));
-	float cosT = sqrt(1.0 - sinT2);
-	return (v * n + normal * (n * cosI - cosT));*/
-	/*float n = -(soft_dot(normal, v));
-	float k = 1.f - eta * eta * (1.f - n * n);
-	if (k < 0.0f)
-		return ((float3)(0, 0, 0));
-	return (eta * v + (eta * n - sqrtf(k)) * normal);
-}*/
-
-# define SWAP(a,b) {float tmp; tmp = a; a = b; b = tmp;}
-
-static float		solvequadratic(float a, float b, float c)
-{
-	float		discriminant;
-	float		t;
-	float		t0;
-	float		t1;
-
-	t = 0;
-	if ((discriminant = b * b - 4 * a * c) < 0)
-		return (0);
-	else if (discriminant == 0)
-		t = -0.5 * b / a;
-	else if (discriminant >= 0)
-	{
-		discriminant = sqrt(discriminant);
-		t0 = ((-b + discriminant) / (2 * a));
-		t1 = ((-b - discriminant) / (2 * a));
-		t = (t0 < t1) ? t0 : t1;
-	}
-	return (t);
-}
-
-static float   isreal(float *roots)
-{
-  int   i;
-
-  i = 0;
-  while (roots[i])
-    ++i;
-  return (roots[i]);
-}
-
-static float   findclosest(float *roots, int a)
-{
-	int 	i = 0;
-	float 	t;
-
-	t = isreal(roots);
-  while (i != a)
-  {
-    if (t > roots[i])
-      t = roots[i];
-		++i;
-	}
-	return (t);
-}
-
-static float   solvecubic(float x, float a, float b, float c)
-{
-  if (x == 0)
-    return (solvequadratic(a, b, c));
-
-  float roots[3];
-  float q = (a * a - 3 * b);
-  float r = (2 * a * a * a - 9 * a * b + 27 * c);
-
-  float Q = q / 9;
-  float R = r / 54;
-
-  float Q3 = Q * Q * Q;
-  float R2 = R * R;
-
-  float CR2 = 729 * r * r;
-  float CQ3 = 2916 * q * q * q;
-
-  if (R == 0 && Q == 0)
-  {
-    roots[0] = - a / 3 ;
-    roots[1] = - a / 3 ;
-    roots[2] = - a / 3 ;
-    return (findclosest(roots, 3));
-  }
-  else if (CR2 == CQ3)
-  {
-    float sqrtQ = sqrt (Q);
-    if (R > 0)
-      {
-        roots[0] = -2 * sqrtQ  - a / 3;
-        roots[1] = sqrtQ - a / 3;
-        roots[2] = sqrtQ - a / 3;
-      }
-    else
-      {
-        roots[0] = - sqrtQ  - a / 3;
-        roots[1] = - sqrtQ - a / 3;
-        roots[2] = 2 * sqrtQ - a / 3;
-      }
-    return (findclosest(roots, 3));
-  }
-  else if (R2 < Q3)
-  {
-    float sgnR = (R >= 0 ? 1 : -1);
-    float ratio = sgnR * sqrt (R2 / Q3);
-    float theta = acos (ratio);
-    float norm = -2 * sqrt (Q);
-    roots[0] = norm * cos (theta / 3) - a / 3;
-    roots[1] = norm * cos ((theta + 2.0 * M_PI) / 3) - a / 3;
-    roots[2] = norm * cos ((theta - 2.0 * M_PI) / 3) - a / 3;
-
-    if (roots[0] > roots[1])
-      SWAP(roots[0], roots[1]);
-
-    if (roots[1] > roots[2])
-    {
-      SWAP(roots[1], roots[2]);
-
-      if (roots[0] > roots[1])
-        SWAP(roots[0], roots[1]);
-    }
-
-    return (findclosest(roots, 3));
-  }
-  else
-  {
-    float sgnR = (R >= 0 ? 1 : -1);
-    float A = -sgnR * pow(fabs(R) + sqrt(R2 - Q3), 1.0f/3.0f);
-    float B = Q / A ;
-    roots[0] = A + B - a / 3;
-    roots[1] = A + B - a / 3;
-    roots[2] = A + B - a / 3;
-    return (findclosest(roots, 3));
-  }
-}
-
-static float 	solvequartic(float a, float b, float c, float d, float e)
-{
-    if (a == 0)
-        return (solvecubic(b, c, d, e));
-    float roots[4];
-    b /= a;
-    c /= a;
-    d /= a;
-    e /= a;
-    float b2 = b * b;
-    float b3 = b * b2;
-    float b4 = b2 * b2;
-    float alpha = (-3.0/8.0) * b2 + c;
-    float beta  = b3 / 8.0 - b * c/ 2.0 + d;
-    float gamma = (-3.0 / 256.0) * b4 + b2 * c/16.0 - b * d / 4.0 + e;
-    float alpha2 = alpha * alpha;
-    float t = -b / 4.0;
-    if (beta == 0)
-    {
-        float rad = sqrt(alpha2 - 4.0 * gamma);
-        float r1 = sqrt((-alpha + rad) / 2.0);
-        float r2 = sqrt((-alpha - rad) / 2.0);
-        roots[0] = t + r1;
-        roots[1] = t - r1;
-        roots[2] = t + r2;
-        roots[3] = t - r2;
-    }
-    else
-    {
-        float alpha3 = alpha * alpha2;
-        float P = - (alpha2 / 12.0 + gamma);
-        float Q = - alpha3 / 108.0 + alpha * gamma / 3.0 - beta * beta / 8.0;
-        float R = -Q / 2.0 + sqrt(Q * Q / 4.0 + P * P * P/ 27.0);
-        float U = cbrt(R);
-        float y = (-5.0 / 6.0) * alpha + U;
-        (U == 0 ? y -= cbrt(Q) : P/ (3.0 * U));
-        float W = sqrt(alpha + 2.0 * y);
-        float r1 = sqrt(-(3.0 * alpha + 2.0 * y + 2.0 * beta / W));
-        float r2 = sqrt(-(3.0 * alpha + 2.0 * y - 2.0 * beta / W));
-        roots[0] = t + ( W - r1) / 2.0;
-        roots[1] = t + ( W + r1) / 2.0;
-        roots[2] = t + (-W - r2) / 2.0;
-        roots[3] = t + (-W + r2) / 2.0;
-    }
-    return (findclosest(roots, 4));
+    return (k < 0 ? 0 : eta * v + (eta * cosi - half_sqrt(soft_dot(k, k))) * n);
 }
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
@@ -471,53 +251,9 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 		return (soft_normalize(impact - a - (objects.position - a) *\
 		 m / (objects.radius + m)));
 }
-	return ((float3)(0, 0, 0));
+	return ((float3)(0.0f, 0.0f, 0.0f));
 }
 
-static float2 getTextureUV(t_ray *ray, const t_objects objects)
-{
-	float2 uv = (float2)(1, 1);
-	float3 impact = ray->pos + ray->dir * ray->deph;
-	float3 normal = get_normal(ray, objects);
-	if (objects.type == SPHERE)
-	{
-		uv.x = atan2(normal.x, normal.z) / (2 * PI) + 0.5;
-		uv.y = normal.y * 0.5 + 0.5;
-		//uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
-		//uv.y = 0.5f - (asin(normal.y)) / PI;
-	}
-
-	//normal = Normalize(sphere_surface_point - sphere_center);
-	//u = atan2(normal.x, normal.z) / (2*pi) + 0.5;
-	//v = normal.y * 0.5 + 0.5;
-
-	else if (objects.type == PLANE)
-	{
-		float3 uAxis = (float3)(normal.y, normal.z, -normal.x);
-		float3 vAxis = cross(uAxis, normal);
-		uv.x = soft_dot(impact, uAxis);
-		uv.y = soft_dot(impact, vAxis);
-		uv.x = uv.x - floor(uv.x);
-		uv.y = uv.y - floor(uv.y);
-	}
-	else if (objects.type == CYLINDER)
-	{
-		/*uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
-		uv.y = impact.y - objects.position.y;
-		uv.x = uv.x * sqrt(objects.radius);
-		uv.y = uv.y / objects.radius;
-		uv.x = uv.x - floor(uv.x);
-		uv.y = uv.y - floor(uv.y);*/
-		uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
-		uv.y = 0.5f - (asin(normal.y)) / PI;
-	}
-	else if (objects.type == CONE)
-	{
-		uv.x = 0.5f + (atan2(normal.z, normal.x)) / (2.0f * PI);
-		uv.y = 0.5f - (asin(normal.y)) / PI;
-	}
-	return (uv);
-}
 constant static int myPerlin[] = { 151,160,137,91,90,15,
    131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
    190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
@@ -560,7 +296,7 @@ static float grad(int hash, float x, float y, float z)
     return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }
 
-float noise(float x, float y, float z)
+static float noise(float x, float y, float z)
 {
     int X = (int)floor(x) & 255;
     int Y = (int)floor(y) & 255;
@@ -598,12 +334,6 @@ static float4   perlin_wood(float3 inter, float frequency)
 {
     float pn = 0.0f;
     float4 color1 = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
-    float4 color2;
-    float4 color3;
-    color1.x = 0.0f;
-    color1.y = 0.0f;
-    color1.z = 0.0f;
-    color1.w = 1.0f;
     int x1 = (inter.x < 0 ? 1 : 0);
     int y1 = (inter.y < 0 ? 1 : 0);
     int z1 = (inter.z < 0 ? 1 : 0);
@@ -638,23 +368,22 @@ static float4   perlin_wood(float3 inter, float frequency)
 
 static float4    light_ambient(float4 color, const t_light light, const t_material material)
 {
-    float4    color_ambient = color;
-    //if (light)
-        color_ambient *= light.color;
-    //if (material)
-        color_ambient *= material.ambient_color;
+    float4 color_ambient = color;
+    color_ambient *= light.color;
+    color_ambient *= material.ambient_color;
     return (color_ambient);
 }
 
 static float4 light(t_ray *ray, const t_objects objects, const t_light light, __constant t_material *material, float3 campos)
 {
     float3  impact = ray->pos + ray->dir * ray->deph;
-    float3  lightDir;
+    float3  lightDir = light.direction;
     float   distanceToLight;
     float   attenuation = 1.0f;
     float3  normal = get_normal(ray, objects);
     float4  finalColor = objects.color;
-
+		if (material[objects.material_id - 1].perlin)
+			finalColor = perlin_wood(impact, 0.1f);
     if (material[objects.material_id - 1].damier)
     {
         int     x1 = (impact.x < 0 ? 1 : 0);
@@ -688,10 +417,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     }
     if (material[objects.material_id].perlin)
       finalColor = perlin_wood(impact, 0.1f);
-    /*if (objects.type == SPHERE)
-    {
-        finalColor = perlin_wood(impact, 0.1f);
-    }*/
     if (light.type == SPOTLIGHT)
     {
         lightDir = soft_normalize(light.position - impact);
@@ -716,8 +441,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     }
     //ambient
     float4  ambient = 0.0f;
-    if (objects.material_id == -1 || objects.material_id > 0)
-        //ambient = light_ambient(objects, light, material[objects.material_id - 1]);
+    if (objects.material_id > 0)
         ambient = light_ambient(finalColor, light, *material);
     //diffuse
     float   diffuse_coeff = max(0.0f, soft_dot(normal, lightDir));
@@ -727,13 +451,13 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     float   specular_coeff = 0.0f;
     float4  specular = material[objects.material_id - 1].specular_color;
     float3 cameradir = normalize(campos  - impact);
-    if (material && !material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0) // = diffuseIntensity > 0.0
+    if (!material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
     {
             float3 reflectionVector = float3_reflect(-lightDir, normal);
             float specTmp = max(0.0f, soft_dot(reflectionVector, cameradir));
             specular_coeff = pow(specTmp, material[objects.material_id - 1].shininess);
     }
-    else if (material && material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
+    else if (material[objects.material_id - 1].blinn && soft_dot(lightDir, normal) > 0.0)
     {
             float3 halfwayVector = soft_normalize(lightDir + cameradir);
             float specTmp = max(0.0f, soft_dot(normal, halfwayVector));
@@ -741,9 +465,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     }
     specular = ambient + diffuse + specular_coeff;
     float4 specular1 = specular * ambient;
-    float4  linearColor = (specular1 + ambient + attenuation) * (diffuse + specular);
+    float4  linearColor = (specular1 + ambient * attenuation) * (diffuse + specular);
     finalColor = clamp(linearColor, 0.0f, 1.0f);
-    //finalColor.w = 1.0f;
     return (finalColor);
 }
 
@@ -763,18 +486,18 @@ static float4 noLight(t_ray *ray, const t_objects objects, __constant t_material
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
 	float3 dist;
-	float a, b, c, d, e;
+	float a, b, c;
 	float m, n, o, p, q;
 	float solve;
 	float t0, t1;
 
 	dist = ray->pos - objects.position;
 	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
-	m = 1.0f;//soft_dot(rdir, rdir);
-	n = 1.0f;//soft_dot(rdir, dist);
-	o = 1.0f;//soft_dot(dist, dist);
-	p = 1.0f;//soft_dot(rdir, objects.normal);
-q = 1.0f;//soft_dot(dist, objects.normal);
+	m = 1.0f;
+	n = 1.0f;
+	o = 1.0f;
+	p = 1.0f;
+	q = 1.0f;
 
 	if (objects.type == SPHERE)
 	{
@@ -804,19 +527,10 @@ q = 1.0f;//soft_dot(dist, objects.normal);
 		a = rdir.x * rdir.x + rdir.z * rdir.z;
 		b = rdir.x * dist.x + rdir.z * dist.z;
 	}
-	/*else if (objects.type == TORUS)
-	{
-		a = m * m;
-		b = 4 * m * n;
-		c = 4 * m * m + 2 * m * o - 2 * (pow(objects.radius,2) + pow(objects.radius2, 2)) * m + 4 * pow(objects.radius, 2) * pow(p, 2);
-		d = 4 * n * o - 4 * (pow(objects.radius, 2) + pow(objects.radius2, 2)) * n + 8 * pow(objects.radius, 2) * p * q;
-		e = pow(o,2) - 2 * (pow(objects.radius, 2) + pow(objects.radius2, 2)) * o + 4 * pow(objects.radius, 2) * pow(q, 2) + pow(pow(objects.radius, 2) + pow(objects.radius2, 2),2);
-		return (solvequartic(a, b, c, d, e));
-}*/
 	else if (objects.type == DISK)
 	{
 		a = soft_dot(-objects.normal, rdir);
-		if (enable && a < EPSILON) // Culling face
+		if (enable && a < EPSILON)
 			return (FLT_MAX);
 		b = soft_dot(-objects.normal, ray->pos);
 		c = soft_dot(-objects.normal, objects.position);
@@ -866,7 +580,6 @@ static float    shadow(t_ray ray, const t_light light, __constant t_objects *obj
 {
     t_ray  ray_light;
     int i = 0;
-    ray_light.object = -1;
     ray_light.pos = ray.pos + ray.dir * ray.deph;
     float3  lightDir;
     if (light.type == POINTLIGHT || light.type == SPOTLIGHT)
@@ -1007,7 +720,6 @@ static float4		refract_color_in_reflect(__constant t_scene *scene, __constant t_
 					i++;
 				}
 				color *= (shadow_attenuation);
-				//color.w = 1.0f;
 			}
 			else
 				color = noLight(&refract_ray, objects[refract_ray.object], materials, scene->max_material);
@@ -1067,13 +779,12 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 					i++;
 				}
 				color *= (shadow_attenuation);
-				//color.w = 1.0f;
 			}
 			else
 				color = noLight(&reflect_ray, objects[reflect_ray.object], materials, scene->max_material);
 		}
 		else
-			return (clamp(color,  0.0f, 1.0f)  /*(float)(1.0f, 0.0f, 0.0f, 1.0f)*/);
+			return (clamp(color,  0.0f, 1.0f));
 		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
 		if (scene->max_refract > 0 && materials[objects[reflect_ray.object].material_id - 1].refraction > 0.0)
 			color += refract_color_in_reflect(scene, objects, reflect_ray, materials, lights,campos);
@@ -1126,7 +837,6 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 					i++;
 				}
 				color *= (shadow_attenuation);
-				//color.w = 0.4f;
 			}
 			else
 				color = noLight(&refract_ray, objects[refract_ray.object], materials, scene->max_material);
@@ -1157,16 +867,13 @@ __kernel void raytracer(__global uchar4* pixel,
 	int x = get_global_id(0);
 	int y = get_global_id(1);
 	int index = x + y * xmax;
-	float4 color;
+	float4 color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
 	float shadow_attenuation = 1.0f;
 	t_ray ray;
-	t_objects obj;
-	float4 cc = (float4)(0, 0, 0, 1);
 	ray.deph = scene->zfar;
 	ray.pos = (float3)(camera->position.x, camera->position.y, camera->position.z);
 	ray.dir = soft_normalize((float3)((x - xmax / 2.0f), (y - ymax / 2.0f), xmax / scene->focale));
 	ray.dir = soft_normalize(rotatexyz(ray.dir, camera->rotation));
-	ray.object = -1;
 	int i = 0;
 	while (i < scene->max_object)
 	{
@@ -1178,53 +885,19 @@ __kernel void raytracer(__global uchar4* pixel,
 		}
 		i++;
 	}
-	/*if (i > 0)
-	{
-		i = 0;
-		while (i < scene->max_light)
-		{
-			float ld  = light_intersect(&ray, lights[i], scene->znear, 1);
-			if (ld >= EPSILON && ld < ray.deph)
-			{
-				ray.deph = ld;
-				ray.object = -10;
-				obj.color = lights[i].color;
-				obj.position = lights[i].position;
-				obj.rotation = (float3)(0.0f, 0.0f, 0.0f);
-				obj.normal = (float3)(0.0f, 1.0f, 0.0f);
-				obj.endpos = (float3)(1.0f, 1.0f, 1.0f);
-				obj.type = SPHERE;
-				obj.material_id = -1;
-				obj.texture_id = -1;
-				obj.in_object = 0;
-				obj.radius = 20.0f;
-				obj.radius2 = 0.0f;
-				obj.a = 0.0f;
-				obj.b = 0.0f;
-				obj.c = 0.0f;
-				obj.d = 0.0f;
-				obj.dist = 0.0f;
-			}
-			i++;
-		}
-	}*/
-	if (ray.object == -10 || (ray.object >= 0 && ray.deph < scene->zfar))
+	if (ray.object >= 0 && ray.deph < scene->zfar)
 	{
 		if (scene->max_light > 0)
 		{
-			color = (float4)(0, 0, 0, 1);
+			color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
 			i = 0;
 			while (i < scene->max_light)
 			{
-				if (ray.object == -10)
-					color += light(&ray, obj, lights[i], 0, camera->position);
-				else
-					color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
+				color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
 				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
 				i++;
 			}
 			color *= (shadow_attenuation);
-			//color.w = 1.0f;
 			if (scene->max_refract > 0 && materials[objects[ray.object].material_id - 1].refraction > 0.0)
 				color += (refract_color(scene, objects, ray, materials, lights, camera->position) * materials[objects[ray.object].material_id - 1].refract_coef);
 			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
@@ -1290,7 +963,6 @@ __kernel void raytracer(__global uchar4* pixel,
 		if (color.z >= 0.5f)
 			color.z = 1.0f;
 	}
-	float2 coor;
   color = clamp(color, 0.0f, 1.0f);
 	pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
 }
