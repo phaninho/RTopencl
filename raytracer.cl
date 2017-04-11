@@ -725,7 +725,7 @@ static float4		refract_color_in_reflect(__constant t_scene *scene, __constant t_
 		{
 			return (clamp(color, 0.0f, 1.0f));
 		}
-		point_color += objects[refract_ray.object].color * materials[objects[nray.object].material_id - 1].refraction;
+		point_color += objects[refract_ray.object].color;
 		refract_color = point_color * color;
 		ray = refract_ray;
 		j++;
@@ -784,7 +784,7 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 			return (clamp(color,  0.0f, 1.0f));
 		point_color += objects[reflect_ray.object].color * materials[objects[nray.object].material_id - 1].reflection;
 		if (scene->max_refract > 0 && materials[objects[reflect_ray.object].material_id - 1].refraction > 0.0)
-			color += refract_color_in_reflect(scene, objects, reflect_ray, materials, lights,campos);
+			color += refract_color_in_reflect(scene, objects, reflect_ray, materials, lights,campos) * materials[objects[reflect_ray.object].material_id - 1].refract_coef;
 		reflect_color = point_color * color;
 		ray = reflect_ray;
 		j++;
