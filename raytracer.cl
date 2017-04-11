@@ -434,7 +434,7 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     else if (light.type == DIRLIGHT)
     {
         lightDir = soft_normalize(light.direction);
-        attenuation = 1.0f;
+        attenuation = light.attenuation;
     }
     //ambient
     float4  ambient = 0.0f;
