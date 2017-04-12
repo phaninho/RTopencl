@@ -1,5 +1,5 @@
-#define PI 3.14159265359f
-#define EPSILON 0.00001f
+# define PI 3.14159265359f
+# define EPSILON 0.00001f
 
 # define SCENE 0
 # define CAMERA (SCENE + 1)
@@ -13,10 +13,10 @@
 # define DISK (TRIANGLE + 1)
 # define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
-# define PARABOLOID (CONEINF + 1)// variable : pos, normal, dist (distance entre les 2 points)
-# define ELLIPSOID (PARABOLOID + 1)// variable : pos, dist (distance entre les 2 points), normal, radius
-# define TORUS (ELLIPSOID + 1)// variable : pos, normal, Grand radius et petit radius.
-# define SOR (TORUS + 1)// pos, normal, taille(dist), coeficient a b c d.
+# define PARABOLOID (CONEINF + 1)
+# define ELLIPSOID (PARABOLOID + 1)
+# define TORUS (ELLIPSOID + 1)
+# define SOR (TORUS + 1)
 # define END_OBJECTS (SOR)
 
 # define LIGHTS (END_OBJECTS + 1)
@@ -29,13 +29,12 @@
 # define TEXTURE (MATERIAL + 1)
 # define RENDER (TEXTURE + 1)
 
-// Pour le parser et le CL du mod de rendu
-#define RENDERMODE_SEPIA (RENDER + 1)
-#define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
-#define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
-#define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
-#define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
-#define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
+# define RENDERMODE_SEPIA (RENDER + 1)
+# define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
+# define RENDERMODE_FILTER (RENDERMODE_GRIS + 1)
+# define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
+# define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
+# define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
 
 typedef struct	s_texture
 {
@@ -146,8 +145,8 @@ static float3 rotatex(float3 vec, float degree)
 	float3 nvec = (float3)(0, 0, 0);
 	float rx = degree * PI / 180.0f;
 	nvec.x = vec.x;
-	nvec.y = vec.y * cosf(rx) - vec.z * sinf(rx);
-	nvec.z = vec.y * sinf(rx) + vec.z * cosf(rx);
+	nvec.y = vec.y * half_cos(rx) - vec.z * half_sin(rx);
+	nvec.z = vec.y * half_sin(rx) + vec.z * half_cos(rx);
 	return (nvec);
 }
 
@@ -155,9 +154,9 @@ static float3 rotatey(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float ry = degree * PI / 180.0f;
-	nvec.x = vec.z * sinf(ry) + vec.x * cosf(ry);
+	nvec.x = vec.z * half_sin(ry) + vec.x * half_cos(ry);
 	nvec.y = vec.y;
-	nvec.z = vec.z * cosf(ry) - vec.x * sinf(ry);
+	nvec.z = vec.z * half_cos(ry) - vec.x * half_sin(ry);
 	return (nvec);
 }
 
@@ -165,8 +164,8 @@ static float3 rotatez(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float rz = degree * PI / 180.0f;
-	nvec.x = vec.x * cosf(rz) - vec.y * sinf(rz);
-	nvec.y = vec.x * sinf(rz) + vec.y * cosf(rz);
+	nvec.x = vec.x * half_cos(rz) - vec.y * half_sin(rz);
+	nvec.y = vec.x * half_sin(rz) + vec.y * half_cos(rz);
 	nvec.z = vec.z;
 	return (nvec);
 }
@@ -218,7 +217,7 @@ static float3        float3_refract(const float3 v, const float3 normal, const f
     }
     float eta = etai - etat;
     float k = 1 - eta * eta * (1 - cosi * cosi);
-    return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
+    return (k < 0 ? 0 : eta * v + (eta * cosi - half_sqrt(soft_dot(k, k))) * n);
 }
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
@@ -244,134 +243,14 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 		nor.y = -0.01f * nor.y;
 		return (soft_normalize(nor));
 	}
-	return ((float3)(0, 0, 0));
-}
-
-constant static int myPerlin[] = { 151,160,137,91,90,15,
-   131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
-   190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
-   88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
-   77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
-   102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
-   135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
-   5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
-   223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
-   129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
-   251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
-   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
-   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180,151,
-   160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,
-   37,240,21,10,23,190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,
-   11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,
-   139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,
-   46,245,40,244,102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,
-   169,200,196,135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,
-   250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,
-   189,28,42,223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167,
-   43,172,9,129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,
-   97,228,251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,
-   239,107,49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127,4,
-   150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
-   };
-static float fade(float t)
-{
-    return t * t * t * (t * (t * 6 - 15) + 10);
-}
-static float lerp(float t, float a, float b)
-{
-    return a + t * (b - a);
-}
-static float grad(int hash, float x, float y, float z)
-{
-    int h = hash & 15;
-    float u = h < 8|| h == 12 || h == 13 ? x : y;
-    float v = h < 4 || h == 12 || h == 13 ? y : z;
-    return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
-}
-
-float noise(float x, float y, float z)
-{
-    int X = (int)floor(x) & 255;
-    int Y = (int)floor(y) & 255;
-    int Z = (int)floor(z) & 255;
-    x -= floor(x);
-    y -= floor(y);
-    z -= floor(z);
-    float u = fade(x);
-    float v = fade(y);
-    float w = fade(z);
-    int A = myPerlin[X] + Y;
-    int AA = myPerlin[A] + Z;
-    int AB = myPerlin[A + 1] + Z;
-    int B = myPerlin[X + 1] + Y;
-    int BA = myPerlin[B] + Z;
-    int BB = myPerlin[B + 1] + Z;
-    return (lerp(w, lerp(v, lerp(u, grad(myPerlin[AA], x  , y  , z   ),
-                                    grad(myPerlin[BA], x - 1, y  , z   )),
-                            lerp(u, grad(myPerlin[AB], x  , y - 1, z   ),
-                                    grad(myPerlin[BB], x - 1, y - 1, z   ))),
-                    lerp(v, lerp(u, grad(myPerlin[AA + 1], x  , y  , z - 1 ),
-                                    grad(myPerlin[BA + 1], x - 1, y  , z - 1 )),
-                            lerp(u, grad(myPerlin[AB + 1], x  , y - 1, z - 1 ),
-                                    grad(myPerlin[BB + 1], x - 1, y - 1, z - 1 )))));
-}
-static  float limit(float x, float n1, float n2)
-{
-    if (x < n1)
-        return (n1);
-    if (x > n2)
-        return (n2);
-    return (x);
-}
-static float4   perlin_wood(float3 inter, float frequency)
-{
-    float pn = 0.0f;
-    float4 color1 = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
-    float4 color2;
-    float4 color3;
-    color1.x = 0.0f;
-    color1.y = 0.0f;
-    color1.z = 0.0f;
-    color1.w = 1.0f;
-    int x1 = (inter.x < 0 ? 1 : 0);
-    int y1 = (inter.y < 0 ? 1 : 0);
-    int z1 = (inter.z < 0 ? 1 : 0);
-    inter.x += x1;
-    inter.y += y1;
-    inter.z += z1;
-    float n = noise(frequency * inter.x, frequency * inter.y, frequency * inter.z);
-    n *= (n < 0.0f ? -1.0f : 1.0f);
-    pn += 10.0f * n;
-    int i = (int)pn;
-    pn = pn - (float)i;
-    if (n < 0.3f)
-    {
-        color1.x = limit(0.08f * (n - 0.3f) / (0.5f - 0.3f) + 0.47f * (0.5f - n) / (0.5f - 0.3f), 0.0f, 1.0f);
-        color1.y = limit(0.47f * (n - 0.3f) / (0.5f - 0.3f) + 0.08f * (0.5f - n) / (0.5f - 0.3f), 0.0f, 1.0f);
-        color1.z = limit(0.78f * (n - 0.3f) / (0.5f - 0.3f) + 0.78f * (0.5f - n) / (0.5f - 0.3f), 0.0f, 1.0f);
-    }
-    else if (n < 0.7f)
-    {
-        color1.x = limit(0.47f * (n - 0.5f) / (0.7f - 0.5f) + 0.78f * (0.7f - n) / (0.7f - 0.5f), 0.0f, 1.0f);
-        color1.y = limit(0.08f * (n - 0.5f) / (0.7f - 0.5f) + 0.47f * (0.7f - n) / (0.7f - 0.5f), 0.0f, 1.0f);
-        color1.z = limit(0.78f * (n - 0.5f) / (0.7f - 0.5f) + 0.08f * (0.7f - n) / (0.7f - 0.5f), 0.0f, 1.0f);
-    }
-    else if (n >= 0.7f)
-    {
-        color1.x = 0.78f;
-        color1.y = 0.47f;
-        color1.z = 0.08f;
-    }
-    return (color1);
+	return ((float3)(0.0f, 0.0f, 0.0f));
 }
 
 static float4    light_ambient(float4 color, const t_light light, const t_material material)
 {
-    float4    color_ambient = color;
-    //if (light)
-        color_ambient *= light.color;
-    //if (material)
-        color_ambient *= material.ambient_color;
+    float4 color_ambient = color;
+    color_ambient *= light.color;
+    color_ambient *= material.ambient_color;
     return (color_ambient);
 }
 
@@ -383,8 +262,8 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     float   attenuation = 1.0f;
     float3  normal = get_normal(ray, objects);
     float4  finalColor = objects.color;
-		//if (material && material[objects.material_id - 1].perlin)
-		//	finalColor = perlin_wood(impact, 0.1f);
+		//if (material[objects.material_id - 1].perlin)
+			//finalColor = perlin_wood(impact, 0.1f);
     if (material[objects.material_id - 1].damier)
     {
         int     x1 = (impact.x < 0 ? 1 : 0);
@@ -484,12 +363,19 @@ static float4 noLight(t_ray *ray, const t_objects objects, __constant t_material
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
 	float3 dist;
-	float a, b, c, d, e;
+	float a, b, c;
+	float m, n, o, p, q;
 	float solve;
 	float t0, t1;
 
 	dist = ray->pos - objects.position;
 	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
+	m = 1.0f;
+	n = 1.0f;
+	o = 1.0f;
+	p = 1.0f;
+	q = 1.0f;
+
 	if (objects.type == SPHERE)
 	{
 		c = soft_dot(dist, dist) - objects.radius * objects.radius;
@@ -521,7 +407,7 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
 	else if (objects.type == DISK)
 	{
 		a = soft_dot(-objects.normal, rdir);
-		if (enable && a < EPSILON) // Culling face
+		if (enable && a < EPSILON)
 			return (FLT_MAX);
 		b = soft_dot(-objects.normal, ray->pos);
 		c = soft_dot(-objects.normal, objects.position);
@@ -846,7 +732,6 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 	return (clamp(refract_color, 0.0f, 1.0f));
 }
 
-
 __kernel void raytracer(__global uchar4* pixel,
 	__constant t_scene *scene,
 	__constant t_cam *camera,
@@ -859,7 +744,7 @@ __kernel void raytracer(__global uchar4* pixel,
 	int x = get_global_id(0);
 	int y = get_global_id(1);
 	int index = x + y * xmax;
-	float4 color;
+	float4 color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
 	float shadow_attenuation = 1.0f;
 	t_ray ray;
 	ray.deph = scene->zfar;
@@ -899,7 +784,7 @@ __kernel void raytracer(__global uchar4* pixel,
 			color = noLight(&ray, objects[ray.object], materials, scene->max_material);
 	}
 	else
-		color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+		color = (float4)(0, 0, 0, 1.0f);
 	if (scene->render_mod == RENDERMODE_GRIS)
  	{
  		float gray = (color.x + color.y + color.z) / 3.0f;
