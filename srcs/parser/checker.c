@@ -121,11 +121,4 @@ void		check_values(t_env *e, t_parse *p, t_arg *arg)
 		check_light(e, p, arg);
 	else if (p->type == MATERIAL)
 		check_material(e, p, arg);
-	else if (p->type == TEXTURE)
-	{
-		e->texture[p->texture].width = arg->aint[WIDTH];
-		e->texture[p->texture].height = arg->aint[HEIGHT];
-		e->texture[p->texture].data = arg->data;
-		p->texture++;
-	}
 }

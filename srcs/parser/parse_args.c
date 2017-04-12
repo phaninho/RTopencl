@@ -38,8 +38,6 @@ static void		get_special_value(const char *tag, int *i, int type, t_arg *arg)
 {
 	if (type == MOD)
 		get_render_mod(arg, tag, i);
-	else if (type == LOAD)
-		load_texture(arg, tag, i);
 }
 
 static void		parse_arg_value(const char *tag, int *i, int type, t_arg *arg)

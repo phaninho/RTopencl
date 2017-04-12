@@ -187,11 +187,6 @@ static void		print_env(void)
 		printf("==================== Material ====================\n> ambient: [%f, %f, %f, %f]\n> specular: [%f, %f, %f, %f]\n> blinn: %d\n> shininess: %f\n> reflection: %f\n> refraction: %f\n> refract_coef: %f\n> perlin: %d\n> damier: %f\n", mate.ambient_color.x, mate.ambient_color.y, mate.ambient_color.z, mate.ambient_color.w, mate.specular_color.x, mate.specular_color.y, mate.specular_color.z, mate.specular_color.w, mate.blinn, mate.shininess, mate.reflection, mate.refraction, mate.refract_coef, mate.perlin, mate.damier);
 	}
 
-	for (int i = 0; i < e->scene.max_texture; i++)
-	{
-		t_texture texture = e->texture[i];
-		printf("==================== Texture ====================\n> width: %d\n> height: %d\n> data: %s\n", texture.width, texture.height, texture.data);
-	}
 }
 
 int				main(int ac, char **av)

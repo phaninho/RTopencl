@@ -104,7 +104,6 @@ void		parse_file(t_env *e, const char *name)
 	init_objects(e, e->scene.max_object);
 	init_lights(e, e->scene.max_light);
 	init_materials(e, e->scene.max_material);
-	init_textures(e, e->scene.max_texture);
 	i = 0;
 	while (file[i])
 	{

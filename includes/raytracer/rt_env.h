@@ -104,13 +104,6 @@ typedef struct	s_material
 	float		refract_coef;
 }				t_material;
 
-typedef struct	s_texture
-{
-	int			width;
-	int			height;
-	char		*data;
-}				t_texture;
-
 typedef struct	s_scene
 {
 	char		*name;
@@ -145,7 +138,6 @@ typedef struct	s_env
 	t_objects	*objects;
 	t_light		*light;
 	t_material	*material;
-	t_texture	*texture;
 }				t_env;
 
 t_env			*env_get(void);

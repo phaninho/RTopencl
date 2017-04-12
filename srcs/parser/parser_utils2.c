@@ -28,12 +28,7 @@ void	malloc_elements(t_env *e, t_parse *p)
 		e->material = NULL;
 	else if (!(e->material = (t_material*)malloc(sizeof(t_material) * p->mate)))
 		die("malloc failure (e->material)");
-	if (!p->texture)
-		e->texture = NULL;
-	else if (!(e->texture = (t_texture*)malloc(sizeof(t_texture) * p->texture)))
-		die("malloc failure (e->texture)");
 	e->scene.max_object = p->object;
-	e->scene.max_texture = p->texture;
 	e->scene.max_light = p->light;
 	e->scene.max_material = p->mate;
 }

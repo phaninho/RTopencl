@@ -37,13 +37,6 @@
 #define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
 #define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
 
-typedef struct	s_texture
-{
-	int			width;
-	int			height;
-	char		*data;
-}				t_texture;
-
 typedef struct	s_scene
 {
 	char		*name;
@@ -61,7 +54,7 @@ typedef struct	s_scene
 	int			max_texture;
 	int			render_debug;
 	int			render_mod;
-	float4		render_filter;
+	float4	render_filter;
 	int			obj_index;
 }				t_scene;
 

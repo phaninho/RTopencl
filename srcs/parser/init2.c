@@ -12,16 +12,6 @@
 
 #include "parser/rt_parser.h"
 
-void	init_textures(t_env *e, int max)
-{
-	while (--max >= 0)
-	{
-		e->texture[max].width = 0;
-		e->texture[max].height = 0;
-		e->texture[max].data = NULL;
-	}
-}
-
 void	init_parse(t_parse *p)
 {
 	p->cam = 0;
