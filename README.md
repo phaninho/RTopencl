@@ -2,12 +2,9 @@
 project from 42.
 
 ## Member
-- mgallo
-- qhonore
-- mabuchwa ?
 - stmartin
-- paim
-- amandine
+- jeexpert
+- qhonore
 
 ## Help:
 ### Git

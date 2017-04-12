@@ -240,124 +240,6 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
 	return ((float3)(0, 0, 0));
 }
 
-constant static int myPerlin[] = { 151,160,137,91,90,15,
-   131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
-   190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
-   88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
-   77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
-   102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
-   135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
-   5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
-   223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
-   129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
-   251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
-   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
-   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180,151,
-   160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,
-   37,240,21,10,23,190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,
-   11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,
-   139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,
-   46,245,40,244,102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,
-   169,200,196,135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,
-   250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,
-   189,28,42,223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167,
-   43,172,9,129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,
-   97,228,251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,
-   239,107,49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127,4,
-   150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
-   };
-static float fade(float t)
-{
-    return t * t * t * (t * (t * 6 - 15) + 10);
-}
-static float lerp(float t, float a, float b)
-{
-    return a + t * (b - a);
-}
-static float grad(int hash, float x, float y, float z)
-{
-    int h = hash & 15;
-    float u = h < 8|| h == 12 || h == 13 ? x : y;
-    float v = h < 4 || h == 12 || h == 13 ? y : z;
-    return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
-}
-
-float noise(float x, float y, float z)
-{
-    int X = (int)floor(x) & 255;
-    int Y = (int)floor(y) & 255;
-    int Z = (int)floor(z) & 255;
-    x -= floor(x);
-    y -= floor(y);
-    z -= floor(z);
-    float u = fade(x);
-    float v = fade(y);
-    float w = fade(z);
-    int A = myPerlin[X] + Y;
-    int AA = myPerlin[A] + Z;
-    int AB = myPerlin[A + 1] + Z;
-    int B = myPerlin[X + 1] + Y;
-    int BA = myPerlin[B] + Z;
-    int BB = myPerlin[B + 1] + Z;
-    return (lerp(w, lerp(v, lerp(u, grad(myPerlin[AA], x  , y  , z   ),
-                                    grad(myPerlin[BA], x - 1, y  , z   )),
-                            lerp(u, grad(myPerlin[AB], x  , y - 1, z   ),
-                                    grad(myPerlin[BB], x - 1, y - 1, z   ))),
-                    lerp(v, lerp(u, grad(myPerlin[AA + 1], x  , y  , z - 1 ),
-                                    grad(myPerlin[BA + 1], x - 1, y  , z - 1 )),
-                            lerp(u, grad(myPerlin[AB + 1], x  , y - 1, z - 1 ),
-                                    grad(myPerlin[BB + 1], x - 1, y - 1, z - 1 )))));
-}
-static  float limit(float x, float n1, float n2)
-{
-    if (x < n1)
-        return (n1);
-    if (x > n2)
-        return (n2);
-    return (x);
-}
-static float4   perlin_wood(float3 inter, float frequency)
-{
-    float pn = 0.0f;
-    float4 color1 = (float4)(1.0f, 1.0f, 1.0f, 1.0f);
-    float4 color2;
-    float4 color3;
-    color1.x = 0.0f;
-    color1.y = 0.0f;
-    color1.z = 0.0f;
-    color1.w = 1.0f;
-    int x1 = (inter.x < 0 ? 1 : 0);
-    int y1 = (inter.y < 0 ? 1 : 0);
-    int z1 = (inter.z < 0 ? 1 : 0);
-    inter.x += x1;
-    inter.y += y1;
-    inter.z += z1;
-    float n = noise(frequency * inter.x, frequency * inter.y, frequency * inter.z);
-    n *= (n < 0.0f ? -1.0f : 1.0f);
-    pn += 10.0f * n;
-    int i = (int)pn;
-    pn = pn - (float)i;
-    if (n < 0.3f)
-    {
-        color1.x = limit(0.08f * (n - 0.3f) / (0.5f - 0.3f) + 0.47f * (0.5f - n) / (0.5f - 0.3f), 0.0f, 1.0f);
-        color1.y = limit(0.47f * (n - 0.3f) / (0.5f - 0.3f) + 0.08f * (0.5f - n) / (0.5f - 0.3f), 0.0f, 1.0f);
-        color1.z = limit(0.78f * (n - 0.3f) / (0.5f - 0.3f) + 0.78f * (0.5f - n) / (0.5f - 0.3f), 0.0f, 1.0f);
-    }
-    else if (n < 0.7f)
-    {
-        color1.x = limit(0.47f * (n - 0.5f) / (0.7f - 0.5f) + 0.78f * (0.7f - n) / (0.7f - 0.5f), 0.0f, 1.0f);
-        color1.y = limit(0.08f * (n - 0.5f) / (0.7f - 0.5f) + 0.47f * (0.7f - n) / (0.7f - 0.5f), 0.0f, 1.0f);
-        color1.z = limit(0.78f * (n - 0.5f) / (0.7f - 0.5f) + 0.08f * (0.7f - n) / (0.7f - 0.5f), 0.0f, 1.0f);
-    }
-    else if (n >= 0.7f)
-    {
-        color1.x = 0.78f;
-        color1.y = 0.47f;
-        color1.z = 0.08f;
-    }
-    return (color1);
-}
-
 static float4    light_ambient(float4 color, const t_light light, const t_material material)
 {
     float4    color_ambient = color;
@@ -376,8 +258,6 @@ static float4 light(t_ray *ray, const t_objects objects, const t_light light, __
     float   attenuation = 1.0f;
     float3  normal = get_normal(ray, objects);
     float4  finalColor = objects.color;
-		//if (material && material[objects.material_id - 1].perlin)
-		//	finalColor = perlin_wood(impact, 0.1f);
     if (material[objects.material_id - 1].damier)
     {
         int     x1 = (impact.x < 0 ? 1 : 0);
