@@ -17,12 +17,13 @@
 
 t_button	g_buttons[] =
 {
-	{1, button_render_mod, "SEPIA", {WIN_W - 290, 70, 100, 35}, 0, 1, 1},
-	{2, button_render_mod, "GREY", {WIN_W - 185, 70, 100, 35}, 0, 1, 1},
-	{3, button_render_mod, "FILTER", {WIN_W - 290, 110, 100, 35}, 0, 1, 1},
-	{4, button_render_mod, "ADD", {WIN_W - 185, 110, 100, 35}, 0, 1, 1},
-	{5, button_render_mod, "NEGATIF", {WIN_W - 290, 150, 100, 35}, 0, 1, 1},
-	{6, button_render_mod, "CARTOON", {WIN_W - 185, 150, 100, 35}, 0, 1, 1},
+	{1, button_render_mod, "SEPIA", {WIN_W - 290, 70, 100, 25}, 0, 1, 1},
+	{2, button_render_mod, "GREY", {WIN_W - 185, 70, 100, 25}, 0, 1, 1},
+	{3, button_render_mod, "FILTER", {WIN_W - 290, 100, 100, 25}, 0, 1, 1},
+	{4, button_render_mod, "ADD", {WIN_W - 185, 100, 100, 25}, 0, 1, 1},
+	{5, button_render_mod, "NEGATIF", {WIN_W - 290, 130, 100, 25}, 0, 1, 1},
+	{6, button_render_mod, "CARTOON", {WIN_W - 185, 130, 100, 25}, 0, 1, 1},
+	{7, button_render_mod, "ANTI-ALIASING", {WIN_W - 290, 160, 205, 25}, 0, 1, 1},
 	{1, button_scene, "-", {WIN_W - 130, 230, 20, 20}, 0, 0, 1},
 	{2, button_scene, "+", {WIN_W - 70, 230, 20, 20}, 0, 0, 1},
 	{3, button_scene, "-", {WIN_W - 130, 260, 20, 20}, 0, 0, 1},

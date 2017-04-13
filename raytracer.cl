@@ -36,6 +36,8 @@
 #define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
 #define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
 #define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
+#define RENDERMODE_ANTI_ALIASING (RENDERMODE_CARTOON + 1)
+
 
 typedef struct	s_scene
 {
@@ -729,105 +731,128 @@ __kernel void raytracer(__global uchar4* pixel,
 {
 	int xmax = get_global_size(0);
 	int ymax = get_global_size(1);
-	int x = get_global_id(0);
-	int y = get_global_id(1);
-	int index = x + y * xmax;
+	int xx = get_global_id(0);
+	int yy = get_global_id(1);
+    float x = xx;
+    float y = yy;
+	int index = xx + yy * xmax;
 	float4 color;
+    float4 finalcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+    float4 AAcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
 	float shadow_attenuation = 1.0f;
-	t_ray ray;
-	ray.deph = scene->zfar;
-	ray.pos = (float3)(camera->position.x, camera->position.y, camera->position.z);
-	ray.dir = soft_normalize((float3)((x - xmax / 2.0f), (y - ymax / 2.0f), xmax / scene->focale));
-	ray.dir = soft_normalize(rotatexyz(ray.dir, camera->rotation));
-	int i = 0;
-	while (i < scene->max_object)
-	{
-		float d  = intersect(&ray, objects[i], scene->znear, 1);
-		if (d >= EPSILON && d < ray.deph)
-		{
-			ray.deph = d;
-			ray.object = i;
-		}
-		i++;
-	}
-	if (ray.object >= 0 && ray.deph < scene->zfar)
-	{
-		if (scene->max_light > 0)
-		{
-			color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-			i = 0;
-			while (i < scene->max_light)
-			{
-				color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
-				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
-				i++;
-			}
-			color *= (shadow_attenuation);
-			if (scene->max_refract > 0 && materials[objects[ray.object].material_id - 1].refraction > 0.0)
-				color += (refract_color(scene, objects, ray, materials, lights, camera->position) * materials[objects[ray.object].material_id - 1].refract_coef);
-			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
-				color += reflect_color(scene, lights, objects, ray, materials, camera->position);
-		}
-		else
-			color = noLight(&ray, objects[ray.object], materials, scene->max_material);
-	}
-	else
-		color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	if (scene->render_mod == RENDERMODE_GRIS)
- 	{
- 		float gray = (color.x + color.y + color.z) / 3.0f;
- 		color.x = gray;
- 		color.y = gray;
- 		color.z = gray;
- 	}
- 	else if (scene->render_mod == RENDERMODE_SEPIA)
- 	{
-		float gray = (color.x + color.y + color.z) / 3.0f;
- 		color.x = gray + 0.4f;
- 		color.y = gray + 0.2f;
- 		color.z = gray - 0.1f;
- 	}
-	else if (scene->render_mod == RENDERMODE_FILTER)
-	{
-		color *= scene->render_filter;
- 	}
-	else if (scene->render_mod == RENDERMODE_ADD)
- 	{
- 		color = (color + scene->render_filter) / 2.0f;
- 	}
-	else if (scene->render_mod == RENDERMODE_NEGATIF)
-	{
-		color.r = 1 - color.r;
-		color.g = 1 - color.g;
-		color.b = 1 - color.b;
-	}
-	else if (scene->render_mod == RENDERMODE_CARTOON)
-	{
-		if (color.x < 0.2f)
-			color.x = 0.0f;
-		if (color.y < 0.2f)
-			color.y = 0.0f;
-		if (color.z < 0.2f)
-			color.z = 0.0f;
-		if (color.x >= 0.2f && color.x < 0.4f)
-			color.x = 0.2f;
-		if (color.y >= 0.2f && color.y < 0.4f)
-			color.y = 0.2f;
-		if (color.z >= 0.2f && color.z < 0.4f)
-			color.z = 0.2f;
-		if (color.x >= 0.4f && color.x < 0.5f)
-			color.x = 0.4f;
-		if (color.y >= 0.4f && color.y < 0.5f)
-			color.y = 0.4f;
-		if (color.z >= 0.4f && color.z < 0.5f)
-			color.z = 0.4f;
-		if (color.x >= 0.5f)
-			color.x = 1.0f;
-		if (color.y >= 0.5f)
-			color.y = 1.0f;
-		if (color.z >= 0.5f)
-			color.z = 1.0f;
-	}
-  color = clamp(color, 0.0f, 1.0f);
-	pixel[index] = (uchar4)(color.z * 255.0f, color.y * 255.0f, color.x * 255.0f, 255.0f);
+    while (y < yy + 1.0f)
+    {
+        x = xx;
+        while (x < xx + 1.0f)
+        {
+	       t_ray ray;
+	       ray.deph = scene->zfar;
+	       ray.pos = (float3)(camera->position.x, camera->position.y, camera->position.z);
+	       ray.dir = soft_normalize((float3)((x - xmax / 2.0f), (y - ymax / 2.0f), xmax / scene->focale));
+	       ray.dir = soft_normalize(rotatexyz(ray.dir, camera->rotation));
+	       int i = 0;
+	       while (i < scene->max_object)
+	       {
+                float d = intersect(&ray, objects[i], scene->znear, 1);
+                if (d >= EPSILON && d < ray.deph)
+                {
+                    ray.deph = d;
+                    ray.object = i;
+    		    }
+                i++;
+            }
+        	if (ray.object >= 0 && ray.deph < scene->zfar)
+        	{
+        		if (scene->max_light > 0)
+        		{
+        			color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+        			i = 0;
+        			while (i < scene->max_light)
+        			{
+        				color += light(&ray, objects[ray.object], lights[i], materials, camera->position);
+        				shadow_attenuation *= shadow(ray, lights[i], objects, scene);
+        				i++;
+        			}
+        			color *= (shadow_attenuation);
+        			if (scene->max_refract > 0 && materials[objects[ray.object].material_id - 1].refraction > 0.0)
+        				color += (refract_color(scene, objects, ray, materials, lights, camera->position) * materials[objects[ray.object].material_id - 1].refract_coef);
+        			if (scene->max_reflect > 0 && materials[objects[ray.object].material_id - 1].reflection > 0.0)
+        				color += reflect_color(scene, lights, objects, ray, materials, camera->position);
+        		}
+        		else
+        			color = noLight(&ray, objects[ray.object], materials, scene->max_material);
+        	}
+        	else
+        		color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+        	if (scene->render_mod == RENDERMODE_GRIS)
+         	{
+         		float gray = (color.x + color.y + color.z) / 3.0f;
+         		color.x = gray;
+         		color.y = gray;
+         		color.z = gray;
+         	}
+         	else if (scene->render_mod == RENDERMODE_SEPIA)
+         	{
+        		float gray = (color.x + color.y + color.z) / 3.0f;
+         		color.x = gray + 0.4f;
+         		color.y = gray + 0.2f;
+         		color.z = gray - 0.1f;
+         	}
+        	else if (scene->render_mod == RENDERMODE_FILTER)
+        	{
+        		color *= scene->render_filter;
+         	}
+        	else if (scene->render_mod == RENDERMODE_ADD)
+         	{
+         		color = (color + scene->render_filter) / 2.0f;
+         	}
+        	else if (scene->render_mod == RENDERMODE_NEGATIF)
+        	{
+        		color.r = 1 - color.r;
+        		color.g = 1 - color.g;
+        		color.b = 1 - color.b;
+        	}
+        	else if (scene->render_mod == RENDERMODE_CARTOON)
+        	{
+        		if (color.x < 0.2f)
+        			color.x = 0.0f;
+        		if (color.y < 0.2f)
+        			color.y = 0.0f;
+        		if (color.z < 0.2f)
+        			color.z = 0.0f;
+        		if (color.x >= 0.2f && color.x < 0.4f)
+        			color.x = 0.2f;
+        		if (color.y >= 0.2f && color.y < 0.4f)
+        			color.y = 0.2f;
+        		if (color.z >= 0.2f && color.z < 0.4f)
+        			color.z = 0.2f;
+        		if (color.x >= 0.4f && color.x < 0.5f)
+        			color.x = 0.4f;
+        		if (color.y >= 0.4f && color.y < 0.5f)
+        			color.y = 0.4f;
+        		if (color.z >= 0.4f && color.z < 0.5f)
+        			color.z = 0.4f;
+        		if (color.x >= 0.5f)
+        			color.x = 1.0f;
+        		if (color.y >= 0.5f)
+        			color.y = 1.0f;
+        		if (color.z >= 0.5f)
+        			color.z = 1.0f;
+        	}
+            color = (clamp(color, 0.0f, 1.0f));
+            AAcolor += color * 0.25f;
+            x += 0.5f;
+            if (scene->render_mod != RENDERMODE_ANTI_ALIASING)
+                x += 1.0f;
+        }
+        y += 0.5f;
+        if (scene->render_mod != RENDERMODE_ANTI_ALIASING)
+            y += 1.0f;
+    }
+    AAcolor.w = 1.0f;
+    finalcolor = (clamp(color, 0.0f, 1.0f));
+    if (scene->render_mod == RENDERMODE_ANTI_ALIASING)
+        finalcolor = clamp(AAcolor, 0.0f, 1.0f);
+
+	pixel[index] = (uchar4)(finalcolor.z * 255.0f, finalcolor.y * 255.0f, finalcolor.x * 255.0f, 255.0f);
 }

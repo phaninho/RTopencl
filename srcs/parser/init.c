@@ -24,7 +24,6 @@ void	init_scene(t_env *e)
 	e->scene.max_object = 0;
 	e->scene.max_material = 0;
 	e->scene.max_light = 0;
-	e->scene.max_texture = 0;
 	e->scene.render_debug = 1;
 	e->scene.render_mod = 0;
 	e->scene.render_filter = (VEC4){{1.0f, 1.0f, 1.0f, 1.0f}};
@@ -47,14 +46,7 @@ void	init_objects(t_env *e, int max)
 		e->objects[max].color = (VEC4){{255.0f, 255.0f, 255.0f, 255.0f}};
 		e->objects[max].radius = 1.0f;
 		e->objects[max].endpos = (VEC3){{1.0f, 1.0f, 1.0f}};
-		e->objects[max].radius2 = 0.5f;
-		e->objects[max].a = 0.0f;
-		e->objects[max].b = 0.0f;
-		e->objects[max].c = 0.0f;
-		e->objects[max].d = 0.0f;
-		e->objects[max].dist = 0.0f;
 		e->objects[max].material_id = 0;
-		e->objects[max].texture_id = 0;
 		e->objects[max].in_object = 0;
 	}
 }

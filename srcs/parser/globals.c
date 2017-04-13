@@ -86,6 +86,7 @@ char		*g_mods[] =
 	"add",
 	"negative",
 	"cartoon",
+	"anti-aliasing",
 	NULL
 };
 
