@@ -101,9 +101,8 @@ static void	updatekey2(t_env *env, t_window *win, VEC3 dir, t_threadSDL *tsdl)
 	}
 	if (win->keys[SDL_SCANCODE_P])
 	{
-		thread = SDL_CreateThread(thread_caillou,"test", win);
+		thread = SDL_CreateThread(thread_caillou,"screenshot", win);
 		win->keys[SDL_SCANCODE_P] = 0;
-//		SDL_KillThread(thread);
 	}
 }
 

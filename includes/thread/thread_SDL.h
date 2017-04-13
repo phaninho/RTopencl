@@ -15,4 +15,8 @@
 typedef struct	s_threadSDL
 {
 	SDL_Thread	*thread;
-}				t_threadSDL;
+}								t_threadSDL;
+
+char	*call_me(int *i, int *j, char *tmp);
+int		ctoi(char c);
+char	itoc(int n);

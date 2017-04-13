@@ -141,6 +141,6 @@ typedef struct	s_env
 	t_material	*material;
 }				t_env;
 
-t_env			*env_get(void);
-void			env_init(void);
+t_env				*env_get(void);
+void				env_init(void);
 #endif

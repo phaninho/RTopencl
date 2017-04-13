@@ -136,6 +136,15 @@ static float soft_dot(float3 vec_a, float3 vec_b)
 	return (vec_a.x * vec_b.x + vec_a.y * vec_b.y + vec_a.z * vec_b.z);
 }
 
+static float3   soft_cross(float3 va, float3 vb)
+{
+    float3  v;
+    v.x = va.y * vb.z - va.z * vb.y;
+    v.y = va.z * vb.x - va.x * vb.z;
+    v.z = va.x * vb.y - va.y * vb.x;
+    return (v);
+}
+
 static float3 rotatex(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
@@ -356,90 +365,131 @@ static float4 noLight(t_ray *ray, const t_objects objects, __constant t_material
 	return (objColor);
 }
 
+static float    solvequadratic(const float a, const float b, const float c)
+{
+    float       discriminant;
+    float       t;
+    float       t0;
+    float       t1;
+    t = 0;
+    if ((discriminant = b * b - a * c) < EPSILON)
+        return (FLT_MAX);
+    else if (discriminant >= EPSILON)
+    {
+        discriminant = sqrt(discriminant);
+        t0 = ((-b + discriminant) / a);
+        t1 = ((-b - discriminant) / a);
+        t = deph_min(t0, t1);
+        return (t);
+    }
+    return (FLT_MAX);
+}
+static float inter_triangle(t_ray *ray, t_objects objects)
+{
+    float3 V1 = objects.rotation - objects.position;
+    float3 V2 = objects.endpos - objects.position;
+    float3 p = soft_cross(ray->dir, V2);
+    float det = soft_dot(V1, p);
+    if (det > -EPSILON && det < EPSILON)
+        return (FLT_MAX);
+    float3 cam_dir_tri = ray->pos - objects.position;
+    float u = soft_dot(cam_dir_tri, p) * (1 / det);
+    if (u < 0 || u > 1)
+        return (FLT_MAX);
+    float3 q = soft_cross(cam_dir_tri, V1);
+    float v = soft_dot(ray->dir, q) * (1 / det);
+    if (v < 0 || v > 1)
+        return (FLT_MAX);
+    float t = soft_dot(V2, q) * (1 / det);
+    if (t > EPSILON)
+        return (t);
+    return (FLT_MAX);
+}
+static float inter_sphere(t_ray *ray, t_objects objects, const float3 rdir)
+{
+    float3 dist = ray->pos - objects.position;
+    float c = soft_dot(dist, dist) - objects.radius * objects.radius;
+    if (c < EPSILON)
+        return (FLT_MAX);
+    float a = soft_dot(rdir, rdir);
+    float b = soft_dot(dist, rdir);
+    return (solvequadratic(a, b, c));
+}
+static float inter_plane(t_ray *ray, t_objects objects, const float3 rdir)
+{
+    float a = soft_dot(-objects.normal, rdir);
+    if (a < EPSILON) // Culling face
+        return (FLT_MAX);
+    float b = soft_dot(-objects.normal, ray->pos);
+    float c = soft_dot(-objects.normal, objects.position);
+    float solve = -((b - c) / a);
+    if (solve < EPSILON)
+        return (FLT_MAX);
+    return (solve);
+}
+static float inter_disk(t_ray *ray, t_objects objects, const float3 rdir)
+{
+    float ng = 1;
+    if (soft_dot(soft_normalize(-objects.normal), rdir) < EPSILON)
+        ng = -1;
+    float a = soft_dot(-objects.normal * ng, rdir);
+    if (a < EPSILON) // Culling face
+        return (FLT_MAX);
+    float b = soft_dot(-objects.normal * ng, ray->pos);
+    float c = soft_dot(-objects.normal * ng, objects.position);
+    float solve = -((b - c) / a);
+    if (solve < EPSILON)
+        return (FLT_MAX);
+    float3 impact = (ray->pos + rdir * solve);
+    float3 v = impact - objects.position;
+    if (sqrt(soft_dot(v,v)) <= 50)
+            return (solve);
+    else
+        return (FLT_MAX);
+}
+static float inter_cylinder(t_ray *ray, t_objects objects, const float3 rdir)
+{
+    float3 dist = ray->pos - objects.position;
+    float c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
+    if (c < EPSILON) // Culling face
+        return (FLT_MAX);
+    float a = rdir.x * rdir.x + rdir.z * rdir.z;
+    float b = rdir.x * dist.x + rdir.z * dist.z;
+    return (solvequadratic(a, b, c));
+}
+static float inter_cone(t_ray *ray, t_objects objects, const float3 rdir)
+{
+    float3 dist = ray->pos - objects.position;
+    float a = rdir.x * rdir.x + rdir.z * rdir.z - rdir.y * rdir.y;
+    float b = rdir.x * dist.x + rdir.z * dist.z - rdir.y * dist.y;
+    float c = dist.x * dist.x + dist.z * dist.z - dist.y * dist.y;
+    float t = solvequadratic(a, b, c);
+    if (objects.type == CONE)
+    {
+        float m = soft_dot(rdir, objects.normal) * t + soft_dot(dist, objects.normal);
+        if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
+            return (t);
+        else
+            return (FLT_MAX);
+    }
+    return (t);
+}
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
-	float3 dist;
-	float a, b, c, d, e;
-	float solve;
-	float t0, t1;
-
-	dist = ray->pos - objects.position;
-	float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
-	if (objects.type == SPHERE)
-	{
-		c = soft_dot(dist, dist) - objects.radius * objects.radius;
-		if (enable && c < EPSILON)
-			return (FLT_MAX);
-		a = soft_dot(rdir, rdir);
-		b = soft_dot(dist, rdir);
-	}
-	else if (objects.type == PLANE)
-	{
-		a = soft_dot(-objects.normal, rdir);
- 		if (enable && a < EPSILON) // Culling face
- 			return (FLT_MAX);
- 		b = soft_dot(-objects.normal, ray->pos);
- 		c = soft_dot(-objects.normal, objects.position);
- 		solve = -((b - c) / a);
-		if (solve < EPSILON)
-			return (FLT_MAX);
-		return (solve);
-	}
-	else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
-	{
-		c = dist.x * dist.x + dist.z * dist.z - objects.radius * objects.radius;
- 		if (enable && c < EPSILON) // Culling face
- 			return (FLT_MAX);
-		a = rdir.x * rdir.x + rdir.z * rdir.z;
-		b = rdir.x * dist.x + rdir.z * dist.z;
-	}
-	else if (objects.type == DISK)
-	{
-		a = soft_dot(-objects.normal, rdir);
-		if (enable && a < EPSILON) // Culling face
-			return (FLT_MAX);
-		b = soft_dot(-objects.normal, ray->pos);
-		c = soft_dot(-objects.normal, objects.position);
-		solve = -((b - c) / a);
-		if (solve < EPSILON)
-			return (FLT_MAX);
-		float3 impact = (ray->pos + rdir * solve);
-		float3 v = impact - objects.position;
-		if (sqrt(soft_dot(v,v)) <= 50)
-				return (solve);
-		else
-			return (FLT_MAX);
-	}
-	else if (objects.type == CONE || objects.type == CONEINF)
-	{
-		a = rdir.x * rdir.x + rdir.z * rdir.z - rdir.y * rdir.y;
-		b = rdir.x * dist.x + rdir.z * dist.z - rdir.y * dist.y;
-		c = dist.x * dist.x + dist.z * dist.z - dist.y * dist.y;
-	}
-	else
-		return (FLT_MAX);
-	solve = b * b - a * c;
-	if (solve < EPSILON)
-		return (FLT_MAX);
-	t0 = (-b - sqrt(solve)) / a;
-	t1 = (-b + sqrt(solve)) / a;
-	if (objects.type == CYLINDER)
-	{
-		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
-		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
-			return (deph_min(t0, t1));
-		else
-			return (FLT_MAX);
-	}
-	if (objects.type == CONE)
-	{
-		float m = soft_dot(rdir, objects.normal) * deph_min(t0, t1) + soft_dot(dist, objects.normal);
-		if (fmax(m,0) > EPSILON && fmax(m,0) < 50)
-			return (deph_min(t0, t1));
-		else
-			return (FLT_MAX);
-	}
-	return (deph_min(t0, t1));
+    float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
+    if (objects.type == SPHERE)
+        return (inter_sphere(ray , objects, rdir));
+    else if (objects.type == PLANE)
+        return (inter_plane(ray , objects, rdir));
+    else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
+        return (inter_cylinder(ray, objects, rdir));
+    else if (objects.type == TRIANGLE)
+        return (inter_triangle(ray, objects));
+    else if (objects.type == DISK)
+        return (inter_disk(ray, objects, rdir));
+    else if (objects.type == CONE || objects.type == CONEINF)
+        return (inter_cone(ray, objects, rdir));
+    return (FLT_MAX);
 }
 
 static float    shadow(t_ray ray, const t_light light, __constant t_objects *objects, __constant t_scene *scene)

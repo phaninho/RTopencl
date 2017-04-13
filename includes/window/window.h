@@ -46,14 +46,15 @@ typedef struct	s_window
 }				t_window;
 
 t_window		*window_get();
-int				window_init();
-void			window_loop(t_window *win);
-void			window_end();
-void			update(void);
-void			mouse_motion(Sint32 xrel, Sint32 yrel);
-void			mouse_grab(int x, int y);
-int				mouse_isgrab(void);
-void			mouse_ungrab(void);
-char			*check_name_screen(t_window *t);
+int					window_init();
+void				window_loop(t_window *win);
+void				window_end();
+void				update(void);
+void				mouse_motion(Sint32 xrel, Sint32 yrel);
+void				mouse_grab(int x, int y);
+int					mouse_isgrab(void);
+void				mouse_ungrab(void);
+char				*check_name_screen(t_window *t);
+void 				kernel_init(t_window *window);
 
 #endif
