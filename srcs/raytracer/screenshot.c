@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:42:23 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/12 13:42:25 by jeexpert         ###   ########.fr       */
+/*   Updated: 2017/04/13 22:37:11 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../../includes/libft/libft.h"
 #include "../../includes/thread/thread_SDL.h"
 
-int					ctoi(char c)
+int			ctoi(char c)
 {
 	int			i;
 
@@ -25,7 +25,7 @@ int					ctoi(char c)
 	return (i);
 }
 
-char				itoc(int n)
+char		itoc(int n)
 {
 	char		c;
 
@@ -40,7 +40,7 @@ static int	check_fscreen(void)
 	return (0);
 }
 
-char				*check_name_screen(t_window *t)
+char		*check_name_screen(t_window *t)
 {
 	FILE		*file;
 	int			i;

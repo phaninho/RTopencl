@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 13:29:01 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 16:41:56 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/13 22:53:04 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static void	draw_object(t_window *win, t_objects *objects, t_interface *inter)
 	draw_text("Type:", CENTER_X - 80, 340, DARK_GREY);
 	draw_text(get_tag(obj->type), CENTER_X, 340, DARK_GREY);
 	draw_vec3(obj->position, (t_vec2i){CENTER_X - 25, 370}, DARK_GREY, 50);
-	// draw_vec3(obj->rotation, (t_vec2i){CENTER_X - 25, 400}, DARK_GREY, 50);
 	draw_vec4(to_255(obj->color), (t_vec2i){CENTER_X - 25, 400}, DARK_GREY, 40);
 	draw_number(obj->radius, CENTER_X, 430, DARK_GREY);
 	draw_text("Material:", CENTER_X - 90, 460, DARK_GREY);

@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 11:19:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/01 19:00:26 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/13 22:50:21 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void		button_render_mod(void *param)
 	else if (button->id == 6)
 		*mod = (*mod == RENDERMODE_CARTOON ? 0 : RENDERMODE_CARTOON);
 	else if (button->id == 7)
-		*mod = (*mod == RENDERMODE_ANTI_ALIASING ? 0 : RENDERMODE_ANTI_ALIASING);
+		*mod = (*mod == RENDERMODE_ANTI_ALIAS ? 0 : RENDERMODE_ANTI_ALIAS);
 	update_onoff(button);
 }
 

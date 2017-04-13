@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 13:05:02 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 16:42:13 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/13 22:52:29 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ t_button	g_buttons[] =
 	{4, button_render_mod, "ADD", {WIN_W - 185, 100, 100, 25}, 0, 1, 1},
 	{5, button_render_mod, "NEGATIF", {WIN_W - 290, 130, 100, 25}, 0, 1, 1},
 	{6, button_render_mod, "CARTOON", {WIN_W - 185, 130, 100, 25}, 0, 1, 1},
-	{7, button_render_mod, "ANTI-ALIASING", {WIN_W - 290, 160, 205, 25}, 0, 1, 1},
+	{7, button_render_mod, "ANTI-ALIASING", \
+		{WIN_W - 290, 160, 205, 25}, 0, 1, 1},
 	{1, button_scene, "-", {WIN_W - 130, 230, 20, 20}, 0, 0, 1},
 	{2, button_scene, "+", {WIN_W - 70, 230, 20, 20}, 0, 0, 1},
 	{3, button_scene, "-", {WIN_W - 130, 260, 20, 20}, 0, 0, 1},
 	{4, button_scene, "+", {WIN_W - 70, 260, 20, 20}, 0, 0, 1},
 	{1, button_objects, "Position:", {WIN_W - 290, 358, 90, 25}, 0, 2, 1},
-	// {2, button_objects, "Rotation:", {WIN_W - 290, 388, 90, 25}, 0, 2, 1},
 	{3, button_objects, "Color:", {WIN_W - 290, 388, 90, 25}, 0, 2, 1},
 	{5, button_objects, "Radius:", {WIN_W - 290, 418, 90, 25}, 0, 2, 1},
 	{6, button_objects, "<", {WIN_W - 185, 450, 20, 20}, 0, 2, 1},

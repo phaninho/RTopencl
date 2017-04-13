@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:41:30 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/12 13:41:33 by jeexpert         ###   ########.fr       */
+/*   Updated: 2017/04/13 22:35:39 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,21 @@ static int	thread_caillou(void *param)
 	return (0);
 }
 
-VEC3				forward(const VEC3 *rot)
+VEC3		forward(const VEC3 *rot)
 {
-	VEC3 vec;
-	float y[2];
-	float len;
+	VEC3	vec;
+	float	y[2];
+	float	len;
 
 	vec = (VEC3){{0, 0, 1}};
 	return (rotatexyz(vec, *rot));
 }
 
-VEC3				straf(const VEC3 *rot)
+VEC3		straf(const VEC3 *rot)
 {
-	VEC3 vec;
-	float y[2];
-	float len;
+	VEC3	vec;
+	float	y[2];
+	float	len;
 
 	vec = (VEC3){{0, 0, 0}};
 	y[0] = cosf(TO_RADIANS(rot->y));
@@ -72,7 +72,7 @@ static void	updatekey2(t_env *env, t_window *win, VEC3 dir, t_threadSDL *tsdl)
 	}
 	if (win->keys[SDL_SCANCODE_P])
 	{
-		thread = SDL_CreateThread(thread_caillou,"screenshot", win);
+		thread = SDL_CreateThread(thread_caillou, "screenshot", win);
 		win->keys[SDL_SCANCODE_P] = 0;
 	}
 }

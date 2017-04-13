@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:46:22 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/12 13:46:24 by jeexpert         ###   ########.fr       */
+/*   Updated: 2017/04/13 22:55:36 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "window/window.h"
 #include "window/interface.h"
 #include "raytracer/rt_env.h"
-#include<stdio.h>
+#include <stdio.h>
 
-static void	gameloop(t_window *win, t_env *env)
+static void		gameloop(t_window *win, t_env *env)
 {
 	const unsigned int	now = SDL_GetTicks();
 	unsigned int		elapse;
@@ -37,15 +37,13 @@ static void	gameloop(t_window *win, t_env *env)
 	win->frame++;
 	if (win->timer >= 1000)
 	{
-		if (env->scene.render_debug)
-				printf("FPS: %d, UPS: %d\n", win->frame, win->tick);
 		win->tick = 0;
 		win->frame = 0;
 		win->timer -= 1000;
 	}
 }
 
-static void	display_window(t_window *win)
+static void		display_window(t_window *win)
 {
 	SDL_Texture	*texture;
 
@@ -56,7 +54,7 @@ static void	display_window(t_window *win)
 	SDL_RenderPresent(win->renderer);
 }
 
-void		window_loop(t_window *win)
+void			window_loop(t_window *win)
 {
 	t_env			*env;
 	SDL_Event		event;

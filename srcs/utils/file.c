@@ -6,14 +6,14 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/06 16:35:43 by qhonore           #+#    #+#             */
-/*   Updated: 2016/12/06 16:42:52 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/13 22:40:15 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils/error.h"
 #include "libft/libft.h"
 
-size_t	get_file(const char *name, char **str)
+size_t		get_file(const char *name, char **str)
 {
 	FILE	*file;
 	size_t	len;
@@ -31,19 +31,19 @@ size_t	get_file(const char *name, char **str)
 	return (len);
 }
 
-int		file_exist(const char *name)
+int			file_exist(const char *name)
 {
 	FILE	*file;
 
 	if ((file = fopen(name, "r")))
-    {
-        fclose(file);
-        return (1);
-    }
-    return (0);
+	{
+		fclose(file);
+		return (1);
+	}
+	return (0);
 }
 
-int		screen_exist(int nb)
+int			screen_exist(int nb)
 {
 	return (1);
 }

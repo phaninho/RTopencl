@@ -36,7 +36,7 @@
 #define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
 #define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
 #define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
-#define RENDERMODE_ANTI_ALIASING (RENDERMODE_CARTOON + 1)
+#define RENDERMODE_ANTI_ALIAS (RENDERMODE_CARTOON + 1)
 
 
 typedef struct	s_scene
@@ -892,16 +892,16 @@ __kernel void raytracer(__global uchar4* pixel,
             color = (clamp(color, 0.0f, 1.0f));
             AAcolor += color * 0.25f;
             x += 0.5f;
-            if (scene->render_mod != RENDERMODE_ANTI_ALIASING)
+            if (scene->render_mod != RENDERMODE_ANTI_ALIAS)
                 x += 1.0f;
         }
         y += 0.5f;
-        if (scene->render_mod != RENDERMODE_ANTI_ALIASING)
+        if (scene->render_mod != RENDERMODE_ANTI_ALIAS)
             y += 1.0f;
     }
     AAcolor.w = 1.0f;
     finalcolor = (clamp(color, 0.0f, 1.0f));
-    if (scene->render_mod == RENDERMODE_ANTI_ALIASING)
+    if (scene->render_mod == RENDERMODE_ANTI_ALIAS)
         finalcolor = clamp(AAcolor, 0.0f, 1.0f);
 
 	pixel[index] = (uchar4)(finalcolor.z * 255.0f, finalcolor.y * 255.0f, finalcolor.x * 255.0f, 255.0f);
