@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:33:15 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/12 13:33:22 by jeexpert         ###   ########.fr       */
+/*   Updated: 2017/04/13 23:00:04 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@
 # define TEXTURE (MATERIAL + 1)
 # define RENDER (TEXTURE + 1)
 
-// Pour le parser et le CL du mod de rendu
 # define RENDERMODE (RENDER + 1)
 # define RENDERMODE_SEPIA (RENDERMODE)
 # define RENDERMODE_GRIS (RENDERMODE_SEPIA + 1)
@@ -53,13 +52,13 @@
 # define RENDERMODE_ADD (RENDERMODE_FILTER + 1)
 # define RENDERMODE_NEGATIF (RENDERMODE_ADD + 1)
 # define RENDERMODE_CARTOON (RENDERMODE_NEGATIF + 1)
-# define RENDERMODE_ANTI_ALIASING (RENDERMODE_CARTOON + 1)
-# define END_RENDERMODE (RENDERMODE_ANTI_ALIASING)
+# define RENDERMODE_ANTI_ALIAS (RENDERMODE_CARTOON + 1)
+# define END_RENDERMODE (RENDERMODE_ANTI_ALIAS)
 
 typedef struct	s_cam
 {
-	VEC3	position;
-	VEC3	rotation;
+	VEC3		position;
+	VEC3		rotation;
 }				t_cam;
 
 typedef struct	s_objects
@@ -68,18 +67,18 @@ typedef struct	s_objects
 	VEC3		position;
 	VEC3		rotation;
 	VEC3		normal;
-	VEC3		endpos; // position final cylindre et cone
+	VEC3		endpos;
 	int			type;
 	int			material_id;
 	int			texture_id;
 	int			in_object;
 	float		radius;
-	float		radius2; // petit radius pour torus
-	float		a; // coefficient pour sor
-	float		b; // pour sor
-	float		c; // pour sor
-	float		d; // pour sor
-	float		dist; // distance des point pour parabol, epsilloid
+	float		radius2;
+	float		a;
+	float		b;
+	float		c;
+	float		d;
+	float		dist;
 }				t_objects;
 
 typedef struct	s_light
@@ -127,8 +126,8 @@ typedef struct	s_scene
 
 typedef struct	s_interface
 {
-	int		index;
-	int		type;
+	int			index;
+	int			type;
 }				t_interface;
 
 typedef struct	s_env
@@ -141,6 +140,7 @@ typedef struct	s_env
 	t_material	*material;
 }				t_env;
 
-t_env				*env_get(void);
-void				env_init(void);
+t_env			*env_get(void);
+void			env_init(void);
+
 #endif

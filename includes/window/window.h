@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:36:31 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/12 13:36:43 by jeexpert         ###   ########.fr       */
+/*   Updated: 2017/04/13 23:13:25 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <SDL2/SDL_ttf.h>
 # include "parser/rt_parser.h"
 
-typedef struct	s_window
+typedef struct		s_window
 {
 	SDL_Window		*win;
 	SDL_Surface		*surface;
@@ -44,9 +44,9 @@ typedef struct	s_window
 	void			(*update)(void);
 	int				lmt_screen;
 	SDL_Rect		interface;
-}				t_window;
+}					t_window;
 
-t_window		*window_get();
+t_window			*window_get();
 int					window_init();
 void				window_loop(t_window *win);
 void				window_end();
@@ -56,7 +56,7 @@ void				mouse_grab(int x, int y);
 int					mouse_isgrab(void);
 void				mouse_ungrab(void);
 char				*check_name_screen(t_window *t);
-void 				kernel_init(t_window *window);
-void			  updatekey(t_env *env, t_window *win, VEC3 dir);
+void				kernel_init(t_window *window);
+void				updatekey(t_env *env, t_window *win, VEC3 dir);
 
 #endif

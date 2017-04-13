@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:33:49 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/12 13:33:53 by jeexpert         ###   ########.fr       */
+/*   Updated: 2017/04/13 23:02:11 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 typedef struct	s_thread
 {
 	cl_platform_id		platform_id;
-	cl_uint 			platform_count;
+	cl_uint				platform_count;
 	cl_device_id		device_id;
 	cl_uint				device_count;
 	cl_context			context;
@@ -31,9 +31,9 @@ typedef struct	s_thread
 	cl_mem				mem_light;
 	cl_program			program;
 	cl_kernel			kernel;
-}								t_thread;
+}				t_thread;
 
-t_thread	*thread_get(void);
+t_thread		*thread_get(void);
 void			thread_init(void);
 void			thread_end(void);
 #endif
