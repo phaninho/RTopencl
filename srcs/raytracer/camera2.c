@@ -19,13 +19,18 @@
 #include "thread/thread_SDL.h"
 #include <stdio.h>
 
-void   updatekey(t_env *env, t_window *win, VEC3 dir)
+void   updatekeykey(t_env *env, t_window *win, VEC3 dir)
 {
-	win->move_speed = (win->keys[SDL_SCANCODE_LSHIFT] ? 10 : 1);
-	if (win->keys[SDL_SCANCODE_SPACE])
+  if (win->keys[SDL_SCANCODE_SPACE])
 		env->camera.position.y -= win->move_speed;
 	if (win->keys[SDL_SCANCODE_LCTRL])
 		env->camera.position.y += win->move_speed;
+}
+
+void   updatekey(t_env *env, t_window *win, VEC3 dir)
+{
+	win->move_speed = (win->keys[SDL_SCANCODE_LSHIFT] ? 10 : 1);
+	updatekeykey(env, win, dir);
 	if (win->keys[SDL_SCANCODE_W])
 	{
 		dir = forward(&(env->camera.rotation));
