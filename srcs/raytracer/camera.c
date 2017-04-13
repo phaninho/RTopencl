@@ -28,11 +28,11 @@ static int	thread_caillou(void *param)
 	tmp = check_name_screen(win);
 	if (!SDL_SaveBMP(win->surface, tmp))
 		free(tmp);
-	printf("PRINTSCREEN\n");
+	printf("Screenshot\n");
 	return (0);
 }
 
-static VEC3	forward(const VEC3 *rot)
+VEC3				forward(const VEC3 *rot)
 {
 	VEC3 vec;
 	float y[2];
@@ -42,7 +42,7 @@ static VEC3	forward(const VEC3 *rot)
 	return (rotatexyz(vec, *rot));
 }
 
-static VEC3	straf(const VEC3 *rot)
+VEC3				straf(const VEC3 *rot)
 {
 	VEC3 vec;
 	float y[2];
@@ -58,35 +58,6 @@ static VEC3	straf(const VEC3 *rot)
 	vec.y /= len;
 	vec.z /= len;
 	return (vec);
-}
-
-static void	updatekey(t_env *env, t_window *win, VEC3 dir)
-{
-	win->move_speed = (win->keys[SDL_SCANCODE_LSHIFT] ? 10 : 1);
-	if (win->keys[SDL_SCANCODE_SPACE])
-		env->camera.position.y -= win->move_speed;
-	if (win->keys[SDL_SCANCODE_LCTRL])
-		env->camera.position.y += win->move_speed;
-	if (win->keys[SDL_SCANCODE_W])
-	{
-		dir = forward(&(env->camera.rotation));
-		env->camera.position.x += dir.x * win->move_speed;
-		env->camera.position.y += dir.y * win->move_speed;
-		env->camera.position.z += dir.z * win->move_speed;
-	}
-	if (win->keys[SDL_SCANCODE_S])
-	{
-		dir = forward(&(env->camera.rotation));
-		env->camera.position.x += dir.x * -win->move_speed;
-		env->camera.position.y += dir.y * -win->move_speed;
-		env->camera.position.z += dir.z * -win->move_speed;
-	}
-	if (win->keys[SDL_SCANCODE_D])
-	{
-		dir = straf(&(env->camera.rotation));
-		env->camera.position.x -= dir.x * win->move_speed;
-		env->camera.position.z -= dir.z * win->move_speed;
-	}
 }
 
 static void	updatekey2(t_env *env, t_window *win, VEC3 dir, t_threadSDL *tsdl)

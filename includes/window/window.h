@@ -19,6 +19,7 @@
 
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_ttf.h>
+# include "parser/rt_parser.h"
 
 typedef struct	s_window
 {
@@ -56,5 +57,6 @@ int					mouse_isgrab(void);
 void				mouse_ungrab(void);
 char				*check_name_screen(t_window *t);
 void 				kernel_init(t_window *window);
+void			  updatekey(t_env *env, t_window *win, VEC3 dir);
 
 #endif

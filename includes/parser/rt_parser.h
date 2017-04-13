@@ -121,4 +121,7 @@ void			check_values(t_env *e, t_parse *p, t_arg *arg);
 VEC3			check_normal(VEC3 normal);
 void			check_render(t_env *e, t_arg *arg);
 
+VEC3			forward(const VEC3 *rot);
+VEC3			straf(const VEC3 *rot);
+
 #endif
