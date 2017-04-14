@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:40:42 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 16:57:23 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/14 12:43:09 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,7 @@
 # define ANGLE (ATTENUATION + 1)
 # define SHININESS (ANGLE + 1)
 # define RADIUS2 (SHININESS + 1)
-# define OBJ_A (RADIUS2 + 1)
-# define OBJ_B (OBJ_A + 1)
-# define OBJ_C (OBJ_B + 1)
-# define OBJ_D (OBJ_C + 1)
-# define DIST (OBJ_D + 1)
+# define DIST (RADIUS2 + 1)
 # define REFRACT_COEF (DIST + 1)
 # define DAMIER (REFRACT_COEF + 1)
 
@@ -49,8 +45,9 @@
 # define POSITION (ROTATION + 1)
 # define DIRECTION (POSITION + 1)
 # define ENDPOS (DIRECTION + 1)
+# define POS2 (ENDPOS + 1)
 
-# define COLOR (ENDPOS + 1)
+# define COLOR (POS2 + 1)
 # define SPECULAR (COLOR + 1)
 # define AMBIENT (SPECULAR + 1)
 # define FILTER (AMBIENT + 1)
@@ -62,8 +59,8 @@ typedef struct	s_arg
 {
 	int		type;
 	int		aint[8];
-	double	adbl[17];
-	VEC3	avec[5];
+	double	adbl[13];
+	VEC3	avec[6];
 	VEC4	color[4];
 	char	*data;
 	int		mod;
