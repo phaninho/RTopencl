@@ -147,8 +147,8 @@ static float3 rotatex(float3 vec, float degree)
 	float3 nvec = (float3)(0, 0, 0);
 	float rx = degree * PI / 180.0f;
 	nvec.x = vec.x;
-	nvec.y = vec.y * cosf(rx) - vec.z * sinf(rx);
-	nvec.z = vec.y * sinf(rx) + vec.z * cosf(rx);
+	nvec.y = vec.y * cos(rx) - vec.z * sin(rx);
+	nvec.z = vec.y * sin(rx) + vec.z * cos(rx);
 	return (nvec);
 }
 
@@ -156,9 +156,9 @@ static float3 rotatey(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float ry = degree * PI / 180.0f;
-	nvec.x = vec.z * sinf(ry) + vec.x * cosf(ry);
+	nvec.x = vec.z * sin(ry) + vec.x * cos(ry);
 	nvec.y = vec.y;
-	nvec.z = vec.z * cosf(ry) - vec.x * sinf(ry);
+	nvec.z = vec.z * cos(ry) - vec.x * sin(ry);
 	return (nvec);
 }
 
@@ -166,8 +166,8 @@ static float3 rotatez(float3 vec, float degree)
 {
 	float3 nvec = (float3)(0, 0, 0);
 	float rz = degree * PI / 180.0f;
-	nvec.x = vec.x * cosf(rz) - vec.y * sinf(rz);
-	nvec.y = vec.x * sinf(rz) + vec.y * cosf(rz);
+	nvec.x = vec.x * cos(rz) - vec.y * sin(rz);
+	nvec.y = vec.x * sin(rz) + vec.y * cos(rz);
 	nvec.z = vec.z;
 	return (nvec);
 }
@@ -219,7 +219,7 @@ static float3        float3_refract(const float3 v, const float3 normal, const f
     }
     float eta = etai - etat;
     float k = 1 - eta * eta * (1 - cosi * cosi);
-    return (k < 0 ? 0 : eta * v + (eta * cosi - sqrtf(soft_dot(k, k))) * n);
+    return (k < 0 ? 0 : eta * v + (eta * cosi - sqrt(soft_dot(k, k))) * n);
 }
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
@@ -229,13 +229,6 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
     if (objects.type == SPHERE)
     {
         return (soft_normalize(impact - objects.position));
-    }
-    else if (objects.type == TRIANGLE || objects.type == PARAL)
-    {
-       // ng = -1.0f;
-       // if (soft_dot(soft_normalize(objects.pos2 - objects.position * objects.endpos - objects.position), ray->dir) < EPSILON)
-       //     ng = 1.0f;
-        return (soft_normalize(soft_cross(objects.pos2 - objects.position, objects.endpos - objects.position)));
     }
     else if (objects.type == PLANE || objects.type == DISK)
     {
@@ -253,6 +246,8 @@ static float3 get_normal(t_ray *ray, const t_objects objects)
         nor.y = -0.01f * nor.y;
         return (soft_normalize(nor));
     }
+		else if (objects.type == TRIANGLE)
+        return (soft_normalize(soft_cross(objects.pos2 - objects.position, objects.endpos - objects.position)));
     return ((float3)(0, 0, 0));
 }
 
@@ -389,50 +384,29 @@ static float    solvequadratic(const float a, const float b, const float c)
     }
     return (FLT_MAX);
 }
+
 static float inter_triangle(t_ray *ray, t_objects objects)
 {
-    float3 V1 = objects.pos2 - objects.position;
+    float3 V1 = objects.rotation - objects.position;
     float3 V2 = objects.endpos - objects.position;
     float3 p = soft_cross(ray->dir, V2);
     float det = soft_dot(V1, p);
     if (det > -EPSILON && det < EPSILON)
         return (FLT_MAX);
     float3 cam_dir_tri = ray->pos - objects.position;
-    float u = soft_dot(cam_dir_tri, p) * (1 / det);
-    if (u < 0 || u > 1)
-        return (FLT_MAX);
-    float3 q = soft_cross(cam_dir_tri, V1);
-    float v = soft_dot(ray->dir, q) * (1 / det);
-    if (v < 0 || v > 1)
-        return (FLT_MAX);
-    float t = soft_dot(V2, q) * (1 / det);
-    if (t > EPSILON)
-        return (t);
-    else
-        return (FLT_MAX);
-}
-static float inter_paral(t_ray *ray, t_objects objects, const float3 rdir, const int enable)
-{
-    float3 V1 = objects.pos2 - objects.position;
-    float3 V2 = objects.endpos - objects.position;
-    float3 p = soft_cross(ray->dir, V2);
-    float det = soft_dot(V1, p);
-    if (det > -EPSILON && det < EPSILON && enable)
-        return (FLT_MAX);
-    float3 cam_dir_tri = ray->pos - objects.position;
     float u = soft_dot(cam_dir_tri, p) * (1.0f / det);
     if (u < 0.0f || u > 1.0f)
         return (FLT_MAX);
     float3 q = soft_cross(cam_dir_tri, V1);
-    float v = soft_dot(ray->dir, q) * (1.0f / det);
-    if (v < 0.0f || v > 1.0f)
+    float v = soft_dot(ray->dir, q) * (1 / det);
+    if (v < 0.0f || v > 1.0f || v + u > 1.0f)
         return (FLT_MAX);
-    float t = (soft_dot(V2, q) * (1.0f / det));
+    float t = soft_dot(V2, q) * (1.0f / det);
     if (t > EPSILON)
         return (t);
-    else
-        return (FLT_MAX);
+    return (FLT_MAX);
 }
+
 static float inter_sphere(t_ray *ray, t_objects objects, const float3 rdir)
 {
     float3 dist = ray->pos - objects.position;
@@ -443,6 +417,7 @@ static float inter_sphere(t_ray *ray, t_objects objects, const float3 rdir)
     float b = soft_dot(dist, rdir);
     return (solvequadratic(a, b, c));
 }
+
 static float inter_plane(t_ray *ray, t_objects objects, const float3 rdir)
 {
     float a = soft_dot(-objects.normal, rdir);
@@ -455,6 +430,7 @@ static float inter_plane(t_ray *ray, t_objects objects, const float3 rdir)
         return (FLT_MAX);
     return (solve);
 }
+
 static float inter_disk(t_ray *ray, t_objects objects, const float3 rdir)
 {
     float ng = 1;
@@ -471,10 +447,11 @@ static float inter_disk(t_ray *ray, t_objects objects, const float3 rdir)
     float3 impact = (ray->pos + rdir * solve);
     float3 v = impact - objects.position;
     if (sqrt(soft_dot(v,v)) <= 50)
-        return (solve);
+            return (solve);
     else
         return (FLT_MAX);
 }
+
 static float inter_cylinder(t_ray *ray, t_objects objects, const float3 rdir)
 {
     float3 dist = ray->pos - objects.position;
@@ -485,6 +462,7 @@ static float inter_cylinder(t_ray *ray, t_objects objects, const float3 rdir)
     float b = rdir.x * dist.x + rdir.z * dist.z;
     return (solvequadratic(a, b, c));
 }
+
 static float inter_cone(t_ray *ray, t_objects objects, const float3 rdir)
 {
     float3 dist = ray->pos - objects.position;
@@ -502,19 +480,16 @@ static float inter_cone(t_ray *ray, t_objects objects, const float3 rdir)
     }
     return (t);
 }
+
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
-    float3 rdir = soft_normalize(rotatexyz(ray->dir, objects.rotation));
+    float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
     if (objects.type == SPHERE)
         return (inter_sphere(ray , objects, rdir));
     else if (objects.type == PLANE)
         return (inter_plane(ray , objects, rdir));
     else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
         return (inter_cylinder(ray, objects, rdir));
-    else if (objects.type == TRIANGLE)
-        return (inter_triangle(ray, objects));
-    else if (objects.type == PARAL)
-        return (inter_paral(ray, objects, rdir, enable));
     else if (objects.type == DISK)
         return (inter_disk(ray, objects, rdir));
     else if (objects.type == CONE || objects.type == CONEINF)
@@ -542,7 +517,11 @@ static float    shadow(t_ray ray, const t_light light, __constant t_objects *obj
     {
         if (i != ray.object)
         {
-            float d  = intersect(&ray_light, objects[i], scene->znear, 1);
+					float d;
+					if (objects && objects[i].type != TRIANGLE)
+							d = intersect(&ray_light, objects[i], scene->znear, 1);
+					else
+							d = inter_triangle(&ray_light, objects[i]);
             if (d >= EPSILON && d < ray_light.deph)
             {
                 ray_light.deph = d;
@@ -587,7 +566,11 @@ static float4 reflect_color_in_refract(__constant t_scene *scene, __constant t_l
 		reflect_ray.dir = soft_normalize(float3_reflect(ray.dir, normal));
 		while (i < scene->max_object)
 		{
-			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
+			float d;
+            if (objects && objects[i].type != TRIANGLE)
+                d = intersect(&reflect_ray, objects[i], EPSILON, 1);
+            else
+                d = inter_triangle(&reflect_ray, objects[i]);
 			if (d >= EPSILON && d < reflect_ray.deph && i != ray.object)
 			{
 				reflect_ray.deph = d;
@@ -645,7 +628,11 @@ static float4		refract_color_in_reflect(__constant t_scene *scene, __constant t_
 		int i = 0;
 		while (i < scene->max_object)
 		{
-			float d  = intersect(&refract_ray, objects[i], EPSILON, 1);
+			float d;
+            if (objects && objects[i].type != TRIANGLE)
+                d = intersect(&refract_ray, objects[i], EPSILON, 1);
+            else
+                d = inter_triangle(&refract_ray, objects[i]);
 			if (d >= EPSILON && d < refract_ray.deph && i != ray.object)
 			{
 				refract_ray.deph = d;
@@ -704,7 +691,11 @@ static float4 reflect_color(__constant t_scene *scene, __constant t_light *light
 		reflect_ray.dir = soft_normalize(float3_reflect(ray.dir, normal));
 		while (i < scene->max_object)
 		{
-			float d  = intersect(&reflect_ray, objects[i], EPSILON, 1);
+			float d;
+            if (objects && objects[i].type != TRIANGLE)
+                d = intersect(&reflect_ray, objects[i], EPSILON, 1);
+            else
+                d = inter_triangle(&reflect_ray, objects[i]);
 			if (d >= EPSILON && d < reflect_ray.deph && i != ray.object)
 			{
 				reflect_ray.deph = d;
@@ -762,7 +753,11 @@ static float4		refract_color(__constant t_scene *scene, __constant t_objects *ob
 		int i = 0;
 		while (i < scene->max_object)
 		{
-			float d  = intersect(&refract_ray, objects[i], EPSILON, 1);
+			float d;
+            if (objects && objects[i].type != TRIANGLE)
+                d = intersect(&refract_ray, objects[i], EPSILON, 1);
+            else
+                d = inter_triangle(&refract_ray, objects[i]);
 			if (d >= EPSILON && d < refract_ray.deph && i != ray.object)
 			{
 				refract_ray.deph = d;
@@ -819,12 +814,12 @@ __kernel void raytracer(__global uchar4* pixel,
 	float4 color;
     float4 finalcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
     float4 AAcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-	float shadow_attenuation = 1.0f;
-    while (y < yy + 1.0f)
+    while (scene->max_material > 0 && y < yy + 1.0f)
     {
         x = xx;
         while (x < xx + 1.0f)
         {
+				float shadow_attenuation = 1.0f;
 	       t_ray ray;
 	       ray.deph = scene->zfar;
 	       ray.pos = (float3)(camera->position.x, camera->position.y, camera->position.z);
@@ -833,14 +828,18 @@ __kernel void raytracer(__global uchar4* pixel,
 	       int i = 0;
 	       while (i < scene->max_object)
 	       {
-                float d = intersect(&ray, objects[i], scene->znear, 1);
-                if (d >= EPSILON && d < ray.deph)
-                {
-                    ray.deph = d;
-                    ray.object = i;
-    		    }
-                i++;
-            }
+					 float d;
+					 if (objects && objects[i].type != TRIANGLE)
+							d = intersect(&ray, objects[i], scene->znear, 1);
+					 else
+							d = inter_triangle(&ray, objects[i]);
+           if (d >= EPSILON && d < ray.deph)
+           {
+            	ray.deph = d;
+            	ray.object = i;
+    		  	}
+          	i++;
+          }
         	if (ray.object >= 0 && ray.deph < scene->zfar)
         	{
         		if (scene->max_light > 0)
@@ -919,11 +918,11 @@ __kernel void raytracer(__global uchar4* pixel,
         		if (color.z >= 0.5f)
         			color.z = 1.0f;
         	}
-            color = (clamp(color, 0.0f, 1.0f));
-            AAcolor += color * 0.25f;
-            x += 0.5f;
-            if (scene->render_mod != RENDERMODE_ANTI_ALIAS)
-                x += 1.0f;
+          color = (clamp(color, 0.0f, 1.0f));
+          AAcolor += color * 0.25f;
+          x += 0.5f;
+          if (scene->render_mod != RENDERMODE_ANTI_ALIAS)
+              x += 1.0f;
         }
         y += 0.5f;
         if (scene->render_mod != RENDERMODE_ANTI_ALIAS)
