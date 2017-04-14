@@ -1,4 +1,4 @@
-ll<scene width="1640" height="1480" maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
+<scene width="1640" height="1080" maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
 	<camera position="550.0 -90.0 620.0" rotation="0.0 180.0 0.0" />
 
 	<cone position="40.0 0.0 155.0" radius="65.0" color="220 50 50 255" material="2"/>-->
@@ -16,6 +16,7 @@ ll<scene width="1640" height="1480" maxreflect="4" maxrefract="4" fov="70" znear
 	<sphere position="0 -40.0 250.0" radius="100.0" color="255 255 0 255" material="2"/>
 	<sphere position="0.0 -30.0 290.0" radius="5.0" color="55 55 25 255" material="1"/>-->
 	<!--<sphere position="300.0 -20.0 -200.0" radius="50.0" color="25 250 250 255" material="2"/>-->
+	<paral position="500.0 -90.0 -200.0" endpos="570.0 -90.0 -200.0" pos2="500.0 -160.0 -200.0" color="255 0 0 255" material="3"/>
 	<sphere position="200.0 -20.0 -200.0" radius="50.0" color="55 255 55 255" material="2"/>
 	<sphere position="650.0 -80.0 -280.0" radius="50.0" color="55 55 255 255" material="3"/>
 	<sphere position="800.0 -20.0 -200.0" radius="50.0" color="255 55 55 255" material="3"/>
@@ -50,5 +51,4 @@ ll<scene width="1640" height="1480" maxreflect="4" maxrefract="4" fov="70" znear
 	<material specular="150 150 150 255" blinn = "1" ambient="125 125 125 255" reflection="0" refraction="0" damier="1" tilesize="100" shininess="10"/>
 	<material specular="255 255 255 255" blinn = "1" ambient="125 125 125 255" reflection="0" refract_coef="0.1" refraction="1" shininess="10"/>
 	<material specular="255 255 225 255" blinn = "1" ambient="125 125 125 255" reflection="1" refraction="0" shininess="1"/>
-	<!--<render mod="grey"/>-->
 </scene>

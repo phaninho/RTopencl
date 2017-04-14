@@ -10,7 +10,8 @@
 # define CYLINDER (PLANE + 1)
 # define CONE (CYLINDER + 1)
 # define TRIANGLE (CONE + 1)
-# define DISK (TRIANGLE + 1)
+# define PARAL (TRIANGLE + 1)
+# define DISK (PARAL + 1)
 # define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
 # define PARABOLOID (CONEINF + 1)// variable : pos, normal, dist (distance entre les 2 points)
@@ -223,28 +224,36 @@ static float3        float3_refract(const float3 v, const float3 normal, const f
 
 static float3 get_normal(t_ray *ray, const t_objects objects)
 {
-	float3 impact = ray->pos + ray->dir * ray->deph;
-	if (objects.type == SPHERE)
-	{
-		return (soft_normalize(impact - objects.position));
-	}
-	else if (objects.type == PLANE || objects.type == DISK)
-	{
-		return (soft_normalize(objects.normal));
-	}
-	else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
-	{
-		float3 nor = impact - objects.position;
-		nor.y = 0;
-		return (soft_normalize(nor));
-	}
-	else if (objects.type == CONE || objects.type == CONEINF)
-	{
-		float3 nor = impact - objects.position;
-		nor.y = -0.01f * nor.y;
-		return (soft_normalize(nor));
-	}
-	return ((float3)(0, 0, 0));
+    float3 rdir = soft_normalize(rotatexyz(ray->dir, objects.rotation));
+    float3 impact = ray->pos + rdir * ray->deph;
+    if (objects.type == SPHERE)
+    {
+        return (soft_normalize(impact - objects.position));
+    }
+    else if (objects.type == TRIANGLE || objects.type == PARAL)
+    {
+       // ng = -1.0f;
+       // if (soft_dot(soft_normalize(objects.pos2 - objects.position * objects.endpos - objects.position), ray->dir) < EPSILON)
+       //     ng = 1.0f;
+        return (soft_normalize(soft_cross(objects.pos2 - objects.position, objects.endpos - objects.position)));
+    }
+    else if (objects.type == PLANE || objects.type == DISK)
+    {
+        return (soft_normalize(objects.normal));
+    }
+    else if (objects.type == CYLINDER || objects.type == CYLINDERINF)
+    {
+        float3 nor = impact - objects.position;
+        nor.y = 0;
+        return (soft_normalize(nor));
+    }
+    else if (objects.type == CONE || objects.type == CONEINF)
+    {
+        float3 nor = impact - objects.position;
+        nor.y = -0.01f * nor.y;
+        return (soft_normalize(nor));
+    }
+    return ((float3)(0, 0, 0));
 }
 
 static float4    light_ambient(float4 color, const t_light light, const t_material material)
@@ -382,7 +391,7 @@ static float    solvequadratic(const float a, const float b, const float c)
 }
 static float inter_triangle(t_ray *ray, t_objects objects)
 {
-    float3 V1 = objects.rotation - objects.position;
+    float3 V1 = objects.pos2 - objects.position;
     float3 V2 = objects.endpos - objects.position;
     float3 p = soft_cross(ray->dir, V2);
     float det = soft_dot(V1, p);
@@ -399,7 +408,30 @@ static float inter_triangle(t_ray *ray, t_objects objects)
     float t = soft_dot(V2, q) * (1 / det);
     if (t > EPSILON)
         return (t);
-    return (FLT_MAX);
+    else
+        return (FLT_MAX);
+}
+static float inter_paral(t_ray *ray, t_objects objects, const float3 rdir, const int enable)
+{
+    float3 V1 = objects.pos2 - objects.position;
+    float3 V2 = objects.endpos - objects.position;
+    float3 p = soft_cross(ray->dir, V2);
+    float det = soft_dot(V1, p);
+    if (det > -EPSILON && det < EPSILON && enable)
+        return (FLT_MAX);
+    float3 cam_dir_tri = ray->pos - objects.position;
+    float u = soft_dot(cam_dir_tri, p) * (1.0f / det);
+    if (u < 0.0f || u > 1.0f)
+        return (FLT_MAX);
+    float3 q = soft_cross(cam_dir_tri, V1);
+    float v = soft_dot(ray->dir, q) * (1.0f / det);
+    if (v < 0.0f || v > 1.0f)
+        return (FLT_MAX);
+    float t = (soft_dot(V2, q) * (1.0f / det));
+    if (t > EPSILON)
+        return (t);
+    else
+        return (FLT_MAX);
 }
 static float inter_sphere(t_ray *ray, t_objects objects, const float3 rdir)
 {
@@ -439,7 +471,7 @@ static float inter_disk(t_ray *ray, t_objects objects, const float3 rdir)
     float3 impact = (ray->pos + rdir * solve);
     float3 v = impact - objects.position;
     if (sqrt(soft_dot(v,v)) <= 50)
-            return (solve);
+        return (solve);
     else
         return (FLT_MAX);
 }
@@ -472,7 +504,7 @@ static float inter_cone(t_ray *ray, t_objects objects, const float3 rdir)
 }
 static float intersect(t_ray *ray, const t_objects objects, const float znear, const int enable)
 {
-    float3 rdir = soft_normalize(rotatexyz(ray->dir, -objects.rotation));
+    float3 rdir = soft_normalize(rotatexyz(ray->dir, objects.rotation));
     if (objects.type == SPHERE)
         return (inter_sphere(ray , objects, rdir));
     else if (objects.type == PLANE)
@@ -481,6 +513,8 @@ static float intersect(t_ray *ray, const t_objects objects, const float znear, c
         return (inter_cylinder(ray, objects, rdir));
     else if (objects.type == TRIANGLE)
         return (inter_triangle(ray, objects));
+    else if (objects.type == PARAL)
+        return (inter_paral(ray, objects, rdir, enable));
     else if (objects.type == DISK)
         return (inter_disk(ray, objects, rdir));
     else if (objects.type == CONE || objects.type == CONEINF)

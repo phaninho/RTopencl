@@ -60,7 +60,7 @@ VEC3		straf(const VEC3 *rot)
 	return (vec);
 }
 
-static void	updatekey2(t_env *env, t_window *win, VEC3 dir, t_threadSDL *tsdl)
+static void	updatekey2(t_env *env, t_window *win, VEC3 dir, t_threadsdl *tsdl)
 {
 	SDL_Thread	*thread;
 
@@ -82,7 +82,7 @@ void		update(void)
 	t_env		*env;
 	VEC3		dir;
 	t_window	*win;
-	t_threadSDL	*tsdl;
+	t_threadsdl	*tsdl;
 
 	env = env_get();
 	win = window_get();
