@@ -31,8 +31,6 @@ static void	init_elements2(t_parse *p, t_env *e)
 		p->light++;
 	else if (p->in_scene && p->type == MATERIAL)
 		p->mate++;
-	else if (p->in_scene && p->type == TEXTURE)
-		p->texture++;
 }
 
 static void	init_elements(t_env *e, const char *file)

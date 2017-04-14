@@ -143,6 +143,8 @@ int				main(int ac, char **av)
 	if (!window_init())
 		die("Error: Window init!");
 	parse_file(env_get(), av[1]);
+	if (!env_get()->scene.max_object)
+		die("Error, bad file!");
 	thread_init();
 	rt_init();
 	window_loop(window_get());

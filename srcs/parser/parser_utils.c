@@ -14,7 +14,6 @@
 #include "utils/error.h"
 #include "libft/libft.h"
 #include <SDL2/SDL.h>
-#include <png.h>
 
 int		comment(const char *s, int i)
 {
@@ -57,19 +56,4 @@ void	close_tag(t_env *e, t_parse *p, char *file, int *i)
 		}
 		type++;
 	}
-}
-
-void	load_texture(t_arg *arg, const char *tag, int *i)
-{
-	int			j;
-	char		*name;
-
-	j = *i;
-	while (tag[*i] && (tag[*i] != '\"'
-	|| (*i - 1 >= 0 && ft_strprefix(&tag[*i] - 1, "\\\""))))
-		(*i)++;
-	if (!(name = ft_strsub(tag, j, *i - j)))
-		die("malloc failure");
-	read_png(arg, name);
-	free(name);
 }

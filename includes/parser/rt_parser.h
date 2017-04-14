@@ -75,7 +75,6 @@ typedef struct	s_parse
 	int		object;
 	int		light;
 	int		mate;
-	int		texture;
 	int		type;
 	char	*tag;
 	t_arg	arg;
@@ -101,8 +100,6 @@ double			get_double(const char *tag, int *i, int *nb);
 int				get_int(const char *tag, int *i, int *nb);
 VEC4			get_color(const char *tag, int *i, int *val);
 void			get_render_mod(t_arg *arg, const char *tag, int *i);
-void			load_texture(t_arg *arg, const char *tag, int *i);
-void			read_png(t_arg *arg, char *name);
 
 void			init_arg(t_arg *arg);
 void			init_parse(t_parse *p);
@@ -111,7 +108,6 @@ void			init_camera(t_env *e);
 void			init_objects(t_env *e, int max);
 void			init_lights(t_env *e, int max);
 void			init_materials(t_env *e, int max);
-void			init_textures(t_env *e, int max);
 
 VEC4			check_color(VEC4 color);
 void			check_values(t_env *e, t_parse *p, t_arg *arg);

@@ -27,8 +27,7 @@
 # define END_LIGHTS (DIRLIGHT)
 
 # define MATERIAL (END_LIGHTS + 1)
-# define TEXTURE (MATERIAL + 1)
-# define RENDER (TEXTURE + 1)
+# define RENDER (MATERIAL + 1)
 
 // Pour le parser et le CL du mod de rendu
 #define RENDERMODE_SEPIA (RENDER + 1)
@@ -54,7 +53,6 @@ typedef struct	s_scene
 	int			max_object;
 	int			max_material;
 	int			max_light;
-	int			max_texture;
 	int			render_debug;
 	int			render_mod;
 	float4	render_filter;
@@ -808,13 +806,13 @@ __kernel void raytracer(__global uchar4* pixel,
 	int ymax = get_global_size(1);
 	int xx = get_global_id(0);
 	int yy = get_global_id(1);
-    float x = xx;
-    float y = yy;
+  float x = xx;
+  float y = yy;
 	int index = xx + yy * xmax;
-	float4 color;
-    float4 finalcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-    float4 AAcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
-    while (scene->max_material > 0 && y < yy + 1.0f)
+	float4 color = (float4)(0.0f, 0.0f, 0.0f, 1.0f);;
+  float4 finalcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+  float4 AAcolor = (float4)(0.0f, 0.0f, 0.0f, 1.0f);
+  while (scene->max_material > 0 && y < yy + 1.0f)
     {
         x = xx;
         while (x < xx + 1.0f)

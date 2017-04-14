@@ -20,7 +20,6 @@ void	init_parse(t_parse *p)
 	p->object = 0;
 	p->light = 0;
 	p->mate = 0;
-	p->texture = 0;
 	p->type = 0;
 	p->in_object = 0;
 	init_arg(&(p->arg));

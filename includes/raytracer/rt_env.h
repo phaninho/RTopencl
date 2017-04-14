@@ -43,8 +43,7 @@
 # define END_LIGHTS (DIRLIGHT)
 
 # define MATERIAL (END_LIGHTS + 1)
-# define TEXTURE (MATERIAL + 1)
-# define RENDER (TEXTURE + 1)
+# define RENDER (MATERIAL + 1)
 
 # define RENDERMODE (RENDER + 1)
 # define RENDERMODE_SEPIA (RENDERMODE)
@@ -115,7 +114,6 @@ typedef struct	s_scene
 	int			max_object;
 	int			max_material;
 	int			max_light;
-	int			max_texture;
 	int			render_debug;
 	int			render_mod;
 	VEC4		render_filter;

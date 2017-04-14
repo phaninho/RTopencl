@@ -71,7 +71,6 @@ char		*g_tags[] =
 	"pointlight",
 	"dirlight",
 	"material",
-	"texture",
 	"render",
 	NULL
 };
