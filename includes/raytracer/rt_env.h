@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt_env.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jeexpert <jeexpert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:33:15 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/13 23:00:04 by stmartin         ###   ########.fr       */
+/*   Updated: 2017/04/14 12:47:53 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 # define CYLINDER (PLANE + 1)
 # define CONE (CYLINDER + 1)
 # define TRIANGLE (CONE + 1)
-# define DISK (TRIANGLE + 1)
+# define PARAL (TRIANGLE + 1)
+# define DISK (PARAL + 1)
 # define CYLINDERINF (DISK + 1)
 # define CONEINF (CYLINDERINF + 1)
 # define PARABOLOID (CONEINF + 1)
@@ -63,22 +64,18 @@ typedef struct	s_cam
 
 typedef struct	s_objects
 {
-	VEC4		color;
+	int			type;
+	int			material_id;
+	int			in_object;
+	float		radius;
+	float		radius2;
+	float		dist;
 	VEC3		position;
 	VEC3		rotation;
 	VEC3		normal;
 	VEC3		endpos;
-	int			type;
-	int			material_id;
-	int			texture_id;
-	int			in_object;
-	float		radius;
-	float		radius2;
-	float		a;
-	float		b;
-	float		c;
-	float		d;
-	float		dist;
+	VEC3		pos2;
+	VEC4		color;
 }				t_objects;
 
 typedef struct	s_light

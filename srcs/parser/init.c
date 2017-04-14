@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/28 16:14:13 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 17:18:43 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/14 12:43:34 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	init_objects(t_env *e, int max)
 		e->objects[max].color = (VEC4){{255.0f, 255.0f, 255.0f, 255.0f}};
 		e->objects[max].radius = 1.0f;
 		e->objects[max].endpos = (VEC3){{1.0f, 1.0f, 1.0f}};
+		e->objects[max].pos2 = (VEC3){{1.0f, 1.0f, 1.0f}};
 		e->objects[max].material_id = 0;
 		e->objects[max].in_object = 0;
 	}

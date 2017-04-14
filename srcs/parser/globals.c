@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/23 16:17:44 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 16:41:31 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/14 12:48:09 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,6 @@ char		*g_args[] =
 	"angle",
 	"shininess",
 	"radius2",
-	"a",
-	"b",
-	"c",
-	"d",
 	"dist",
 	"refract_coef",
 	"damier",
@@ -44,6 +40,7 @@ char		*g_args[] =
 	"position",
 	"direction",
 	"endpos",
+	"pos2",
 	"color",
 	"specular",
 	"ambient",
@@ -62,6 +59,7 @@ char		*g_tags[] =
 	"cylinder",
 	"cone",
 	"triangle",
+	"paral",
 	"disk",
 	"cylinderinf",
 	"coneinf",

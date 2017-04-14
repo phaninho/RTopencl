@@ -6,7 +6,7 @@
 /*   By: qhonore <qhonore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/26 10:59:57 by qhonore           #+#    #+#             */
-/*   Updated: 2017/04/06 17:18:32 by qhonore          ###   ########.fr       */
+/*   Updated: 2017/04/14 12:45:53 by qhonore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,8 @@ static void	check_object(t_env *e, t_parse *p, t_arg *arg)
 	if (p->object + 1 != p->in_object)
 		o->in_object = p->in_object;
 	o->endpos = arg->avec[ENDPOS - VEC];
+	o->pos2 = arg->avec[POS2 - VEC];
 	o->radius2 = arg->adbl[RADIUS2 - DOUBLE];
-	o->a = arg->adbl[OBJ_A - DOUBLE];
-	o->b = arg->adbl[OBJ_B - DOUBLE];
-	o->c = arg->adbl[OBJ_C - DOUBLE];
-	o->d = arg->adbl[OBJ_D - DOUBLE];
 	o->dist = arg->adbl[DIST - DOUBLE];
 	p->object++;
 }
