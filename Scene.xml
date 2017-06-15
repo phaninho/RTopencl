@@ -14,7 +14,6 @@
 	<material specular="150 150 150 255" blinn = "0" ambient="120 120 120 255" reflection="0.1" refraction="1" shininess="1"/>
 	<material specular="150 150 150 255" blinn = "1" ambient="120 120 120 255" reflection="0.1" refraction="1" shininess="10"/>
 
-	<!--<texture load="texture.png" />
-	<!--<texture load="test.png" />-->
+	<texture load="texture.png" />
 
 </scene>
