@@ -1,0 +1,21 @@
+<scene maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
+	<camera position="350.0 -90.0 1520.0" rotation="0.0 180.0 0.0" />
+
+	<cone position="40.0 0.0 155.0" radius="65.0" dist="50.0" color="220 50 50 255" material="2"/>
+
+	<cylinderinf position="300.0 -20.0 -250.0" radius="42.0" color="120 150 200 255"  material="2"/>
+
+	<cylinder position="889.0 -300.0 -273.0"  dist="500.0" radius="27.0" color="20 250 50 255" material="1"/>
+
+	<disk position="700.0 -120.0 -100.0" radius="12.0" color="50 50 110 255" normal="0.0 0.0 1.0" material="1"/>
+	<triangle position="500.0 -90.0 -200.0" endpos="570.0 -90.0 -200.0" rotation="500.0 -160.0 -200.0" color="255 0 0 255" material="3"/>
+	<sphere position="200.0 -20.0 -200.0" radius="50.0" color="55 255 55 255" material="2"/>
+	<sphere position="650.0 -80.0 -280.0" radius="50.0" color="55 55 255 255" material="3"/>
+	<sphere position="800.0 -20.0 -200.0" radius="50.0" color="255 55 55 255" material="3"/>
+	<plane position="0.0 0.0 -600.0" color="200 200 200 255" normal="0.0 0.0 1.0" material="1"/>
+	<plane position="0.0 40.0 0.0" color="200 200 200 255" normal="0.0 -1.0 0.0" material="3"/>
+	<spotlight position="252.0 25.0 1492.0" color="200 150 200" attenuation="0.01" direction="0.0 0.25 -2.5" angle="65"/>
+	<material specular="150 150 150 255" blinn = "1" ambient="125 125 125 255" reflection="0" refraction="0" damier="1" tilesize="100" shininess="10"/>
+	<material specular="255 255 255 255" blinn = "1" ambient="125 125 125 255" reflection="0" refract_coef="0.1" refraction="1" shininess="10"/>
+	<material specular="255 255 225 255" blinn = "1" ambient="125 125 125 255" reflection="1" refraction="0" shininess="1"/>
+</scene>

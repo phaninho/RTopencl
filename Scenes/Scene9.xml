@@ -1,0 +1,54 @@
+<scene width="1640" height="1080" maxreflect="4" maxrefract="4" fov="70" znear="0" zfar="10000" >
+	<camera position="550.0 -90.0 620.0" rotation="0.0 180.0 0.0" />
+
+	<cone position="40.0 0.0 155.0" radius="65.0" color="220 50 50 255" material="2"/>-->
+	<!--<coneinf position="40.0 0.0 105.0" radius="15.0" color="21 50 250 255" material="3"/>-->
+
+	<cylinderinf position="300.0 -20.0 -250.0" radius="42.0" color="120 150 200 255"  material="2"/>
+	<!--<cylinderinf position="-40.0 -20.0 105.0"   radius="27.0" color="120 150 50 255" material="1"/>
+	<!--<cylinder position="40.0 -20.0 155.0"   radius="27.0" color="20 250 50 255" material="1"/>-->
+
+	<!--<disk position="15.0 -15.0 200.0" radius="12.0" color="50 50 110 255" normal="0.0 0.0 1.0" material="1"/>
+	<disk position="16.0 -14.0 199.0" radius="12.0" color="50 150 200 255" normal="0.0 0.0 -1.0" material="1"/>-->
+	<!--<sphere position="15 -15.0 250.0" radius="10.0" color="255 0 0 255" material="1"/>
+	<sphere position="-15.0 -15.0 250.0"  radius="10.0" color="0 255 0 255" material="2"/>
+	<sphere position="0 -20.0 250.0" radius="10.0" color="0 0 255 255" material="2"/>
+	<sphere position="0 -40.0 250.0" radius="100.0" color="255 255 0 255" material="2"/>
+	<sphere position="0.0 -30.0 290.0" radius="5.0" color="55 55 25 255" material="1"/>-->
+	<!--<sphere position="300.0 -20.0 -200.0" radius="50.0" color="25 250 250 255" material="2"/>-->
+	<triangle position="500.0 -90.0 -200.0" endpos="570.0 -90.0 -200.0" rotation="500.0 -160.0 -200.0" color="255 0 0 255" material="3"/>
+	<sphere position="200.0 -20.0 -200.0" radius="50.0" color="55 255 55 255" material="2"/>
+	<sphere position="650.0 -80.0 -280.0" radius="50.0" color="55 55 255 255" material="3"/>
+	<sphere position="800.0 -20.0 -200.0" radius="50.0" color="255 55 55 255" material="3"/>
+	<!--<torus position="700.0 -60.0 -280.0" radius="50.0" radius2="25.0" color="255 55 55 255" material="3">-->
+<!--	<cone position="-0.0 -15.0 155.0" color="255 255 255 255" radius="20" rotation="0.0 0.0 0.0"material="1"/>-->
+
+	<!--<plane position="0.0 0.0 400.0" color="200 200 200 255" normal="0.0 0.0 -1.0" material="1"/>-->
+	<plane position="0.0 0.0 -600.0" color="200 200 200 255" normal="0.0 0.0 1.0" material="1"/>
+	<!--<plane position="0.0 -500.0 0.0" color="200 200 200 255" normal="0.0 1.0 0.0" material="1"/>-->
+	<plane position="0.0 40.0 0.0" color="200 200 200 255" normal="0.0 -1.0 0.0" material="3"/>
+	<!--<plane position="820.0 0.0 0.0" color="200 200 200 255" normal="-1.0 0.0 0.0" material="1"/>
+	<plane position="-400.0 0.0 0.0" color="200 200 200 255" normal="1.0 0.0 0.0" material="1"/>-->
+
+<!--	<spotlight position="40.0 -40.0 280.0" color="255 255 255" direction="0.0 1.0 -1.0" attenuation="0.001" angle="50"/>-->
+	<!--<pointlight position="200 -500.0 1000.0" color="150 150 150" attenuation="0.01"/>-->
+	<spotlight position="650.0 25.0 -200.0" color="200 150 200" attenuation="0.01" direction="1.0 0.25 -0.5" angle="65"/>
+	<!--<pointlight position="550.0 25.0 -200.0" color="0 200 0" attenuation="0.01" direction="0.75 0.25 -0.5" angle="65"/>
+	<pointlight position="450.0 25.0 -200.0" color="200 0 0" attenuation="0.01" direction="0.5 0.25 -0.5" angle="65"/>-->
+		<!--<pointlight position="90.0 -40.0 200.0" color="255 255 255" attenuation="0.01" material="1"/>
+		<pointlight position="30.0 -30.0 180.0" color="255 255 255" attenuation="0.01" material="1"/>
+		<pointlight position="60.0 -30.0 200.0" color="255 255 255" attenuation="0.01" material="1"/>-->
+
+	<!--<dirlight color="255 255 255" attenuation="0.0"  direction="1.5 -1. 0.0" />-->
+
+	<!--<spotlight position="0.0 -30.0 380.0" color="255 255 255" attenuation="0.001" direction="0.0 0.5 -0.85" angle="45"/>-->
+	<!--<spotlight position="0.0 -50.0 380.0" color="255 255 255" attenuation="0.001" direction="-1.0 0.6 -0.95" angle="45"/>-->
+	<!--<spotlight position="50.0 -50.0 390.0" color="255 255 255" attenuation="0.01" direction="0.1 0.5 -0.95" angle="45"/>-->
+
+
+	<!--<triangle position="0.0 0.0 0.0" rotation="0.0 0.0 0.0" color="255 255 255" material="2" />-->
+
+	<material specular="150 150 150 255" blinn = "1" ambient="125 125 125 255" reflection="0" refraction="0" damier="1" tilesize="100" shininess="10"/>
+	<material specular="255 255 255 255" blinn = "1" ambient="125 125 125 255" reflection="0" refract_coef="0.1" refraction="1" shininess="10"/>
+	<material specular="255 255 225 255" blinn = "1" ambient="125 125 125 255" reflection="1" refraction="0" shininess="1"/>
+</scene>

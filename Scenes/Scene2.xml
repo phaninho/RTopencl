@@ -1,0 +1,24 @@
+<scene maxreflect="0" maxrefract="4" fov="70" znear="0" zfar="10000">
+	<camera position="-100.0 45.0 -1200.0" rotation="0.0 5.0 0.0" />
+
+	<sphere position="-175.0 15.0 15.0" normal="0.0 1.0 0.0" radius="40.0" color="205 0 0 255" material="1" texture="1"/>
+	<sphere position="-30.0 15.0 65.0" normal="0.0 1.0 0.0" radius="40.0" color="0 180 0 255" material="1"/>
+	<sphere position="40.0 40.0 40.0" normal="0.0 1.0 0.0" radius="40.0" color="100 100 155 255" material="1"/>
+	<sphere position="-20.0 110.0 90.0" normal="0.0 1.0 0.0" radius="40.0" color="255 255 255 0" material="1"/>
+
+
+	<plane position="-400.0 0.0 0.0" color="255 102 35 255" normal="1.0 0.0 0.0" material="2"/>
+	<plane position="150.0 0.0 0.0" color="10 102 135 255" normal="-1.0 0.0 0.0" material="2"/>
+	<plane position="0.0 0.0 -1000.0" color="54 205 205 255" normal="0.0 0.0 1.0" material="2"/>
+	<plane position="0.0 0.0 500.0" color="0 100 100 255" normal="0.0 0.0 -1.0" material="2"/>
+	<plane position="0.0 -200.0 0.0" color="205 100 100 255" normal="0.0 1.0 0.0" material="2"/>
+	<plane position="0.0 200.0 0.0" color="120 55 105 255" normal="0.0 -1.0 0.0" material="2"/>
+
+	<pointlight position="0.0 -180.0 20.0" color="205 205 205" attenuation="0.01"/>
+
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" perlin="0" reflection="0.1" refraction="0.1" refract_coef="1" shininess="100"/>
+	<material specular="255 255 255 255" blinn = "1" ambient="255 255 255 255" perlin="1" reflection="0.01 " refraction="0.0" shininess="100"/>
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" perlin="0" reflection="0.1" refraction="0.0" shininess="10"/>
+	<texture load="texture.png" />
+	<render debug="0"/>
+</scene>

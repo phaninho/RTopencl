@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:33:49 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/13 23:02:11 by stmartin         ###   ########.fr       */
+/*   Updated: 2017/04/14 20:26:01 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <OpenCL/opencl.h>
 
-typedef struct	s_thread
+typedef struct		s_thread
 {
 	cl_platform_id		platform_id;
 	cl_uint				platform_count;
@@ -31,9 +31,10 @@ typedef struct	s_thread
 	cl_mem				mem_light;
 	cl_program			program;
 	cl_kernel			kernel;
-}				t_thread;
+}					t_thread;
 
-t_thread		*thread_get(void);
-void			thread_init(void);
-void			thread_end(void);
+t_thread			*thread_get(void);
+void				thread_init(void);
+void				thread_end(void);
+
 #endif

@@ -6,11 +6,11 @@
 #    By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/12 13:47:45 by jeexpert          #+#    #+#              #
-#    Updated: 2017/04/12 13:47:47 by jeexpert         ###   ########.fr        #
+#    Updated: 2017/04/14 21:25:37 by stmartin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = RT
+NAME = rt
 INC_DIR = includes
 SRC_DIR = srcs/
 OBJ_DIR = obj/
@@ -39,6 +39,7 @@ parser/parser.c \
 parser/parser_utils.c \
 parser/parser_utils2.c \
 raytracer.c \
+raytracer2.c \
 raytracer/camera.c \
 raytracer/camera2.c \
 raytracer/mouse.c \

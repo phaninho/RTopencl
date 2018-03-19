@@ -6,7 +6,7 @@
 /*   By: jeexpert <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 13:36:31 by jeexpert          #+#    #+#             */
-/*   Updated: 2017/04/13 23:13:25 by stmartin         ###   ########.fr       */
+/*   Updated: 2017/04/14 20:40:08 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_ttf.h>
 # include "parser/rt_parser.h"
+# include "thread/thread.h"
 
 typedef struct		s_window
 {
@@ -58,5 +59,7 @@ void				mouse_ungrab(void);
 char				*check_name_screen(t_window *t);
 void				kernel_init(t_window *window);
 void				updatekey(t_env *env, t_window *win, VEC3 dir);
+void				cl_render3(t_thread *cl, cl_int err, t_window *window, \
+					t_env *env);
 
 #endif

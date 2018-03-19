@@ -458,7 +458,16 @@ static float inter_cylinder(t_ray *ray, t_objects objects, const float3 rdir)
         return (FLT_MAX);
     float a = rdir.x * rdir.x + rdir.z * rdir.z;
     float b = rdir.x * dist.x + rdir.z * dist.z;
-    return (solvequadratic(a, b, c));
+     float t = solvequadratic(a, b, c);
+    if (objects.type == CYLINDER)
+    {
+        float m = soft_dot(rdir, objects.normal) * t + soft_dot(dist, objects.normal);
+        if (fmax(m,0) > EPSILON && fmax(m,0) < objects.dist)
+            return (t);
+        else
+            return (FLT_MAX);
+    }
+    return (t);
 }
 
 static float inter_cone(t_ray *ray, t_objects objects, const float3 rdir)

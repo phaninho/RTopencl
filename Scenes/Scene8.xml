@@ -1,0 +1,28 @@
+<scene width="640" height="480" maxreflect="0" maxrefract="0" fov="70" znear="0" zfar="10000">
+	<camera position="0.0 0.0 400.0" rotation="0.0 180.0 0.0" />
+
+<!--	<sphere position="0 5.0 165.0"  radius="10.0" color="0 55 255 255" material="3"/>
+	<sphere position="25 0.0 165.0"  radius="10.0" color="0 255 0 255" material="3"/>-->
+	<sphere position="-25 0.0 105.0"  radius="10.0" color="255 55 0 255" material="3"/>
+	<!--<cone position="40.0 0.0 105.0" radius="15.0" color="21 50 250 255" material="1"/>-->
+
+	<!--<plane position="0.0 0.0 400.0" color="30 35 40 255" normal="0.0 0.0 -1.0" material="2"/>
+	<plane position="0.0 0.0 -400.0" color="30 35 40 255" normal="0.0 0.0 1.0" material="2"/>
+	<plane position="0.0 -400.0 0.0" color="30 35 40 255" normal="0.0 1.0 0.0" material="2"/>
+	<plane position="0.0 200.0 0.0" color="30 35 40 255" normal="0.0 -1.0 0.0" material="2"/>
+	<plane position="400.0 0.0 0.0" color="30 35 40  255" normal="-1.0 0.0 0.0" material="2"/>
+	<plane position="-400.0 0.0 0.0" color="30 35 40 255" normal="1.0 0.0 0.0" material="2"/>-->
+
+	<pointlight position="0.0 -40.0 320.0" color="255 255 255" attenuation="0.01"/>
+	<!--	<dirlight position="0.0 -10.0 165.0" color="255 255 255" direction="0.4 -1.0 -1.0" attenuation="0.6" angle="40"/>-->
+	<!--<pointlight position="15.0 -35.0 220.0" color="255 255 255" direction="0.1 0.3 -0.8" attenuation="0.06" angle="40.0"/>-->
+	<!--<dirlight position="35.0 -15.0 100.0" color="105 105 205" direction="0.3 -1.0 0.0" attenuation="0.2" angle="40.0"/>-->
+
+
+	<material specular="255 255 255 255" blinn = "0" ambient="200 200 200 255" reflection="1" refraction="1.0" shininess="10"/>
+	<material specular="255 255 255 255" blinn = "1" ambient="255 255 255 255" reflection="0.1" refraction="1.0" shininess="100"/>
+	<material specular="255 255 255 255" blinn = "0" ambient="255 255 255 255" reflection="0.0" refraction="0.0" shininess="2"/>
+
+	<texture load="texture.png" />
+	<render debug="0"/>
+</scene>
